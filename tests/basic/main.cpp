@@ -19,7 +19,7 @@ public:
 		
 	}
 	
-	void onStringParsed(const utki::Buf<char> str) override{
+	void onContentParsed(const utki::Buf<char> str) override{
 		
 	}
 };
