@@ -21,7 +21,8 @@ class Parser{
 		ATTRIBUTE_SEEK_TO_EQUALS,
 		ATTRIBUTE_SEEK_TO_VALUE,
 		ATTRIBUTE_VALUE,
-		CONTENT
+		CONTENT,
+		REF_CHAR
 	} state = State_e::IDLE;
 
 	void parseIdle(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e);
@@ -38,17 +39,23 @@ class Parser{
 	void parseAttributeSeekToValue(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e);
 	void parseAttributeValue(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e);
 	void parseContent(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e);
+	void parseRefChar(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e);
 	
 	void handleAttributeParsed();
 	
 	void processParsedTagName();
 	
+	void processParsedRefChar();
+	
 	std::vector<std::string> elementNameStack;
 	
 	std::vector<char> buf;
 	std::vector<char> attributeName;
+	std::vector<char> refCharBuf;
 	
 	char attrValueQuoteChar;
+	
+	State_e stateAfterRefChar;
 	
 	unsigned lineNumber = 1;
 	

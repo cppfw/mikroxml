@@ -58,12 +58,42 @@ void Parser::feed(const utki::Buf<char> data) {
 			case State_e::CONTENT:
 				this->parseContent(i, e);
 				break;
+			case State_e::REF_CHAR:
+				this->parseRefChar(i, e);
+				break;
 		}
 		if(i == e){
 			return;
 		}
 	}
 }
+
+void Parser::processParsedRefChar() {
+	
+	
+	
+	//TODO:
+	this->refCharBuf.clear();
+	this->state = this->stateAfterRefChar;
+}
+
+
+void Parser::parseRefChar(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e) {
+	for(; i != e; ++i){
+		switch(*i){
+			case ';':
+				this->processParsedRefChar();
+				return;
+			case '\n':
+				++this->lineNumber;
+				//fall-through
+			default:
+				this->refCharBuf.push_back(*i);
+				break;
+		}
+	}
+}
+
 
 void Parser::parseTagEmpty(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e) {
 	ASSERT(this->buf.size() == 0)
@@ -91,8 +121,14 @@ void Parser::parseContent(utki::Buf<char>::const_iterator& i, utki::Buf<char>::c
 				this->buf.clear();
 				this->state = State_e::TAG;
 				return;
+			case '&':
+				ASSERT(this->refCharBuf.size() == 0)
+				this->stateAfterRefChar = this->state;
+				this->state = State_e::REF_CHAR;
+				return;
 			case '\n':
 				++this->lineNumber;
+				//fall-through
 			default:
 				this->buf.push_back(*i);
 				break;
@@ -131,6 +167,11 @@ void Parser::parseAttributeValue(utki::Buf<char>::const_iterator& i, utki::Buf<c
 				}
 				this->buf.push_back(*i);
 				break;
+			case '&':
+				ASSERT(this->refCharBuf.size() == 0)
+				this->stateAfterRefChar = this->state;
+				this->state = State_e::REF_CHAR;
+				return;
 			default:
 				this->buf.push_back(*i);
 				break;
