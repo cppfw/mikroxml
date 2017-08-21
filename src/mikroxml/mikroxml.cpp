@@ -2,6 +2,8 @@
 
 #include <sstream>
 
+#include <unikod/utf8.hpp>
+
 using namespace mikroxml;
 
 Parser::MalformedDocumentExc::MalformedDocumentExc(unsigned lineNumber, const std::string& message) :
@@ -69,12 +71,46 @@ void Parser::feed(const utki::Buf<char> data) {
 }
 
 void Parser::processParsedRefChar() {
-	
-	
-	
-	//TODO:
-	this->refCharBuf.clear();
 	this->state = this->stateAfterRefChar;
+	
+	if(this->refCharBuf.size() == 0){
+		return;
+	}
+	
+	if(this->refCharBuf[0] == '#'){
+		//numeric character reference
+		char* endPtr;
+		std::uint32_t unicode = std::strtoul(&*(++this->refCharBuf.begin()), &endPtr, 16);
+		if(endPtr != &*(--this->refCharBuf.end())){
+			std::stringstream ss;
+			ss << "Unknown character reference encountered: " << &*this->refCharBuf.begin();
+			throw MalformedDocumentExc(this->lineNumber, ss.str());
+		}
+		auto utf8 = unikod::toUtf8(char32_t(unicode));
+		for(auto i = utf8.begin(), e = utf8.end(); *i != '\0' && i != e; ++i){
+			this->buf.push_back(*i);
+		}
+	}else{
+		//character name reference
+		this->refCharBuf.push_back('\0'); //zero-terminate
+		if(std::string("amp") == &*this->refCharBuf.begin()){
+			this->buf.push_back('&');
+		}else if(std::string("lt") == &*this->refCharBuf.begin()){
+			this->buf.push_back('<');
+		}else if(std::string("gt") == &*this->refCharBuf.begin()){
+			this->buf.push_back('>');
+		}else if(std::string("quot") == &*this->refCharBuf.begin()){
+			this->buf.push_back('"');
+		}else if(std::string("apos") == &*this->refCharBuf.begin()){
+			this->buf.push_back('\'');
+		}else{
+			std::stringstream ss;
+			ss << "Unknown character reference encountered: " << &*this->refCharBuf.begin();
+			throw MalformedDocumentExc(this->lineNumber, ss.str());
+		}
+	}
+	
+	this->refCharBuf.clear();
 }
 
 
