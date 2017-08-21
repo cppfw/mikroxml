@@ -521,3 +521,9 @@ void Parser::parseIdle(utki::Buf<char>::const_iterator& i, utki::Buf<char>::cons
 		}
 	}
 }
+
+
+
+void Parser::feed(const std::string& str){
+	this->feed(utki::wrapBuf(str.c_str(), str.length()));
+}

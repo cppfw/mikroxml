@@ -89,8 +89,14 @@ public:
 	void feed(const utki::Buf<char> data);
 	
 	void feed(const utki::Buf<std::uint8_t> data){
-		this->feed(utki::Buf<char>(reinterpret_cast<char*>(const_cast<std::uint8_t*>(&*data.begin())), data.size()));
+		this->feed(utki::wrapBuf(reinterpret_cast<const char*>(&*data.begin()), data.size()));
 	}
+	
+	/**
+	 * @brief Parse in string.
+	 * @param str - string to parse.
+	 */
+	void feed(const std::string& str);
 	
 	/**
 	 * @brief Finalize parsing after all data has been fed.

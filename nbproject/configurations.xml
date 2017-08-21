@@ -10,6 +10,9 @@
       <df name="basic">
         <in>main.cpp</in>
       </df>
+      <df name="samples">
+        <in>main.cpp</in>
+      </df>
     </df>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -33,8 +36,9 @@
         <rebuildPropChanged>false</rebuildPropChanged>
       </toolsSet>
       <flagsDictionary>
-        <element flagsID="0" commonFlags="-funsigned-char -std=c++11 -O3 -fPIC"/>
-        <element flagsID="1" commonFlags="-std=c++11"/>
+        <element flagsID="0"
+                 commonFlags="-mtune=generic -march=x86-64 -O3 -std=c++11 -funsigned-char -fPIC"/>
+        <element flagsID="1" commonFlags="-std=c++11 -O3"/>
       </flagsDictionary>
       <codeAssistance>
       </codeAssistance>
@@ -44,19 +48,27 @@
           <buildCommand>${MAKE} -f makefile</buildCommand>
           <cleanCommand>${MAKE} -f makefile clean</cleanCommand>
           <executablePath>tests/basic/tests</executablePath>
-          <ccTool>
-            <incDir>
-              <pElem>.</pElem>
-            </incDir>
-          </ccTool>
         </makeTool>
         <preBuild>
           <preBuildCommandWorkingDir>.</preBuildCommandWorkingDir>
           <preBuildCommand></preBuildCommand>
         </preBuild>
       </makefileType>
+      <folder path="0">
+        <ccTool>
+          <incDir>
+            <pElem>/usr/include/utki</pElem>
+            <pElem>src/mikroxml</pElem>
+            <pElem>/usr/include/unikod</pElem>
+            <pElem>.</pElem>
+          </incDir>
+        </ccTool>
+      </folder>
       <folder path="1">
         <ccTool>
+          <incDir>
+            <pElem>.</pElem>
+          </incDir>
           <preprocessorList>
             <Elem>DEBUG</Elem>
           </preprocessorList>
@@ -67,6 +79,10 @@
         </ccTool>
       </item>
       <item path="tests/basic/main.cpp" ex="false" tool="1" flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="tests/samples/main.cpp" ex="false" tool="1" flavor2="8">
         <ccTool flags="1">
         </ccTool>
       </item>
