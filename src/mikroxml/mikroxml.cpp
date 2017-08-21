@@ -83,7 +83,7 @@ void Parser::processParsedRefChar() {
 		std::uint32_t unicode = std::strtoul(&*(++this->refCharBuf.begin()), &endPtr, 16);
 		if(endPtr != &*(--this->refCharBuf.end())){
 			std::stringstream ss;
-			ss << "Unknown character reference encountered: " << &*this->refCharBuf.begin();
+			ss << "Unknown numeric character reference encountered: " << &*this->refCharBuf.begin();
 			throw MalformedDocumentExc(this->lineNumber, ss.str());
 		}
 		auto utf8 = unikod::toUtf8(char32_t(unicode));
@@ -105,7 +105,7 @@ void Parser::processParsedRefChar() {
 			this->buf.push_back('\'');
 		}else{
 			std::stringstream ss;
-			ss << "Unknown character reference encountered: " << &*this->refCharBuf.begin();
+			ss << "Unknown name character reference encountered: " << &*this->refCharBuf.begin();
 			throw MalformedDocumentExc(this->lineNumber, ss.str());
 		}
 	}
