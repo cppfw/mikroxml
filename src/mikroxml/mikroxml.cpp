@@ -439,6 +439,7 @@ void Parser::parseTag(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const
 				this->processParsedTagName();
 				switch(this->state){
 					case State_e::ATTRIBUTES:
+						this->onAttributesEnd(false);
 					case State_e::TAG_SEEK_GT:
 						this->state = State_e::IDLE;
 						break;
