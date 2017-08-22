@@ -11,7 +11,11 @@ public:
 		
 	}
 	
-	void onElementEnd() override{
+	void onElementEnd(const std::string& name) override{
+		
+	}
+	
+	void onAttributesEnd(bool isEmptyElement) override{
 		
 	}
 

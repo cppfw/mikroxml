@@ -76,7 +76,9 @@ public:
 	
 	virtual void onElementStart(const utki::Buf<char> name) = 0;
 	
-	virtual void onElementEnd() = 0;
+	virtual void onElementEnd(const std::string& name) = 0;
+	
+	virtual void onAttributesEnd(bool isEmptyElement) = 0;
 	
 	virtual void onAttributeParsed(const utki::Buf<char> name, const utki::Buf<char> value) = 0;
 	

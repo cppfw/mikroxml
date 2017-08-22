@@ -137,8 +137,9 @@ void Parser::parseTagEmpty(utki::Buf<char>::const_iterator& i, utki::Buf<char>::
 	for(; i != e; ++i){
 		switch(*i){
 			case '>':
-				this->onElementEnd();
+				this->onAttributesEnd(true);
 				ASSERT(this->elementNameStack.size() != 0)
+				this->onElementEnd(std::string());
 				this->elementNameStack.pop_back();
 				this->state = State_e::IDLE;
 				return;
@@ -299,6 +300,7 @@ void Parser::parseAttributes(utki::Buf<char>::const_iterator& i, utki::Buf<char>
 				this->state = State_e::TAG_EMPTY;
 				return;
 			case '>':
+				this->onAttributesEnd(false);
 				this->state = State_e::IDLE;
 				return;
 			case '=':
@@ -408,8 +410,8 @@ void Parser::processParsedTagName() {
 				throw MalformedDocumentExc(this->lineNumber, ss.str());
 			}
 			this->buf.clear();
+			this->onElementEnd(this->elementNameStack.back());
 			this->elementNameStack.pop_back();
-			this->onElementEnd();
 			this->state = State_e::TAG_SEEK_GT;
 			return;
 		default:

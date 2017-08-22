@@ -11,11 +11,21 @@ public:
 	std::stringstream ss;
 	
 	void onAttributeParsed(const utki::Buf<char> name, const utki::Buf<char> value) override{
-		
+		ss << " " << name << "=\"" << value << "\"";
 	}
 	
-	void onElementEnd() override{
-		ss << '>';
+	void onElementEnd(const std::string& name) override{
+		if(name.length() == 0){
+			ss << "/>";
+		}else{
+			ss << "</" << name << ">";
+		}
+	}
+
+	void onAttributesEnd(bool isEmptyElement) override{
+		if(!isEmptyElement){
+			ss << ">";
+		}
 	}
 
 	void onElementStart(const utki::Buf<char> name) override{
@@ -23,7 +33,7 @@ public:
 	}
 	
 	void onContentParsed(const utki::Buf<char> str) override{
-		
+		ss << str;
 	}
 };
 
