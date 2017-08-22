@@ -1,6 +1,6 @@
 include prorab.mk
 
-this_name := tests
+this_name := parsexml
 
 this_cxxflags += -Wall
 this_cxxflags += -Wno-format #no warnings about format
@@ -33,12 +33,18 @@ $(eval $(prorab-build-app))
 this_dirs := $(subst /, ,$(d))
 this_test := $(word $(words $(this_dirs)),$(this_dirs))
 
+this_xmls := $(patsubst %.xml,%,$(shell ls $(d)testdata/*.xml))
+
 define this_rules
 test:: $(prorab_this_name)
 	@prorab-running-test.sh $(this_test)
 	$(prorab_echo)cp $(d)../../src/*.dll $(d) || true
-	$(prorab_echo)(cd $(d); LD_LIBRARY_PATH=../../src DYLD_LIBRARY_PATH=$$$$LD_LIBRARY_PATH ./tests); \
-		if [ $$$$? -ne 0 ]; then prorab-error.sh "test failed"; exit 1; fi
+	$(prorab_echo)for f in $(this_xmls); do \
+	    echo "checking file $$$$f.xml..." && \
+	    LD_LIBRARY_PATH=$(d)../../src DYLD_LIBRARY_PATH=$$$$LD_LIBRARY_PATH $(d)./parsexml $$$$f.xml && \
+	    cmp out.xml $$$$f.xml.cmp; \
+	    if [ $$$$? -ne 0 ]; then prorab-error.sh "parsed XML did not match etalon sample"; exit 1; fi \
+	done
 	@prorab-passed.sh
 endef
 $(eval $(this_rules))

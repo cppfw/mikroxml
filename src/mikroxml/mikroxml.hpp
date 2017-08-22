@@ -22,7 +22,8 @@ class Parser{
 		ATTRIBUTE_SEEK_TO_VALUE,
 		ATTRIBUTE_VALUE,
 		CONTENT,
-		REF_CHAR
+		REF_CHAR,
+		SKIP_EXCLAMATION_MARK_DECLARATION
 	} state = State_e::IDLE;
 
 	void parseIdle(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e);
@@ -40,6 +41,7 @@ class Parser{
 	void parseAttributeValue(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e);
 	void parseContent(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e);
 	void parseRefChar(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e);
+	void parseSkipExclamationMarkDeclaration(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e);
 	
 	void handleAttributeParsed();
 	

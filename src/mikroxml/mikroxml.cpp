@@ -63,6 +63,9 @@ void Parser::feed(const utki::Buf<char> data) {
 			case State_e::REF_CHAR:
 				this->parseRefChar(i, e);
 				break;
+			case State_e::SKIP_EXCLAMATION_MARK_DECLARATION:
+				this->parseSkipExclamationMarkDeclaration(i, e);
+				break;
 		}
 		if(i == e){
 			return;
@@ -389,14 +392,17 @@ void Parser::processParsedTagName() {
 			throw MalformedDocumentExc(this->lineNumber, "Unknown declaration opening tag, should be <?xml.");
 		case '!':
 			//comment or whatever
-			if(this->buf.size() == 3){
+			if(this->buf.size() >= 3){
 				if(this->buf[1] == '-' && this->buf[2] == '-'){
 					this->buf.clear();
 					this->state = State_e::COMMENT;
 					return;
 				}
 			}
-			throw MalformedDocumentExc(this->lineNumber, "Unknown <! construct encountered, only comments <!-- --> are supported.");
+			//Unknown ! construct, just skip it
+			this->buf.clear();
+			this->state = State_e::SKIP_EXCLAMATION_MARK_DECLARATION;
+			return;
 		case '/':
 			if(this->buf.size() <= 1){
 				throw MalformedDocumentExc(this->lineNumber, "end tag cannot be empty");
@@ -447,12 +453,36 @@ void Parser::parseTag(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const
 						break;
 				}
 				return;
+			case '/':
+				if(this->buf.size() != 0){
+					this->processParsedTagName();
+					this->state = State_e::TAG_EMPTY;
+					return;
+				}
+				//fall-through
 			default:
 				this->buf.push_back(*i);
 				break;
 		}
 	}
 }
+
+void Parser::parseSkipExclamationMarkDeclaration(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e) {
+	for(; i != e; ++i){
+		switch(*i){
+			case '>':
+				ASSERT(this->buf.size() == 0)
+				this->state = State_e::IDLE;
+				return;
+			case '\n':
+				++this->lineNumber;
+				//fall-through
+			default:
+				break;
+		}
+	}
+}
+
 
 void Parser::parseTagSeekGt(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e) {
 	for(; i != e; ++i){
@@ -467,7 +497,11 @@ void Parser::parseTagSeekGt(utki::Buf<char>::const_iterator& i, utki::Buf<char>:
 				this->state = State_e::IDLE;
 				return;
 			default:
-				throw MalformedDocumentExc(this->lineNumber, "Unexpected character encountered, expected '>'.");
+				{
+					std::stringstream ss;
+					ss << "Unexpected character encountered (" << *i << "), expected '>'.";
+					throw MalformedDocumentExc(this->lineNumber, ss.str());
+				}
 		}
 	}
 }

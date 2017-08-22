@@ -21,7 +21,7 @@ public:
 	}
 	
 	void onElementEnd(const std::string& name) override{
-		TRACE(<< "onElementEnd(): invoked" << std::endl)
+//		TRACE(<< "onElementEnd(): invoked" << std::endl)
 		if(name.length() != 0){
 			--this->indent;
 			this->outIndent();
@@ -30,7 +30,7 @@ public:
 	}
 
 	void onAttributesEnd(bool isEmptyElement) override{
-		TRACE(<< "onAttributesEnd(): invoked" << std::endl)
+//		TRACE(<< "onAttributesEnd(): invoked" << std::endl)
 		if(isEmptyElement){
 			this->ss << "/>" << std::endl;
 		}else{
@@ -40,13 +40,13 @@ public:
 	}
 
 	void onElementStart(const std::string& name) override{
-		TRACE(<< "onElementStart(): invoked" << std::endl)
+//		TRACE(<< "onElementStart(): invoked" << std::endl)
 		this->outIndent();
 		this->ss << '<' << name;
 	}
 	
 	void onContentParsed(const utki::Buf<char> str) override{
-		TRACE(<< "onContentParsed(): invoked" << std::endl)
+//		TRACE(<< "onContentParsed(): invoked" << std::endl)
 		this->outIndent();
 		this->ss << str << std::endl;
 	}
