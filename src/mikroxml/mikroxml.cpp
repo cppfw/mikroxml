@@ -80,10 +80,11 @@ void Parser::processParsedRefChar() {
 	if(this->refCharBuf[0] == '#'){
 		//numeric character reference
 		char* endPtr;
-		std::uint32_t unicode = std::strtoul(&*(++this->refCharBuf.begin()), &endPtr, 16);
-		if(endPtr != &*(--this->refCharBuf.end())){
+		char* startPtr = &*(++this->refCharBuf.begin());
+		std::uint32_t unicode = std::strtoul(startPtr, &endPtr, 16);
+		if(endPtr != startPtr + this->refCharBuf.size() - 1){
 			std::stringstream ss;
-			ss << "Unknown numeric character reference encountered: " << &*this->refCharBuf.begin();
+			ss << "Unknown numeric character reference encountered: " << &*(++this->refCharBuf.begin());
 			throw MalformedDocumentExc(this->lineNumber, ss.str());
 		}
 		auto utf8 = unikod::toUtf8(char32_t(unicode));

@@ -11,7 +11,7 @@ public:
 	std::stringstream ss;
 	
 	void onAttributeParsed(const utki::Buf<char> name, const utki::Buf<char> value) override{
-		ss << " " << name << "=\"" << value << "\"";
+		ss << " " << name << "='" << value << "'";
 	}
 	
 	void onElementEnd(const std::string& name) override{
@@ -45,6 +45,37 @@ int main(int argc, char** argv){
 		parser.feed(in);
 		parser.end();
 		
-		TRACE_ALWAYS(<< "out = " << parser.ss.str() << std::endl)
+//		TRACE_ALWAYS(<< "out = " << parser.ss.str() << std::endl)
+		ASSERT_INFO_ALWAYS(parser.ss.str() == "<element attribute='attributeValue'>content</element>", " str = " << parser.ss.str())
+	}
+	{
+		auto in = "<element attribute='attribute&amp;&lt;&gt;&quot;&apos;Value'>content&amp;&lt;&gt;&quot;&apos;</element>";
+		Parser parser;
+		
+		parser.feed(in);
+		parser.end();
+		
+//		TRACE_ALWAYS(<< "out = " << parser.ss.str() << std::endl)
+		ASSERT_INFO_ALWAYS(parser.ss.str() == "<element attribute='attribute&<>\"'Value'>content&<>\"'</element>", " str = " << parser.ss.str())
+	}
+	{
+		auto in = "<element attribute='attribute&#bf5;Value'>content&#41a;</element>";
+		Parser parser;
+		
+		parser.feed(in);
+		parser.end();
+		
+//		TRACE_ALWAYS(<< "out = " << parser.ss.str() << std::endl)
+		ASSERT_INFO_ALWAYS(parser.ss.str() == "<element attribute='attribute௵Value'>contentК</element>", " str = " << parser.ss.str())
+	}
+	{
+		auto in = "<element attribute='attribute&#bf5;Value'/>";
+		Parser parser;
+		
+		parser.feed(in);
+		parser.end();
+		
+//		TRACE_ALWAYS(<< "out = " << parser.ss.str() << std::endl)
+		ASSERT_INFO_ALWAYS(parser.ss.str() == "<element attribute='attribute௵Value'/>", " str = " << parser.ss.str())
 	}
 }
