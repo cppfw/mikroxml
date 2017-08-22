@@ -28,7 +28,7 @@ public:
 		}
 	}
 
-	void onElementStart(const utki::Buf<char> name) override{
+	void onElementStart(const std::string& name) override{
 		ss << '<' << name;
 	}
 	

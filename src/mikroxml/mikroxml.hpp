@@ -74,8 +74,12 @@ public:
 		MalformedDocumentExc(unsigned lineNumber, const std::string& message);
 	};
 	
-	virtual void onElementStart(const utki::Buf<char> name) = 0;
+	virtual void onElementStart(const std::string& name) = 0;
 	
+	/**
+	 * @brief Element end.
+	 * @param name - name of the element which has ended. Name is empty if empty element has ended.
+	 */
 	virtual void onElementEnd(const std::string& name) = 0;
 	
 	virtual void onAttributesEnd(bool isEmptyElement) = 0;

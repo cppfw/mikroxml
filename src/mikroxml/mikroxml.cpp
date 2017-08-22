@@ -415,9 +415,9 @@ void Parser::processParsedTagName() {
 			this->state = State_e::TAG_SEEK_GT;
 			return;
 		default:
-			this->onElementStart(utki::wrapBuf(this->buf));
 			this->elementNameStack.push_back(std::string(&*this->buf.begin(), this->buf.size()));
 			this->buf.clear();
+			this->onElementStart(this->elementNameStack.back());
 			this->state = State_e::ATTRIBUTES;
 			return;
 	}
