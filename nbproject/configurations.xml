@@ -20,7 +20,9 @@
                    kind="IMPORTANT_FILES_FOLDER">
       <itemPath>.travis.yml</itemPath>
       <itemPath>appveyor.yml</itemPath>
+      <itemPath>debian/control.in</itemPath>
       <itemPath>nbproject/private/launcher.properties</itemPath>
+      <itemPath>homebrew/libmikroxml.rb.in</itemPath>
       <itemPath>src/makefile</itemPath>
       <itemPath>travis_bintray_android.json.in</itemPath>
       <itemPath>travis_bintray_deb.json.in</itemPath>
