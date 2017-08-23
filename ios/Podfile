@@ -1,0 +1,8 @@
+project 'tests.xcodeproj'
+
+source 'https://github.com/igagis/cocoapods-repo.git'
+
+target "tests" do
+	pod 'libutki', '>= 1.1.13'
+	pod 'libunikod', '>=2.0.17'
+end
