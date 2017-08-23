@@ -14,8 +14,9 @@ class Parser : public mikroxml::Parser{
 		}
 	}
 	
-	std::vector<std::string> tagNameStack;
 public:
+	std::vector<std::string> tagNameStack;
+	
 	std::stringstream ss;
 	
 	void onAttributeParsed(const utki::Buf<char> name, const utki::Buf<char> value) override{
@@ -90,6 +91,7 @@ int main(int argc, char** argv){
 			parser.feed(utki::wrapBuf(&*buf.begin(), res));
 		}
 		parser.end();
+		ASSERT_ALWAYS(parser.tagNameStack.size() == 0)
 	}
 	
 	{
