@@ -142,9 +142,7 @@ void Parser::parseTagEmpty(utki::Buf<char>::const_iterator& i, utki::Buf<char>::
 		switch(*i){
 			case '>':
 				this->onAttributesEnd(true);
-				ASSERT(this->elementNameStack.size() != 0)
-				this->onElementEnd(std::string());
-				this->elementNameStack.pop_back();
+				this->onElementEnd(utki::wrapBuf<char>(nullptr, 0));
 				this->state = State_e::IDLE;
 				return;
 			default:
@@ -407,24 +405,13 @@ void Parser::processParsedTagName() {
 			if(this->buf.size() <= 1){
 				throw MalformedDocumentExc(this->lineNumber, "end tag cannot be empty");
 			}
-			if(this->elementNameStack.size() == 0){
-				throw MalformedDocumentExc(this->lineNumber, "end tag encountered, but there was no any start tags before.");
-			}
-			this->buf.push_back('\0');
-			if(this->elementNameStack.back() != &*(++this->buf.begin())){
-				std::stringstream ss;
-				ss << "end tag (" << &*(++this->buf.begin()) << ") does not match start tag (" << this->elementNameStack.back() << ")";
-				throw MalformedDocumentExc(this->lineNumber, ss.str());
-			}
+			this->onElementEnd(utki::wrapBuf(&*(++this->buf.begin()), this->buf.size() - 1));
 			this->buf.clear();
-			this->onElementEnd(this->elementNameStack.back());
-			this->elementNameStack.pop_back();
 			this->state = State_e::TAG_SEEK_GT;
 			return;
 		default:
-			this->elementNameStack.push_back(std::string(&*this->buf.begin(), this->buf.size()));
+			this->onElementStart(utki::wrapBuf(this->buf));
 			this->buf.clear();
-			this->onElementStart(this->elementNameStack.back());
 			this->state = State_e::ATTRIBUTES;
 			return;
 	}

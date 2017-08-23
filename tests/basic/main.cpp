@@ -14,8 +14,8 @@ public:
 		ss << " " << name << "='" << value << "'";
 	}
 	
-	void onElementEnd(const std::string& name) override{
-		if(name.length() == 0){
+	void onElementEnd(const utki::Buf<char> name) override{
+		if(name.size() == 0){
 			ss << "/>";
 		}else{
 			ss << "</" << name << ">";
@@ -28,7 +28,7 @@ public:
 		}
 	}
 
-	void onElementStart(const std::string& name) override{
+	void onElementStart(const utki::Buf<char> name) override{
 		ss << '<' << name;
 	}
 	

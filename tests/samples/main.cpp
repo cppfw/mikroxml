@@ -13,6 +13,8 @@ class Parser : public mikroxml::Parser{
 			this->ss << "\t";
 		}
 	}
+	
+	std::vector<std::string> tagNameStack;
 public:
 	std::stringstream ss;
 	
@@ -20,13 +22,16 @@ public:
 		this->ss << " " << name << "='" << value << "'";
 	}
 	
-	void onElementEnd(const std::string& name) override{
+	void onElementEnd(const utki::Buf<char> name) override{
 //		TRACE(<< "onElementEnd(): invoked" << std::endl)
-		if(name.length() != 0){
+		if(name.size() != 0){
 			--this->indent;
 			this->outIndent();
 			this->ss << "</" << name << ">" << std::endl;
+			
+			ASSERT_INFO_ALWAYS(this->tagNameStack.back() == std::string(&*name.begin(), name.size()), "element start tag (" << this->tagNameStack.back() << ") does not match end tag (" << name << ")")
 		}
+		this->tagNameStack.pop_back();
 	}
 
 	void onAttributesEnd(bool isEmptyElement) override{
@@ -39,10 +44,11 @@ public:
 		}
 	}
 
-	void onElementStart(const std::string& name) override{
+	void onElementStart(const utki::Buf<char> name) override{
 //		TRACE(<< "onElementStart(): invoked" << std::endl)
 		this->outIndent();
 		this->ss << '<' << name;
+		this->tagNameStack.push_back(utki::toString(name));
 	}
 	
 	void onContentParsed(const utki::Buf<char> str) override{
