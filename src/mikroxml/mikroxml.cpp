@@ -6,6 +6,13 @@
 
 using namespace mikroxml;
 
+Parser::Parser() {
+	this->buf.reserve(256);
+	this->attributeName.reserve(256);
+	this->refCharBuf.reserve(10);
+}
+
+
 Parser::MalformedDocumentExc::MalformedDocumentExc(unsigned lineNumber, const std::string& message) :
 		Exc([lineNumber, &message](){
 			std::stringstream ss;

@@ -60,9 +60,7 @@ class Parser{
 	unsigned lineNumber = 1;
 	
 public:
-	Parser(){
-		this->buf.reserve(256);
-	}
+	Parser();
 	
 	class Exc : public utki::Exc{
 	public:
@@ -82,10 +80,26 @@ public:
 	 */
 	virtual void onElementEnd(const utki::Buf<char> name) = 0;
 	
+	/**
+	 * @brief Attributes section end notification.
+	 * This callback is called when all attributes of the last element have been parsed.
+	 * @param isEmptyElement - indicates weather the element is empty element or not.
+	 */
 	virtual void onAttributesEnd(bool isEmptyElement) = 0;
 	
+	/**
+	 * @brief Attribute parsed notification.
+	 * This callback may be called after 'onElementStart' notification. It can be called several times, once for each parsed attribute.
+	 * @param name - name of the parsed attribute.
+	 * @param value - value of the parsed attribute.
+	 */
 	virtual void onAttributeParsed(const utki::Buf<char> name, const utki::Buf<char> value) = 0;
 	
+	/**
+	 * @brief Content parsed notification.
+	 * This callback may be called after 'onAttributesEnd' notification.
+	 * @param str - parsed content.
+	 */
 	virtual void onContentParsed(const utki::Buf<char> str) = 0;
 	
 	/**
@@ -94,6 +108,10 @@ public:
 	 */
 	void feed(const utki::Buf<char> data);
 	
+	/**
+	 * @brief feed UTF-8 data to parser.
+	 * @param data - data to be fed to parser.
+	 */
 	void feed(const utki::Buf<std::uint8_t> data){
 		this->feed(utki::wrapBuf(reinterpret_cast<const char*>(&*data.begin()), data.size()));
 	}
