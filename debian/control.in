@@ -1,0 +1,36 @@
+Source: libmikroxml
+Section: libs
+Priority: extra
+Maintainer: Ivan Gagis <igagis@gmail.com>
+Build-Depends: debhelper (>= 9), prorab,
+		libc6-dev, libutki-dev, libpapki-dev
+Build-Depends-Indep: doxygen
+Standards-Version: 3.9.2
+
+Package: libmikroxml$(soname)
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Cross-platform XML parser in C++.
+ Cross-platform parser of MicroXML standard in C++.
+
+Package: libmikroxml$(soname)-dbg
+Section: debug
+Architecture: any
+Depends: libmikroxml$(soname) (= ${binary:Version}), ${misc:Depends}
+Description: debugging symbols for libmikroxml$(soname) package.
+
+Package: libmikroxml-dev
+Section: libdevel
+Architecture: any
+Depends: libmikroxml$(soname) (= ${binary:Version}), libmikroxml$(soname)-dbg (= ${binary:Version}), ${misc:Depends}
+Suggests: libmikroxml-doc
+Description: Cross-platform XML parser in C++.
+ Cross-platform parser of MicroXML standard in C++.
+
+Package: libmikroxml-doc
+Section: doc
+Architecture: all
+Depends: ${misc:Depends}
+Description: documentation for libmikroxml library.
+ For more details see description to libmikroxml-dev package.

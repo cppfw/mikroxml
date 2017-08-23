@@ -1,0 +1,9 @@
+Name: mikroxml   # human-readable name
+Description: Cross-platform XML parser library in C++ 
+Version: $(version)
+URL: https://github.com/igagis/mikroxml
+Requires:
+Conflicts:
+Libs: -lmikroxml
+Libs.private:
+Cflags:
