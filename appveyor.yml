@@ -10,7 +10,7 @@ clone_folder: c:\projects\build
 environment:
   PRORAB_GIT_USERNAME: igagis
   PRORAB_GIT_ACCESS_TOKEN:
-    secure: mpW6B2ols1a2FkshjKjryBuvBt8A1TpU9WGn+/d6PIQiZlzA0Rpo1ETKpmy0bnvX
+    secure: JlQO38EcUJ7UUzgIgPfafDfuygYu6i1dkzXVw406AkCfq2H9IbYAKXAVkAErnYP1
   DEPS: make,gcc-g++,prorab,utki,papki,unikod
 
 install:
