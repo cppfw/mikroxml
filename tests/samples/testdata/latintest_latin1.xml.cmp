@@ -1,0 +1,41 @@
+<EXAMPLE>
+	<ORDER version='1.0' xml:lang='de'>
+		<HEADER>
+			<X_ORDER_ID>
+				0000053535
+			</X_ORDER_ID>
+			<CUSTOMER_ID>
+				1010
+			</CUSTOMER_ID>
+			<NAME_1>
+				Müller
+			</NAME_1>
+			<NAME_2>
+				Jörg
+			</NAME_2>
+		</HEADER>
+		<ENTRIES>
+			<ENTRY>
+				<ARTICLE>
+					<Test>
+				</ARTICLE>
+				<ENTRY_NO>
+					10
+				</ENTRY_NO>
+			</ENTRY>
+			<ENTRY>
+				<ARTICLE>
+					<Test 2>
+				</ARTICLE>
+				<ENTRY_NO>
+					20
+				</ENTRY_NO>
+			</ENTRY>
+		</ENTRIES>
+		<FOOTER>
+			<TEXT>
+				This is a text.
+			</TEXT>
+		</FOOTER>
+	</ORDER>
+</EXAMPLE>

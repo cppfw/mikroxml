@@ -387,14 +387,10 @@ void Parser::processParsedTagName() {
 	
 	switch(this->buf[0]){
 		case '?':
-			if(this->buf.size() == 4){
-				if(this->buf[1] == 'x' && this->buf[2] == 'm' && this->buf[3] == 'l'){
-					this->buf.clear();
-					this->state = State_e::DECLARATION;
-					return;
-				}
-			}
-			throw MalformedDocumentExc(this->lineNumber, "Unknown declaration opening tag, should be <?xml.");
+			//some declaration, we just skip it.
+			this->buf.clear();
+			this->state = State_e::DECLARATION;
+			return;
 		case '!':
 			//comment or whatever
 			if(this->buf.size() >= 3){
@@ -440,6 +436,8 @@ void Parser::parseTag(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const
 				switch(this->state){
 					case State_e::ATTRIBUTES:
 						this->onAttributesEnd(false);
+						//fall-through
+					case State_e::SKIP_EXCLAMATION_MARK_DECLARATION:
 					case State_e::TAG_SEEK_GT:
 						this->state = State_e::IDLE;
 						break;
@@ -544,6 +542,10 @@ void Parser::parseIdle(utki::Buf<char>::const_iterator& i, utki::Buf<char>::cons
 				break;
 			case '<':
 				this->state = State_e::TAG;
+				return;
+			case '&':
+				this->stateAfterRefChar = State_e::CONTENT;
+				this->state = State_e::REF_CHAR;
 				return;
 			default:
 				ASSERT(this->buf.size() == 0)

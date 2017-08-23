@@ -53,7 +53,7 @@ public:
 	}
 	
 	void onContentParsed(const utki::Buf<char> str) override{
-//		TRACE(<< "onContentParsed(): invoked" << std::endl)
+//		TRACE(<< "onContentParsed(): length = " << str.size() << " str = " << str << std::endl)
 		this->outIndent();
 		this->ss << str << std::endl;
 	}

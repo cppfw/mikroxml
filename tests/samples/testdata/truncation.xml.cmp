@@ -1,0 +1,51 @@
+
+
+
+
+
+
+<mesh name='mesh_root'>
+	
+	
+	
+	some text
+	
+	
+	some more text
+	
+	<node attr1='value1' attr2='value2'/>
+	
+	
+	<node attr1='value2'>
+		
+	    
+		<汉语 名字='name' 价值='value'>
+			世界有很多语言𤭢
+		</汉语>
+		
+		
+		<innernode/>
+		
+	
+	</node>
+	
+	
+	<氏名>
+		
+		
+		<氏>
+			山田
+		</氏>
+		
+		
+		<名>
+			太郎
+		</名>
+		
+	
+	</氏名>
+	
+	
+	
+
+</mesh>
