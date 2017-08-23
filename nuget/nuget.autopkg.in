@@ -1,0 +1,72 @@
+configurations {
+	UserPlatformToolset {
+		// Needed because autopackage lacks VS2015+ support
+		key = "PlatformToolset";
+		choices: "v140,v141";
+	};
+}
+
+nuget{
+	nuspec{
+		id = libmikroxml;
+		version : $(version);
+		title: C++ XML parser library;
+		authors: {Ivan Gagis};
+		owners: {Ivan Gagis};
+		licenseUrl: "https://raw.githubusercontent.com/igagis/mikroxml/master/LICENSE";
+		projectUrl: "https://github.com/igagis/svgdom";
+		iconUrl: "https://github.com/igagis/mikroxml/blob/master/logo.svg";
+		requireLicenseAcceptance:false;
+		summary: C++ XML parser library;
+
+		description: @"C++ XML parser library";
+		releaseNotes: "Initial release";
+		copyright: Copyright 2017 Ivan Gagis;
+		tags: { native};
+	}
+	dependencies {
+		packages : {
+			libutki/1.1.13;
+			libunikod/2.0.17;
+		};
+	}
+	files {
+		//this is needed to put headers in the base folder
+		nestedInclude: {
+			#destination = ${d_include}mikroxml;
+			"..\src\mikroxml\**\*.hpp"
+		};
+
+		[x86,v140,release] {
+			lib: ..\msvs_solution\v140_Release\libmikroxml.lib;
+		}
+
+		[x86,v140,debug] {
+			lib: ..\msvs_solution\v140_Debug\libmikroxml.lib;
+		}
+
+		[x64,v140,release] {
+			lib: ..\msvs_solution\x64\v140_Release\libmikroxml.lib;
+		}
+
+		[x64,v140,debug] {
+			lib: ..\msvs_solution\x64\v140_Debug\libmikroxml.lib;
+		}
+		
+		[x86,v141,release] {
+			lib: ..\msvs_solution\v141_Release\libmikroxml.lib;
+		}
+
+		[x86,v141,debug] {
+			lib: ..\msvs_solution\v141_Debug\libmikroxml.lib;
+		}
+
+		[x64,v141,release] {
+			lib: ..\msvs_solution\x64\v141_Release\libmikroxml.lib;
+		}
+
+		[x64,v141,debug] {
+			lib: ..\msvs_solution\x64\v141_Debug\libmikroxml.lib;
+		}
+	}
+}
