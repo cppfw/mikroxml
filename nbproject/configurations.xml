@@ -18,8 +18,14 @@
                    displayName="Important Files"
                    projectFiles="false"
                    kind="IMPORTANT_FILES_FOLDER">
+      <itemPath>.travis.yml</itemPath>
+      <itemPath>appveyor.yml</itemPath>
       <itemPath>nbproject/private/launcher.properties</itemPath>
       <itemPath>src/makefile</itemPath>
+      <itemPath>travis_bintray_android.json.in</itemPath>
+      <itemPath>travis_bintray_deb.json.in</itemPath>
+      <itemPath>travis_bintray_rasp.json.in</itemPath>
+      <itemPath>travis_bintray_ubu.json.in</itemPath>
     </logicalFolder>
   </logicalFolder>
   <sourceFolderFilter>^(nbproject)$</sourceFolderFilter>
