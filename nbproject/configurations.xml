@@ -22,6 +22,7 @@
       <itemPath>appveyor.yml</itemPath>
       <itemPath>debian/control.in</itemPath>
       <itemPath>nbproject/private/launcher.properties</itemPath>
+      <itemPath>cocoapods/libmikroxml.podspec.in</itemPath>
       <itemPath>homebrew/libmikroxml.rb.in</itemPath>
       <itemPath>src/makefile</itemPath>
       <itemPath>cygwin/mikroxml.cygport.in</itemPath>
