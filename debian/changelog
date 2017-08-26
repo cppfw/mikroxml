@@ -1,3 +1,9 @@
+libmikroxml (0.1.2) unstable; urgency=medium
+
+  * fix android deploy
+
+ -- Ivan Gagis <igagis@gmail.com>  Sun, 27 Aug 2017 00:37:10 +0300
+
 libmikroxml (0.1.1) unstable; urgency=medium
 
   * initial release
