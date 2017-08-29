@@ -18,7 +18,7 @@
   sudo apt-get update
   ```
 
-- Install **libsvgren-dev** package
+- Install **libmikroxml-dev** package
 
   ```
   sudo apt-get install libmikroxml-dev
