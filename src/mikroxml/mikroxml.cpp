@@ -195,10 +195,6 @@ void Parser::parseAttributeValue(utki::Buf<char>::const_iterator& i, utki::Buf<c
 	ASSERT(this->attributeName.size() != 0)
 	for(; i != e; ++i){
 		switch(*i){
-			case '\n':
-				++this->lineNumber;
-				this->buf.push_back(*i);
-				break;
 			case '\'':
 				if(this->attrValueQuoteChar == '\''){
 					this->handleAttributeParsed();
@@ -218,6 +214,9 @@ void Parser::parseAttributeValue(utki::Buf<char>::const_iterator& i, utki::Buf<c
 				this->stateAfterRefChar = this->state;
 				this->state = State_e::REF_CHAR;
 				return;
+			case '\n':
+				++this->lineNumber;
+				//fall-through
 			default:
 				this->buf.push_back(*i);
 				break;
@@ -264,7 +263,11 @@ void Parser::parseAttributeSeekToEquals(utki::Buf<char>::const_iterator& i, utki
 				this->state = State_e::ATTRIBUTE_SEEK_TO_VALUE;
 				return;
 			default:
-				throw MalformedDocumentExc(this->lineNumber, "Unexpected character encountered, expected '='");
+				{
+					std::stringstream ss;
+					ss << "Unexpected character encountered (0x" << std::hex << unsigned(*i) << "), expected '='";
+					throw MalformedDocumentExc(this->lineNumber, ss.str());
+				}
 		}
 	}
 }
