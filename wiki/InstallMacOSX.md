@@ -14,8 +14,8 @@ Installation in MacOS X requires **[homebrew](http://brew.sh/)** package manager
   brew update
   ```
 
-- Install **libsvgren** keg
+- Install **libmikroxml** keg
 
   ```
-  brew install libsvgren
+  brew install libmikroxml
   ```
