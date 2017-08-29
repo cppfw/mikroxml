@@ -4,4 +4,4 @@ Stream-oriented parser of [MicroXML](https://dvcs.w3.org/hg/microxml/raw-file/ti
 
 # Installation and usage tutorials
 
-See [Wiki page](wiki/MainPage.adoc)
+See [Wiki page](wiki/MainPage.md)
