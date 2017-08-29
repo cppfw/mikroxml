@@ -6,29 +6,19 @@
 #include <papki/FSFile.hpp>
 
 class Parser : public mikroxml::Parser{
-	unsigned indent = 0;
-	
-	void outIndent(){
-		for(unsigned i = 0; i != this->indent; ++i){
-			this->ss << "\t";
-		}
-	}
-	
 public:
 	std::vector<std::string> tagNameStack;
 	
 	std::stringstream ss;
 	
 	void onAttributeParsed(const utki::Buf<char> name, const utki::Buf<char> value) override{
-		this->ss << " " << name << "='" << value << "'";
+		this->ss << " " << name << "=\"" << value << "\"";
 	}
 	
 	void onElementEnd(const utki::Buf<char> name) override{
 //		TRACE(<< "onElementEnd(): invoked" << std::endl)
 		if(name.size() != 0){
-			--this->indent;
-			this->outIndent();
-			this->ss << "</" << name << ">" << std::endl;
+			this->ss << "</" << name << ">";
 			
 			ASSERT_INFO_ALWAYS(this->tagNameStack.back() == std::string(&*name.begin(), name.size()), "element start tag (" << this->tagNameStack.back() << ") does not match end tag (" << name << ")")
 		}
@@ -38,24 +28,21 @@ public:
 	void onAttributesEnd(bool isEmptyElement) override{
 //		TRACE(<< "onAttributesEnd(): invoked" << std::endl)
 		if(isEmptyElement){
-			this->ss << "/>" << std::endl;
+			this->ss << "/>";
 		}else{
-			this->ss << ">" << std::endl;
-			++this->indent;
+			this->ss << ">";
 		}
 	}
 
 	void onElementStart(const utki::Buf<char> name) override{
 //		TRACE(<< "onElementStart(): invoked" << std::endl)
-		this->outIndent();
 		this->ss << '<' << name;
 		this->tagNameStack.push_back(utki::toString(name));
 	}
 	
 	void onContentParsed(const utki::Buf<char> str) override{
 //		TRACE(<< "onContentParsed(): length = " << str.size() << " str = " << str << std::endl)
-		this->outIndent();
-		this->ss << str << std::endl;
+		this->ss << str;
 	}
 };
 

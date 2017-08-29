@@ -172,6 +172,9 @@ void Parser::parseContent(utki::Buf<char>::const_iterator& i, utki::Buf<char>::c
 				this->stateAfterRefChar = this->state;
 				this->state = State_e::REF_CHAR;
 				return;
+			case '\r':
+				//ignore
+				break;
 			case '\n':
 				++this->lineNumber;
 				//fall-through
@@ -214,6 +217,9 @@ void Parser::parseAttributeValue(utki::Buf<char>::const_iterator& i, utki::Buf<c
 				this->stateAfterRefChar = this->state;
 				this->state = State_e::REF_CHAR;
 				return;
+			case '\r':
+				//ignore
+				break;
 			case '\n':
 				++this->lineNumber;
 				//fall-through
@@ -232,6 +238,7 @@ void Parser::parseAttributeSeekToValue(utki::Buf<char>::const_iterator& i, utki:
 				//fall-through
 			case ' ':
 			case '\t':
+			case '\r':
 				break;
 			case '\'':
 				this->attrValueQuoteChar = '\'';
@@ -256,6 +263,7 @@ void Parser::parseAttributeSeekToEquals(utki::Buf<char>::const_iterator& i, utki
 				//fall-through
 			case ' ':
 			case '\t':
+			case '\r':
 				break;
 			case '=':
 				ASSERT(this->attributeName.size() != 0)
@@ -282,6 +290,7 @@ void Parser::parseAttributeName(utki::Buf<char>::const_iterator& i, utki::Buf<ch
 				//fall-through
 			case ' ':
 			case '\t':
+			case '\r':
 				ASSERT(this->attributeName.size() != 0)
 				this->state = State_e::ATTRIBUTE_SEEK_TO_EQUALS;
 				return;
@@ -307,6 +316,7 @@ void Parser::parseAttributes(utki::Buf<char>::const_iterator& i, utki::Buf<char>
 				//fall-through
 			case ' ':
 			case '\t':
+			case '\r':
 				break;
 			case '/':
 				this->state = State_e::TAG_EMPTY;
@@ -329,12 +339,12 @@ void Parser::parseAttributes(utki::Buf<char>::const_iterator& i, utki::Buf<char>
 void Parser::parseComment(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e) {
 	for(; i != e; ++i){
 		switch(*i){
-			case '\n':
-				++this->lineNumber;
-				break;
 			case '-':
 				this->state = State_e::COMMENT_END;
 				return;
+			case '\n':
+				++this->lineNumber;
+				//fall-through
 			default:
 				break;
 		}
@@ -432,6 +442,7 @@ void Parser::parseTag(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const
 				//fall-through
 			case ' ':
 			case '\t':
+			case '\r':
 				this->processParsedTagName();
 				return;
 			case '>':
@@ -487,6 +498,7 @@ void Parser::parseTagSeekGt(utki::Buf<char>::const_iterator& i, utki::Buf<char>:
 				//fall-through
 			case ' ':
 			case '\t':
+			case '\r':
 				break;
 			case '>':
 				this->state = State_e::IDLE;
@@ -537,12 +549,6 @@ void Parser::parseDeclarationEnd(utki::Buf<char>::const_iterator& i, utki::Buf<c
 void Parser::parseIdle(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e) {
 	for(; i != e; ++i){
 		switch(*i){
-			case ' ':
-			case '\t':
-				break;
-			case '\n':
-				++this->lineNumber;
-				break;
 			case '<':
 				this->state = State_e::TAG;
 				return;
@@ -550,6 +556,12 @@ void Parser::parseIdle(utki::Buf<char>::const_iterator& i, utki::Buf<char>::cons
 				this->stateAfterRefChar = State_e::CONTENT;
 				this->state = State_e::REF_CHAR;
 				return;
+			case '\r':
+				//ignore
+				break;
+			case '\n':
+				++this->lineNumber;
+				//fall-through
 			default:
 				ASSERT(this->buf.size() == 0)
 				this->buf.push_back(*i);
