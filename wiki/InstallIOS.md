@@ -12,7 +12,7 @@
 - in the Podfile add dependency
 
   ```
-  pod 'libsvgren', '>= 0.1.2'
+  pod 'libmikroxml', '>= 0.1.2'
   ```
 
 - istall or update your pods
