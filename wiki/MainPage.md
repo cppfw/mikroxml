@@ -1,12 +1,12 @@
 # WiKi main page
 
 Istallation:
-- [Windows (Visual Studio 2015)](InstallMSVS.md)
+- [Windows (Visual Studio 2015+)](InstallMSVS.md)
 - [Windows (Cygwin)](InstallCygwin.adoc)
 - [Linux](InstallLinux.md)
 - [MacOSX](InstallMacOSX.md)
 - [iOS](InstallIOS.md)
-- [Android (Android Studio 2.3)](InstallAndroid.adoc)
+- [Android (Android Studio 2.3+)](InstallAndroid.adoc)
 - [MSYS](InstallMSYS.md)
 
 Tutorials:
