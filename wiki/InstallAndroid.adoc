@@ -13,7 +13,7 @@ repositories {
 }
 dependencies {
     //...
-    compile 'io.github.igagis:libsvgren:+'
+    compile 'io.github.igagis:libmikroxml:+'
 }
 ....
 
@@ -49,7 +49,7 @@ model{
             cppFlags.add("-I" + projectDir.getAbsolutePath() + "/build/ndkLibs/include")
             ldLibs.addAll([
                     //...
-                    'svgren',
+                    'mikroxml',
                     //...
                 ])
         }
