@@ -52,7 +52,7 @@ env:
   - MYCI_GIT_USERNAME=igagis
   - MYCI_GIT_ACCESS_TOKEN=$PRORAB_GIT_ACCESS_TOKEN
   - USE_ANDROID_NDK_VERSION=15c
-  - linuxDependencies="lintian debhelper prorab prorab-extra doxygen libutki-dev libpapki-dev libunikod-dev"
+  - linuxDependencies="lintian debhelper prorab prorab-extra myci doxygen libutki-dev libpapki-dev libunikod-dev"
 
 
 before_install:
@@ -113,7 +113,7 @@ before_install:
     echo "deb [arch=amd64] http://dl.bintray.com/igagis/ubu unstable main" | sudo tee /etc/apt/sources.list.d/igagis.list > /dev/null &&
     sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 379CE192D401AB61 &&
     sudo apt-get update -qq &&
-    sudo apt-get install -qq prorab;
+    sudo apt-get install -qq myci;
     sudo myci-make-raspberry-chroot.sh /srv/chroot/rasp-armhf &&
     echo "deb [arch=armhf] http://dl.bintray.com/igagis/rasp unstable main" | sudo tee /srv/chroot/rasp-armhf/etc/apt/sources.list.d/igagis.list > /dev/null &&
     sudo chroot /srv/chroot/rasp-armhf apt-get update &&
