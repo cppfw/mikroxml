@@ -10,7 +10,7 @@ Cross-platform XML parser library in C++."
 SRC_URI="https://github.com/igagis/mikroxml/archive/${VERSION}.tar.gz"
 
 #compile time dependencies
-DEPEND="prorab utki papki unikod"
+DEPEND="prorab prorab-extra utki papki unikod"
 
 REQUIRES="utki unikod"
 
