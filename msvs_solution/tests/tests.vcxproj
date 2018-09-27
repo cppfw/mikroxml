@@ -208,25 +208,25 @@
     <ClCompile Include="..\..\tests\basic\main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\libmikroxml\libmikroxml.vcxproj">
       <Project>{42d83db5-922d-42c7-8f8c-00932c4cd2b9}</Project>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
-    <Import Project="..\packages\libpapki.1.0.43\build\native\libpapki.targets" Condition="Exists('..\packages\libpapki.1.0.43\build\native\libpapki.targets')" />
-    <Import Project="..\packages\libutki.1.1.13\build\native\libutki.targets" Condition="Exists('..\packages\libutki.1.1.13\build\native\libutki.targets')" />
-    <Import Project="..\packages\libunikod.2.0.17\build\native\libunikod.targets" Condition="Exists('..\packages\libunikod.2.0.17\build\native\libunikod.targets')" />
+    <Import Project="..\packages\libutki.1.1.17\build\native\libutki.targets" Condition="Exists('..\packages\libutki.1.1.17\build\native\libutki.targets')" />
+    <Import Project="..\packages\libpapki.1.0.47\build\native\libpapki.targets" Condition="Exists('..\packages\libpapki.1.0.47\build\native\libpapki.targets')" />
+    <Import Project="..\packages\libunikod.2.0.21\build\native\libunikod.targets" Condition="Exists('..\packages\libunikod.2.0.21\build\native\libunikod.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\libpapki.1.0.43\build\native\libpapki.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\libpapki.1.0.43\build\native\libpapki.targets'))" />
-    <Error Condition="!Exists('..\packages\libutki.1.1.13\build\native\libutki.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\libutki.1.1.13\build\native\libutki.targets'))" />
-    <Error Condition="!Exists('..\packages\libunikod.2.0.17\build\native\libunikod.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\libunikod.2.0.17\build\native\libunikod.targets'))" />
+    <Error Condition="!Exists('..\packages\libutki.1.1.17\build\native\libutki.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\libutki.1.1.17\build\native\libutki.targets'))" />
+    <Error Condition="!Exists('..\packages\libpapki.1.0.47\build\native\libpapki.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\libpapki.1.0.47\build\native\libpapki.targets'))" />
+    <Error Condition="!Exists('..\packages\libunikod.2.0.21\build\native\libunikod.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\libunikod.2.0.21\build\native\libunikod.targets'))" />
   </Target>
 </Project>
