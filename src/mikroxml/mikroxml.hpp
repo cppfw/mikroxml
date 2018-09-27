@@ -23,7 +23,14 @@ class Parser{
 		ATTRIBUTE_VALUE,
 		CONTENT,
 		REF_CHAR,
-		SKIP_EXCLAMATION_MARK_DECLARATION
+		DOCTYPE,
+		DOCTYPE_BODY,
+		DOCTYPE_TAG,
+		DOCTYPE_ENTITY_NAME,
+		DOCTYPE_ENTITY_SEEK_TO_VALUE,
+		DOCTYPE_ENTITY_VALUE,
+		DOCTYPE_SKIP_TAG,
+		SKIP_UNKNOWN_EXCLAMATION_MARK_CONSTRUCT
 	} state = State_e::IDLE;
 
 	void parseIdle(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e);
@@ -41,7 +48,14 @@ class Parser{
 	void parseAttributeValue(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e);
 	void parseContent(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e);
 	void parseRefChar(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e);
-	void parseSkipExclamationMarkDeclaration(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e);
+	void parseDoctype(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e);
+	void parseDoctypeBody(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e);
+	void parseDoctypeTag(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e);
+	void parseDoctypeSkipTag(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e);
+	void parseDoctypeEntityName(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e);
+	void parseDoctypeEntitySeekToValue(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e);
+	void parseDoctypeEntityValue(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e);
+	void parseSkipUnknownExclamationMarkConstruct(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e);
 	
 	void handleAttributeParsed();
 	
@@ -50,7 +64,7 @@ class Parser{
 	void processParsedRefChar();
 	
 	std::vector<char> buf;
-	std::vector<char> attributeName;
+	std::vector<char> name; //general variable for storing name of something (attribute name, entity name, etc.)
 	std::vector<char> refCharBuf;
 	
 	char attrValueQuoteChar;
@@ -58,6 +72,8 @@ class Parser{
 	State_e stateAfterRefChar;
 	
 	unsigned lineNumber = 1;
+	
+	std::map<std::string, std::vector<char>> doctypeEntities;
 	
 public:
 	Parser();

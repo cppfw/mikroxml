@@ -6,9 +6,17 @@
 
 using namespace mikroxml;
 
+namespace{
+const std::string commentTag_c = "!--";
+const std::string doctypeTag_c = "!DOCTYPE";
+const std::string doctypeElementTag_c = "!ELEMENT";
+const std::string doctypeAttlistTag_c = "!ATTLIST";
+const std::string doctypeEntityTag_c = "!ENTITY";
+}
+
 Parser::Parser() {
 	this->buf.reserve(256);
-	this->attributeName.reserve(256);
+	this->name.reserve(256);
 	this->refCharBuf.reserve(10);
 }
 
@@ -70,8 +78,29 @@ void Parser::feed(const utki::Buf<char> data) {
 			case State_e::REF_CHAR:
 				this->parseRefChar(i, e);
 				break;
-			case State_e::SKIP_EXCLAMATION_MARK_DECLARATION:
-				this->parseSkipExclamationMarkDeclaration(i, e);
+			case State_e::DOCTYPE:
+				this->parseDoctype(i, e);
+				break;
+			case State_e::DOCTYPE_BODY:
+				this->parseDoctypeBody(i, e);
+				break;
+			case State_e::DOCTYPE_TAG:
+				this->parseDoctypeTag(i, e);
+				break;
+			case State_e::DOCTYPE_SKIP_TAG:
+				this->parseDoctypeSkipTag(i, e);
+				break;
+			case State_e::DOCTYPE_ENTITY_NAME:
+				this->parseDoctypeEntityName(i, e);
+				break;
+			case State_e::DOCTYPE_ENTITY_SEEK_TO_VALUE:
+				this->parseDoctypeEntitySeekToValue(i, e);
+				break;
+			case State_e::DOCTYPE_ENTITY_VALUE:
+				this->parseDoctypeEntityValue(i, e);
+				break;
+			case State_e::SKIP_UNKNOWN_EXCLAMATION_MARK_CONSTRUCT:
+				this->parseSkipUnknownExclamationMarkConstruct(i, e);
 				break;
 		}
 		if(i == e){
@@ -103,16 +132,20 @@ void Parser::processParsedRefChar() {
 		}
 	}else{
 		//character name reference
-		this->refCharBuf.push_back('\0'); //zero-terminate
-		if(std::string("amp") == &*this->refCharBuf.begin()){
+		std::string refCharString(&*this->refCharBuf.begin(), this->refCharBuf.size());
+		
+		auto i = this->doctypeEntities.find(refCharString);
+		if(i != this->doctypeEntities.end()){
+			this->buf.insert(std::end(this->buf), std::begin(i->second), std::end(i->second));
+		}else if(std::string("amp") == refCharString){
 			this->buf.push_back('&');
-		}else if(std::string("lt") == &*this->refCharBuf.begin()){
+		}else if(std::string("lt") == refCharString){
 			this->buf.push_back('<');
-		}else if(std::string("gt") == &*this->refCharBuf.begin()){
+		}else if(std::string("gt") == refCharString){
 			this->buf.push_back('>');
-		}else if(std::string("quot") == &*this->refCharBuf.begin()){
+		}else if(std::string("quot") == refCharString){
 			this->buf.push_back('"');
-		}else if(std::string("apos") == &*this->refCharBuf.begin()){
+		}else if(std::string("apos") == refCharString){
 			this->buf.push_back('\'');
 		}else{
 			std::stringstream ss;
@@ -144,7 +177,7 @@ void Parser::parseRefChar(utki::Buf<char>::const_iterator& i, utki::Buf<char>::c
 
 void Parser::parseTagEmpty(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e) {
 	ASSERT(this->buf.size() == 0)
-	ASSERT(this->attributeName.size() == 0)
+	ASSERT(this->name.size() == 0)
 	for(; i != e; ++i){
 		switch(*i){
 			case '>':
@@ -187,15 +220,15 @@ void Parser::parseContent(utki::Buf<char>::const_iterator& i, utki::Buf<char>::c
 
 
 void Parser::handleAttributeParsed() {
-	this->onAttributeParsed(utki::wrapBuf(this->attributeName), utki::wrapBuf(this->buf));
-	this->attributeName.clear();
+	this->onAttributeParsed(utki::wrapBuf(this->name), utki::wrapBuf(this->buf));
+	this->name.clear();
 	this->buf.clear();
 	this->state = State_e::ATTRIBUTES;
 }
 
 
 void Parser::parseAttributeValue(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e) {
-	ASSERT(this->attributeName.size() != 0)
+	ASSERT(this->name.size() != 0)
 	for(; i != e; ++i){
 		switch(*i){
 			case '\'':
@@ -266,7 +299,7 @@ void Parser::parseAttributeSeekToEquals(utki::Buf<char>::const_iterator& i, utki
 			case '\r':
 				break;
 			case '=':
-				ASSERT(this->attributeName.size() != 0)
+				ASSERT(this->name.size() != 0)
 				ASSERT(this->buf.size() == 0)
 				this->state = State_e::ATTRIBUTE_SEEK_TO_VALUE;
 				return;
@@ -291,7 +324,7 @@ void Parser::parseAttributeName(utki::Buf<char>::const_iterator& i, utki::Buf<ch
 			case ' ':
 			case '\t':
 			case '\r':
-				ASSERT(this->attributeName.size() != 0)
+				ASSERT(this->name.size() != 0)
 				this->state = State_e::ATTRIBUTE_SEEK_TO_EQUALS;
 				return;
 			case '=':
@@ -299,7 +332,7 @@ void Parser::parseAttributeName(utki::Buf<char>::const_iterator& i, utki::Buf<ch
 				this->state = State_e::ATTRIBUTE_SEEK_TO_VALUE;
 				return;
 			default:
-				this->attributeName.push_back(*i);
+				this->name.push_back(*i);
 				break;
 		}
 	}
@@ -308,7 +341,7 @@ void Parser::parseAttributeName(utki::Buf<char>::const_iterator& i, utki::Buf<ch
 
 void Parser::parseAttributes(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e) {
 	ASSERT(this->buf.size() == 0)
-	ASSERT(this->attributeName.size() == 0)
+	ASSERT(this->name.size() == 0)
 	for(; i != e; ++i){
 		switch(*i){
 			case '\n':
@@ -328,7 +361,7 @@ void Parser::parseAttributes(utki::Buf<char>::const_iterator& i, utki::Buf<char>
 			case '=':
 				throw MalformedDocumentExc(this->lineNumber, "unexpected '=' encountered");
 			default:
-				this->attributeName.push_back(*i);
+				this->name.push_back(*i);
 				this->state = State_e::ATTRIBUTE_NAME;
 				return;
 		}
@@ -393,6 +426,21 @@ void Parser::end() {
 	}
 }
 
+namespace{
+bool startsWith(const std::vector<char>& vec, const std::string& str){
+	if(vec.size() < str.size()){
+		return false;
+	}
+	
+	for(unsigned i = 0; i != str.size(); ++i){
+		if(str[i] != vec[i]){
+			return false;
+		}
+	}
+	return true;
+}
+}
+
 void Parser::processParsedTagName() {
 	if(this->buf.size() == 0){
 		throw MalformedDocumentExc(this->lineNumber, "tag name cannot be empty");
@@ -405,17 +453,15 @@ void Parser::processParsedTagName() {
 			this->state = State_e::DECLARATION;
 			return;
 		case '!':
-			//comment or whatever
-			if(this->buf.size() >= 3){
-				if(this->buf[1] == '-' && this->buf[2] == '-'){
-					this->buf.clear();
-					this->state = State_e::COMMENT;
-					return;
-				}
+//			TRACE(<< "this->buf = " << std::string(&*this->buf.begin(), this->buf.size()) << std::endl)
+			if(startsWith(this->buf, commentTag_c)){
+				this->state = State_e::COMMENT;
+			}else if(startsWith(this->buf, doctypeTag_c)){
+				this->state = State_e::DOCTYPE;
+			}else{
+				this->state = State_e::SKIP_UNKNOWN_EXCLAMATION_MARK_CONSTRUCT;
 			}
-			//Unknown ! construct, just skip it
 			this->buf.clear();
-			this->state = State_e::SKIP_EXCLAMATION_MARK_DECLARATION;
 			return;
 		case '/':
 			if(this->buf.size() <= 1){
@@ -451,11 +497,8 @@ void Parser::parseTag(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const
 					case State_e::ATTRIBUTES:
 						this->onAttributesEnd(false);
 						//fall-through
-					case State_e::SKIP_EXCLAMATION_MARK_DECLARATION:
-					case State_e::TAG_SEEK_GT:
-						this->state = State_e::IDLE;
-						break;
 					default:
+						this->state = State_e::IDLE;
 						break;
 				}
 				return;
@@ -473,7 +516,162 @@ void Parser::parseTag(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const
 	}
 }
 
-void Parser::parseSkipExclamationMarkDeclaration(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e) {
+void Parser::parseDoctype(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e) {
+	for(; i != e; ++i){
+		switch(*i){
+			case '>':
+				ASSERT(this->buf.size() == 0)
+				this->state = State_e::IDLE;
+				return;
+			case '[':
+				this->state = State_e::DOCTYPE_BODY;
+				return;
+			case '\n':
+				++this->lineNumber;
+				//fall-through
+			default:
+				break;
+		}
+	}
+}
+
+void Parser::parseDoctypeBody(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e) {
+	for(; i != e; ++i){
+		switch(*i){
+			case ']':
+				ASSERT(this->buf.size() == 0)
+				this->state = State_e::DOCTYPE;
+				return;
+			case '<':
+				this->state = State_e::DOCTYPE_TAG;
+				return;
+			case '\n':
+				++this->lineNumber;
+				//fall-through
+			default:
+				break;
+		}
+	}
+}
+
+
+void Parser::parseDoctypeTag(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e) {
+	for(; i != e; ++i){
+		switch(*i){
+			case '\n':
+				++this->lineNumber;
+				//fall-through
+			case ' ':
+			case '\t':
+			case '\r':
+				if(this->buf.size() == 0){
+					throw MalformedDocumentExc(this->lineNumber, "Empty DOCTYPE tag name encountered");
+				}
+				
+				if(
+						startsWith(this->buf, doctypeElementTag_c) ||
+						startsWith(this->buf, doctypeAttlistTag_c)
+				){
+					this->state = State_e::DOCTYPE_SKIP_TAG;
+				}else if(startsWith(this->buf, doctypeEntityTag_c)){
+					this->state = State_e::DOCTYPE_ENTITY_NAME;
+				}else{
+					throw MalformedDocumentExc(this->lineNumber, "Unknown DOCTYPE tag encountered");
+				}
+				this->buf.clear();
+				return;
+			case '>':
+				throw MalformedDocumentExc(this->lineNumber, "Unexpected > character while parsing DOCTYPE tag");
+			default:
+				this->buf.push_back(*i);
+				break;
+		}
+	}
+}
+
+void Parser::parseDoctypeSkipTag(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e) {
+	for(; i != e; ++i){
+		switch(*i){
+			case '>':
+				ASSERT(this->buf.size() == 0)
+				this->state = State_e::DOCTYPE_BODY;
+				return;
+			case '\n':
+				++this->lineNumber;
+				//fall-through
+			default:
+				break;
+		}
+	}
+}
+
+void Parser::parseDoctypeEntityName(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e) {
+	for(; i != e; ++i){
+		switch(*i){
+			case '\n':
+				++this->lineNumber;
+				//fall-through
+			case ' ':
+			case '\t':
+			case '\r':
+				if(this->buf.size() == 0){
+					break;
+				}
+				
+				this->name = std::move(this->buf);
+				ASSERT(this->buf.size() == 0)
+				
+				this->state = State_e::DOCTYPE_ENTITY_SEEK_TO_VALUE;
+				return;
+			default:
+				this->buf.push_back(*i);
+				break;
+		}
+	}
+}
+
+void Parser::parseDoctypeEntitySeekToValue(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e) {
+	for(; i != e; ++i){
+		switch(*i){
+			case '\n':
+				++this->lineNumber;
+				//fall-through
+			case ' ':
+			case '\t':
+			case '\r':
+				break;
+			case '"':
+				this->state = State_e::DOCTYPE_ENTITY_VALUE;
+				return;
+			default:
+				throw MalformedDocumentExc(this->lineNumber, "Unexpected character encountered while seeking to DOCTYPE entity value, expected '\"'.");
+		}
+	}
+}
+
+void Parser::parseDoctypeEntityValue(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e) {
+	for(; i != e; ++i){
+		switch(*i){
+			case '"':
+				this->doctypeEntities.insert(std::make_pair(std::string(&*std::begin(this->name), this->name.size()), std::move(this->buf)));
+				
+				this->name.clear();
+				
+				ASSERT(this->buf.size() == 0)
+				
+				this->state = State_e::DOCTYPE_SKIP_TAG;
+				return;
+			case '\n':
+				++this->lineNumber;
+				//fall-through
+			default:
+				this->buf.push_back(*i);
+				break;
+		}
+	}
+}
+
+void Parser::parseSkipUnknownExclamationMarkConstruct(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e) {
 	for(; i != e; ++i){
 		switch(*i){
 			case '>':
@@ -488,7 +686,6 @@ void Parser::parseSkipExclamationMarkDeclaration(utki::Buf<char>::const_iterator
 		}
 	}
 }
-
 
 void Parser::parseTagSeekGt(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e) {
 	for(; i != e; ++i){
