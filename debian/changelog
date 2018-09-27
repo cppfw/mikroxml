@@ -1,3 +1,9 @@
+libmikroxml (0.1.7) unstable; urgency=medium
+
+  * add support for doctype entities
+
+ -- Ivan Gagis <igagis@gmail.com>  Thu, 27 Sep 2018 22:27:09 +0300
+
 libmikroxml (0.1.6) unstable; urgency=medium
 
   * test release
