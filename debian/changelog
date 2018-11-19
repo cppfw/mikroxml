@@ -1,3 +1,9 @@
+libmikroxml (0.1.8) unstable; urgency=medium
+
+  * bugfix: comment with slash symbol
+
+ -- Ivan Gagis <igagis@gmail.com>  Mon, 19 Nov 2018 21:34:33 +0200
+
 libmikroxml (0.1.7) unstable; urgency=medium
 
   * add support for doctype entities
