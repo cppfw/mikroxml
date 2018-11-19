@@ -505,7 +505,12 @@ void Parser::parseTag(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const
 			case '/':
 				if(this->buf.size() != 0){
 					this->processParsedTagName();
-					this->state = State_e::TAG_EMPTY;
+
+					//After parsing usual tag the we expect attributes, but since we got '/' the tag has no any attributes, so it is empty.
+					//In other cases, like '!--' (comment) tag the state should remain.
+					if(this->state == State_e::ATTRIBUTES){
+						this->state = State_e::TAG_EMPTY;
+					}
 					return;
 				}
 				//fall-through
