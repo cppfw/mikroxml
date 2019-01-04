@@ -17,14 +17,10 @@ this_ldlibs += -lpapki -lmikroxml -lstdc++
 this_ldflags += -L$(d)../../src
 
 ifeq ($(os), linux)
-    this_ldlibs +=
 else ifeq ($(os), macosx)
     this_cxxflags += -stdlib=libc++ #this is needed to be able to use c++11 std lib
     this_ldlibs += -lc++
 else ifeq ($(os),windows)
-    this_cxxflags += -I/usr/include -I/usr/local/include
-    this_ldflags += -L/usr/lib -L/usr/local/lib
-    this_ldlibs +=
 endif
 
 this_no_install := true
