@@ -34,15 +34,24 @@ $(eval $(prorab-build-app))
 this_dirs := $(subst /, ,$(d))
 this_test := $(word $(words $(this_dirs)),$(this_dirs))
 
+ifeq ($(os),windows)
+    this_test_cmd := cmd /C 'set PATH=../../src;%PATH% && $$^ $$$$f.xml'
+else ifeq ($(os),macosx)
+    this_test_cmd := DYLD_LIBRARY_PATH=../../src $$^ $$$$f.xml
+else ifeq ($(os),linux)
+    this_test_cmd := LD_LIBRARY_PATH=../../src $$^ $$$$f.xml
+else
+    $(error "Unknown OS")
+endif
+
 this_xmls := $(patsubst %.xml,%,$(shell ls $(d)testdata/*.xml))
 
 define this_rules
 test:: $(prorab_this_name)
 	@myci-running-test.sh $(this_test)
-	$(prorab_echo)cp $(d)../../src/*.dll $(d) || true
 	$(prorab_echo)for f in $(this_xmls); do \
 	    echo "checking file $$$$f.xml..." && \
-	    LD_LIBRARY_PATH=$(d)../../src DYLD_LIBRARY_PATH=$$$$LD_LIBRARY_PATH $(d)./parsexml $$$$f.xml && \
+	    $(this_test_cmd) && \
 	    cmp out.xml $$$$f.xml.cmp; \
 	    if [ $$$$? -ne 0 ]; then myci-error.sh "parsed XML did not match etalon sample"; exit 1; fi \
 	done

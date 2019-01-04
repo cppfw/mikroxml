@@ -34,11 +34,22 @@ $(eval $(prorab-build-app))
 this_dirs := $(subst /, ,$(d))
 this_test := $(word $(words $(this_dirs)),$(this_dirs))
 
+
+ifeq ($(os),windows)
+    this_test_cmd := (cd $(d) && cmd /C 'set PATH=../../src;%PATH% && $$(notdir $$^)')
+else ifeq ($(os),macosx)
+    this_test_cmd := (cd $(d) && DYLD_LIBRARY_PATH=../../src ./$$(notdir $$^))
+else ifeq ($(os),linux)
+    this_test_cmd := (cd $(d) && LD_LIBRARY_PATH=../../src ./$$(notdir $$^))
+else
+    $(error "Unknown OS")
+endif
+
+
 define this_rules
 test:: $(prorab_this_name)
 	@myci-running-test.sh $(this_test)
-	$(prorab_echo)cp $(d)../../src/*.dll $(d) || true
-	$(prorab_echo)(cd $(d); LD_LIBRARY_PATH=../../src DYLD_LIBRARY_PATH=$$$$LD_LIBRARY_PATH ./tests); \
+	$(prorab_echo)$(this_test_cmd); \
 		if [ $$$$? -ne 0 ]; then myci-error.sh "test failed"; exit 1; fi
 	@myci-passed.sh
 endef
