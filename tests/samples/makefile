@@ -35,11 +35,11 @@ this_dirs := $(subst /, ,$(d))
 this_test := $(word $(words $(this_dirs)),$(this_dirs))
 
 ifeq ($(os),windows)
-    this_test_cmd := cmd /C 'set PATH=../../src;%PATH% && $$^ $$$$f.xml'
+    this_test_cmd := cmd /C 'set PATH=$(d)../../src;%PATH% && $$^ $$$$f.xml'
 else ifeq ($(os),macosx)
-    this_test_cmd := DYLD_LIBRARY_PATH=../../src $$^ $$$$f.xml
+    this_test_cmd := DYLD_LIBRARY_PATH=$(d)../../src $$^ $$$$f.xml
 else ifeq ($(os),linux)
-    this_test_cmd := LD_LIBRARY_PATH=../../src $$^ $$$$f.xml
+    this_test_cmd := LD_LIBRARY_PATH=$(d)../../src $$^ $$$$f.xml
 else
     $(error "Unknown OS")
 endif
