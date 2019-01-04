@@ -9,14 +9,9 @@ this_soname := $(shell cat $(d)soname.txt)
 this_srcs := $(call prorab-src-dir,.)
 
 
-this_cxxflags := 
-
 ifeq ($(debug),true)
     this_cxxflags += -DDEBUG
 endif
-
-
-
 
 this_cxxflags += -Wall #enable all warnings
 this_cxxflags += -Wno-comment #no warnings on nested comments
