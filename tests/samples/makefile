@@ -27,6 +27,7 @@ else ifeq ($(os),windows)
     this_ldlibs +=
 endif
 
+this_no_install := true
 
 $(eval $(prorab-build-app))
 
