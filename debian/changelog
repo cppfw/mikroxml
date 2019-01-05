@@ -1,3 +1,9 @@
+libmikroxml (0.1.9) unstable; urgency=medium
+
+  * deploying to msys2
+
+ -- Ivan Gagis <igagis@gmail.com>  Sat, 05 Jan 2019 02:32:44 +0200
+
 libmikroxml (0.1.8) unstable; urgency=medium
 
   * bugfix: comment with slash symbol
