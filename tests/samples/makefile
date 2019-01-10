@@ -37,7 +37,7 @@ test:: $(prorab_this_name)
 	@myci-running-test.sh $(this_test)
 	$(prorab_echo)cp $(d)../../src/*.dll $(d) || true
 	$(prorab_echo)for f in $(this_xmls); do \
-	    echo "checking file $$$$f.xml..." && \
+	    echo "checking file $$$$f.xml" && \
 		LD_LIBRARY_PATH=$(d)../../src DYLD_LIBRARY_PATH=$$$$LD_LIBRARY_PATH $(d)./parsexml $$$$f.xml && \
 	    cmp out.xml $$$$f.xml.cmp; \
 	    if [ $$$$? -ne 0 ]; then myci-error.sh "parsed XML did not match etalon sample"; exit 1; fi \
