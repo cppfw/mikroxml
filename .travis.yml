@@ -40,8 +40,8 @@ matrix:
         components:
           - platform-tools
           - tools
-          - build-tools-25.0.2
-          - android-25
+          - build-tools-28.0.3
+          - android-28
 #          - sys-img-armeabi-v7a-android-22
           - extra-android-m2repository
 
@@ -53,7 +53,6 @@ env:
   - secure: "gfyfvYP5Gv9NByD4K3p6h7fvXbwN2rno3UfIsUtdWsnZOn35dpntXkYxXLdXTnAOkdcy0H9oy1lt5jNYGvY0tagmrB0rtmVHrn0Jbe3DHIZqYUozCIH4m7WhamGZkQAzBKogahw4+5tLNxgKxn1rimfL5vHg+m8D1zRf+kgtiUEO3pkvkXwZJQQ0QDAgarHDGdMrlDiFukV4I9FW9ysKWgUYa5psdqm7awltmitRy7ekR87obTU1pUb274gfSk2BGO0QmExfLYgczD+xl1xlQDcSH6xNigkGzsgOnlJMnv8O+OLkpVXgJCD6gGsIHjZOrG8jMnF9x3iFQ/Il3dJFzL199t9d0J0Sm98kEKRv+dLWNAvURo9lzSFAk9rPNkwiCrdJDGL+IsRccc9c4akCV6SWGyUgHiIh5JxFfs+ec7FdqqEt53zNcOS1b5PN6AD7iYVy6i+1ZANMPkvc/srtZdhwpVIPuePE7cEyJky+Z6DionMwgGWK10aZovnL2amf4P7wJQ48gol3mie69EekZ4fTeXFyyqPJnrfSZnzD5480noCLjXlo4z3J89dAGFYJBgvekl8F8ZuVRFjGk4kTCyjmA1d7gfT506hKvOvNtXdtEn8WlH5q+nkR0EfQQfSevlLZLA51xTxwFCIVNekmmRjGamZU6hl7ClkwUq+jtO0="
   - MYCI_GIT_USERNAME=igagis
   - MYCI_GIT_ACCESS_TOKEN=$PRORAB_GIT_ACCESS_TOKEN
-  - USE_ANDROID_NDK_VERSION=15c
   - PACKAGE_NAME=mikroxml
   matrix:
   - OS_REL=xenial OS=ubuntu DOCKER_IMAGE=$OS:$OS_REL PACKAGE_TYPE=deb
@@ -97,22 +96,15 @@ before_install:
     pod repo add --silent igagis https://$MYCI_GIT_USERNAME:$MYCI_GIT_ACCESS_TOKEN@github.com/igagis/cocoapods-repo.git &&
     pod install --project-directory=ios;
   fi
-# download and install android NDK
-- if [ "$TRAVIS_JOB_NAME" == "android" ]; then
-    export TERM=dumb &&
-    curl -L https://dl.google.com/android/repository/android-ndk-r$USE_ANDROID_NDK_VERSION-linux-x86_64.zip -O &&
-    unzip ./android-ndk-r$USE_ANDROID_NDK_VERSION-linux-x86_64.zip > /dev/null &&
-    rm android-ndk-r$USE_ANDROID_NDK_VERSION-linux-x86_64.zip &&
-    export ANDROID_NDK_HOME=`pwd`/android-ndk-r$USE_ANDROID_NDK_VERSION &&
-    export LOCAL_ANDROID_NDK_HOME="$ANDROID_NDK_HOME" &&
-    export LOCAL_ANDROID_NDK_HOST_PLATFORM="linux-x86_64" &&
-    export PATH=$PATH:${ANDROID_NDK_HOME} &&
-    env;
-  fi
 
 install:
 - if [ "$TRAVIS_OS_NAME" == "linux" ] && [ -z "$TRAVIS_JOB_NAME" ]; then
     docker exec ccc myci-deb-install-build-deps.sh;
+  fi
+# Accept android SDK licenses and install android tools
+- if [ "$TRAVIS_JOB_NAME" == "android" ]; then
+    echo y | sdkmanager "ndk-bundle" &&
+    echo y | sdkmanager "cmake;3.6.4111459";
   fi
 
 before_script:
