@@ -32,7 +32,7 @@ this_test := $(word $(words $(this_dirs)),$(this_dirs))
 
 
 ifeq ($(os),windows)
-    this_test_cmd := (cd $(d) && cmd /C 'set PATH=../../src;%PATH% && $$(notdir $$^)')
+    this_test_cmd := (cd $(d) && cmd //C 'set PATH=../../src;%PATH% && $$(notdir $$^)')
 else ifeq ($(os),macosx)
     this_test_cmd := (cd $(d) && DYLD_LIBRARY_PATH=../../src ./$$(notdir $$^))
 else ifeq ($(os),linux)
