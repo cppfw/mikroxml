@@ -231,7 +231,30 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='v142_Debug_MD|Win32'">
+    <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='v142_Debug_MD|x64'">
+    <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='v142_Debug_MT|Win32'">
+    <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='v142_Debug_MT|x64'">
+    <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='v142_Release_MD|Win32'">
+    <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='v142_Release_MD|x64'">
+    <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='v142_Release_MT|Win32'">
+    <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='v142_Release_MT|x64'">
+    <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='v141_Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -411,7 +434,7 @@
   <ImportGroup Label="ExtensionTargets">
     <Import Project="..\packages\libutki.1.1.30\build\native\libutki.targets" Condition="Exists('..\packages\libutki.1.1.30\build\native\libutki.targets')" />
     <Import Project="..\packages\libpapki.1.0.54\build\native\libpapki.targets" Condition="Exists('..\packages\libpapki.1.0.54\build\native\libpapki.targets')" />
-    <Import Project="..\packages\libunikod.2.0.26\build\native\libunikod.targets" Condition="Exists('..\packages\libunikod.2.0.26\build\native\libunikod.targets')" />
+    <Import Project="..\packages\libunikod.2.0.29\build\native\libunikod.targets" Condition="Exists('..\packages\libunikod.2.0.29\build\native\libunikod.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
@@ -419,6 +442,6 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\libutki.1.1.30\build\native\libutki.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\libutki.1.1.30\build\native\libutki.targets'))" />
     <Error Condition="!Exists('..\packages\libpapki.1.0.54\build\native\libpapki.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\libpapki.1.0.54\build\native\libpapki.targets'))" />
-    <Error Condition="!Exists('..\packages\libunikod.2.0.26\build\native\libunikod.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\libunikod.2.0.26\build\native\libunikod.targets'))" />
+    <Error Condition="!Exists('..\packages\libunikod.2.0.29\build\native\libunikod.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\libunikod.2.0.29\build\native\libunikod.targets'))" />
   </Target>
 </Project>
