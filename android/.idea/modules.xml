@@ -6,8 +6,8 @@
       <module fileurl="file://$PROJECT_DIR$/android.iml" filepath="$PROJECT_DIR$/android.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/libmikroxml/libmikroxml.iml" filepath="$PROJECT_DIR$/libmikroxml/libmikroxml.iml" />
-      <module fileurl="file://$PROJECT_DIR$/libmikroxml/libmikroxml.iml" filepath="$PROJECT_DIR$/libmikroxml/libmikroxml.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mikroxml/mikroxml.iml" filepath="$PROJECT_DIR$/mikroxml/mikroxml.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mikroxml/mikroxml.iml" filepath="$PROJECT_DIR$/mikroxml/mikroxml.iml" />
     </modules>
   </component>
 </project>

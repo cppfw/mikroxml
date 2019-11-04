@@ -3,20 +3,20 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.github.igagis</groupId>
-  <artifactId>libmikroxml</artifactId>
+  <artifactId>mikroxml</artifactId>
   <version>$(version)</version>
   <packaging>aar</packaging>
   <dependencies>
 	  <dependency>
 		  <groupId>io.github.igagis</groupId>
-		  <artifactId>libutki</artifactId>
+		  <artifactId>utki</artifactId>
 		  <version>[1.1.13,)</version>
 		  <type>aar</type>
 		  <scope>compile</scope>
 	  </dependency>
 	  <dependency>
 		  <groupId>io.github.igagis</groupId>
-		  <artifactId>libunikod</artifactId>
+		  <artifactId>unikod</artifactId>
 		  <version>[2.0.17,)</version>
 		  <type>aar</type>
 		  <scope>compile</scope>
