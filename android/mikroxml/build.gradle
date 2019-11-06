@@ -20,7 +20,7 @@ android {
 
     // This is needed to make the default dependency configuration to be 'debug' for the test app which references
     // this module as in-project dependency. Because app searches for library to link against in debug directory.
-//    defaultPublishConfig "debug"
+    defaultPublishConfig "debug"
 
     buildTypes {
         debug {

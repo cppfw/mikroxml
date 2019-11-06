@@ -19,7 +19,7 @@ link_directories( build/ndkLibs/${ANDROID_ABI}/ )
 add_library( # Specifies the name of the library.
              ${name}
 
-             # Sets the library as a shared library.
+             # Sets the library as a static library.
              STATIC
 
              # Provides a relative path to your source file(s).
