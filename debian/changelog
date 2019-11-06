@@ -1,3 +1,9 @@
+libmikroxml (0.1.15) unstable; urgency=medium
+
+  * android build config fix
+
+ -- Ivan Gagis <igagis@gmail.com>  Wed, 06 Nov 2019 18:02:07 +0200
+
 libmikroxml (0.1.14) unstable; urgency=medium
 
   * android dependeencies fixed
