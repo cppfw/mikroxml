@@ -1,3 +1,9 @@
+libmikroxml (0.1.16) unstable; urgency=medium
+
+  * debian buster
+
+ -- Ivan Gagis <igagis@gmail.com>  Fri, 29 Nov 2019 00:21:01 +0200
+
 libmikroxml (0.1.15) unstable; urgency=medium
 
   * android build config fix
