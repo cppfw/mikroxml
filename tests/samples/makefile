@@ -50,4 +50,4 @@ $(eval $(this_rules))
 #add dependency on libmikroxml
 $(prorab_this_name): $(abspath $(d)../../src/libmikroxml$(soext))
 
-$(eval $(call prorab-include,$(d)../../src/makefile))
+$(eval $(call prorab-include, ../../src/makefile))
