@@ -1,3 +1,9 @@
+libmikroxml (0.1.17) unstable; urgency=medium
+
+  * nuget update
+
+ -- Ivan Gagis <igagis@gmail.com>  Fri, 03 Jan 2020 23:24:42 +0200
+
 libmikroxml (0.1.16) unstable; urgency=medium
 
   * debian buster
