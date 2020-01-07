@@ -1,3 +1,9 @@
+libmikroxml (0.1.18) unstable; urgency=medium
+
+  * rebuild for latest papki
+
+ -- Ivan Gagis <igagis@gmail.com>  Tue, 07 Jan 2020 20:59:54 +0200
+
 libmikroxml (0.1.17) unstable; urgency=medium
 
   * nuget update
