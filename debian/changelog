@@ -1,3 +1,9 @@
+libmikroxml (0.1.19) unstable; urgency=medium
+
+  * debian/buster i386 packages
+
+ -- Ivan Gagis <igagis@gmail.com>  Tue, 21 Jan 2020 15:27:07 +0200
+
 libmikroxml (0.1.18) unstable; urgency=medium
 
   * rebuild for latest papki
