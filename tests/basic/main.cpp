@@ -6,15 +6,15 @@
 #include <utki/debug.hpp>
 
 
-class Parser : public mikroxml::Parser{
+class Parser : public mikroxml::parser{
 public:
 	std::stringstream ss;
 	
-	void onAttributeParsed(const utki::Buf<char> name, const utki::Buf<char> value) override{
+	void on_attribute_parsed(const utki::span<char> name, const utki::span<char> value) override{
 		ss << " " << name << "='" << value << "'";
 	}
 	
-	void onElementEnd(const utki::Buf<char> name) override{
+	void on_element_end(const utki::span<char> name) override{
 		if(name.size() == 0){
 			ss << "/>";
 		}else{
@@ -22,17 +22,17 @@ public:
 		}
 	}
 
-	void onAttributesEnd(bool isEmptyElement) override{
+	void on_attributes_end(bool isEmptyElement) override{
 		if(!isEmptyElement){
 			ss << ">";
 		}
 	}
 
-	void onElementStart(const utki::Buf<char> name) override{
+	void on_element_start(const utki::span<char> name) override{
 		ss << '<' << name;
 	}
 	
-	void onContentParsed(const utki::Buf<char> str) override{
+	void on_content_parsed(const utki::span<char> str) override{
 		ss << str;
 	}
 };

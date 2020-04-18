@@ -2,11 +2,16 @@
 
 #include <vector>
 
-#include <utki/Buf.hpp>
-#include <utki/Exc.hpp>
+#include <utki/span.hpp>
 
 namespace mikroxml{
-class Parser{
+
+class malformed_xml : public std::logic_error{
+public:
+	malformed_xml(unsigned line_number, const std::string& message);
+};
+
+class parser{
 	enum class State_e{
 		IDLE,
 		TAG,
@@ -33,29 +38,29 @@ class Parser{
 		SKIP_UNKNOWN_EXCLAMATION_MARK_CONSTRUCT
 	} state = State_e::IDLE;
 
-	void parseIdle(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e);
-	void parseTag(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e);
-	void parseTagEmpty(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e);
-	void parseTagSeekGt(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e);
-	void parseDeclaration(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e);
-	void parseDeclarationEnd(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e);
-	void parseComment(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e);
-	void parseCommentEnd(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e);
-	void parseAttributes(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e);
-	void parseAttributeName(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e);
-	void parseAttributeSeekToEquals(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e);
-	void parseAttributeSeekToValue(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e);
-	void parseAttributeValue(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e);
-	void parseContent(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e);
-	void parseRefChar(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e);
-	void parseDoctype(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e);
-	void parseDoctypeBody(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e);
-	void parseDoctypeTag(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e);
-	void parseDoctypeSkipTag(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e);
-	void parseDoctypeEntityName(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e);
-	void parseDoctypeEntitySeekToValue(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e);
-	void parseDoctypeEntityValue(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e);
-	void parseSkipUnknownExclamationMarkConstruct(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e);
+	void parseIdle(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
+	void parseTag(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
+	void parseTagEmpty(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
+	void parseTagSeekGt(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
+	void parseDeclaration(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
+	void parseDeclarationEnd(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
+	void parseComment(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
+	void parseCommentEnd(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
+	void parseAttributes(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
+	void parseAttributeName(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
+	void parseAttributeSeekToEquals(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
+	void parseAttributeSeekToValue(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
+	void parseAttributeValue(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
+	void parseContent(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
+	void parseRefChar(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
+	void parseDoctype(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
+	void parseDoctypeBody(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
+	void parseDoctypeTag(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
+	void parseDoctypeSkipTag(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
+	void parseDoctypeEntityName(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
+	void parseDoctypeEntitySeekToValue(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
+	void parseDoctypeEntityValue(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
+	void parseSkipUnknownExclamationMarkConstruct(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
 	
 	void handleAttributeParsed();
 	
@@ -76,60 +81,50 @@ class Parser{
 	std::map<std::string, std::vector<char>> doctypeEntities;
 	
 public:
-	Parser();
+	parser();
 	
-	class Exc : public utki::Exc{
-	public:
-		Exc(const std::string& message) : utki::Exc(message){}
-	};
-	
-	class MalformedDocumentExc : public Exc{
-	public:
-		MalformedDocumentExc(unsigned lineNumber, const std::string& message);
-	};
-	
-	virtual void onElementStart(const utki::Buf<char> name) = 0;
+	virtual void on_element_start(const utki::span<char> name) = 0;
 	
 	/**
 	 * @brief Element end.
 	 * @param name - name of the element which has ended. Name is empty if empty element has ended.
 	 */
-	virtual void onElementEnd(const utki::Buf<char> name) = 0;
+	virtual void on_element_end(const utki::span<char> name) = 0;
 	
 	/**
 	 * @brief Attributes section end notification.
 	 * This callback is called when all attributes of the last element have been parsed.
-	 * @param isEmptyElement - indicates weather the element is empty element or not.
+	 * @param is_empty_element - indicates weather the element is empty element or not.
 	 */
-	virtual void onAttributesEnd(bool isEmptyElement) = 0;
+	virtual void on_attributes_end(bool is_empty_element) = 0;
 	
 	/**
 	 * @brief Attribute parsed notification.
-	 * This callback may be called after 'onElementStart' notification. It can be called several times, once for each parsed attribute.
+	 * This callback may be called after 'on_element_start' notification. It can be called several times, once for each parsed attribute.
 	 * @param name - name of the parsed attribute.
 	 * @param value - value of the parsed attribute.
 	 */
-	virtual void onAttributeParsed(const utki::Buf<char> name, const utki::Buf<char> value) = 0;
+	virtual void on_attribute_parsed(const utki::span<char> name, const utki::span<char> value) = 0;
 	
 	/**
 	 * @brief Content parsed notification.
 	 * This callback may be called after 'onAttributesEnd' notification.
 	 * @param str - parsed content.
 	 */
-	virtual void onContentParsed(const utki::Buf<char> str) = 0;
+	virtual void on_content_parsed(const utki::span<char> str) = 0;
 	
 	/**
 	 * @brief feed UTF-8 data to parser.
 	 * @param data - data to be fed to parser.
 	 */
-	void feed(const utki::Buf<char> data);
+	void feed(const utki::span<char> data);
 	
 	/**
 	 * @brief feed UTF-8 data to parser.
 	 * @param data - data to be fed to parser.
 	 */
-	void feed(const utki::Buf<std::uint8_t> data){
-		this->feed(utki::wrapBuf(reinterpret_cast<const char*>(&*data.begin()), data.size()));
+	void feed(const utki::span<std::uint8_t> data){
+		this->feed(utki::make_span(reinterpret_cast<const char*>(&*data.begin()), data.size()));
 	}
 	
 	/**
@@ -143,6 +138,6 @@ public:
 	 */
 	void end();
 	
-	virtual ~Parser()noexcept{}
+	virtual ~parser()noexcept{}
 };
 }

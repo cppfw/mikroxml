@@ -14,23 +14,21 @@ const std::string doctypeAttlistTag_c = "!ATTLIST";
 const std::string doctypeEntityTag_c = "!ENTITY";
 }
 
-Parser::Parser() {
+parser::parser() {
 	this->buf.reserve(256);
 	this->name.reserve(256);
 	this->refCharBuf.reserve(10);
 }
 
-
-Parser::MalformedDocumentExc::MalformedDocumentExc(unsigned lineNumber, const std::string& message) :
-		Exc([lineNumber, &message](){
+malformed_xml::malformed_xml(unsigned line_number, const std::string& message) :
+		std::logic_error([line_number, &message](){
 			std::stringstream ss;
-			ss << message << " Line: " << lineNumber;
+			ss << message << " line: " << line_number;
 			return ss.str();
 		}())
 {}
 
-
-void Parser::feed(const utki::Buf<char> data) {
+void parser::feed(const utki::span<char> data) {
 	for(auto i = data.begin(), e = data.end(); i != e; ++i){
 		switch(this->state){
 			case State_e::IDLE:
@@ -109,7 +107,7 @@ void Parser::feed(const utki::Buf<char> data) {
 	}
 }
 
-void Parser::processParsedRefChar() {
+void parser::processParsedRefChar(){
 	this->state = this->stateAfterRefChar;
 	
 	if(this->refCharBuf.size() == 0){
@@ -117,21 +115,21 @@ void Parser::processParsedRefChar() {
 	}
 	
 	if(this->refCharBuf[0] == '#'){
-		//numeric character reference
+		// numeric character reference
 		char* endPtr;
 		char* startPtr = &*(++this->refCharBuf.begin());
 		std::uint32_t unicode = std::strtoul(startPtr, &endPtr, 16);
 		if(endPtr != startPtr + this->refCharBuf.size() - 1){
 			std::stringstream ss;
 			ss << "Unknown numeric character reference encountered: " << &*(++this->refCharBuf.begin());
-			throw MalformedDocumentExc(this->lineNumber, ss.str());
+			throw malformed_xml(this->lineNumber, ss.str());
 		}
 		auto utf8 = unikod::toUtf8(char32_t(unicode));
 		for(auto i = utf8.begin(), e = utf8.end(); *i != '\0' && i != e; ++i){
 			this->buf.push_back(*i);
 		}
 	}else{
-		//character name reference
+		// character name reference
 		std::string refCharString(&*this->refCharBuf.begin(), this->refCharBuf.size());
 		
 		auto i = this->doctypeEntities.find(refCharString);
@@ -150,15 +148,14 @@ void Parser::processParsedRefChar() {
 		}else{
 			std::stringstream ss;
 			ss << "Unknown name character reference encountered: " << &*this->refCharBuf.begin();
-			throw MalformedDocumentExc(this->lineNumber, ss.str());
+			throw malformed_xml(this->lineNumber, ss.str());
 		}
 	}
 	
 	this->refCharBuf.clear();
 }
 
-
-void Parser::parseRefChar(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e) {
+void parser::parseRefChar(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e){
 	for(; i != e; ++i){
 		switch(*i){
 			case ';':
@@ -166,7 +163,7 @@ void Parser::parseRefChar(utki::Buf<char>::const_iterator& i, utki::Buf<char>::c
 				return;
 			case '\n':
 				++this->lineNumber;
-				//fall-through
+				// fall-through
 			default:
 				this->refCharBuf.push_back(*i);
 				break;
@@ -174,29 +171,27 @@ void Parser::parseRefChar(utki::Buf<char>::const_iterator& i, utki::Buf<char>::c
 	}
 }
 
-
-void Parser::parseTagEmpty(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e) {
+void parser::parseTagEmpty(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e) {
 	ASSERT(this->buf.size() == 0)
 	ASSERT(this->name.size() == 0)
 	for(; i != e; ++i){
 		switch(*i){
 			case '>':
-				this->onAttributesEnd(true);
-				this->onElementEnd(utki::wrapBuf<char>(nullptr, 0));
+				this->on_attributes_end(true);
+				this->on_element_end(utki::make_span<char>(nullptr, 0));
 				this->state = State_e::IDLE;
 				return;
 			default:
-				throw MalformedDocumentExc(this->lineNumber, "Unexpected '/' character in attribute list encountered.");
+				throw malformed_xml(this->lineNumber, "Unexpected '/' character in attribute list encountered.");
 		}
 	}
 }
 
-
-void Parser::parseContent(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e) {
+void parser::parseContent(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e) {
 	for(; i != e; ++i){
 		switch(*i){
 			case '<':
-				this->onContentParsed(utki::wrapBuf(this->buf));
+				this->on_content_parsed(utki::make_span(this->buf));
 				this->buf.clear();
 				this->state = State_e::TAG;
 				return;
@@ -206,11 +201,11 @@ void Parser::parseContent(utki::Buf<char>::const_iterator& i, utki::Buf<char>::c
 				this->state = State_e::REF_CHAR;
 				return;
 			case '\r':
-				//ignore
+				// ignore
 				break;
 			case '\n':
 				++this->lineNumber;
-				//fall-through
+				// fall-through
 			default:
 				this->buf.push_back(*i);
 				break;
@@ -218,16 +213,14 @@ void Parser::parseContent(utki::Buf<char>::const_iterator& i, utki::Buf<char>::c
 	}
 }
 
-
-void Parser::handleAttributeParsed() {
-	this->onAttributeParsed(utki::wrapBuf(this->name), utki::wrapBuf(this->buf));
+void parser::handleAttributeParsed() {
+	this->on_attribute_parsed(utki::make_span(this->name), utki::make_span(this->buf));
 	this->name.clear();
 	this->buf.clear();
 	this->state = State_e::ATTRIBUTES;
 }
 
-
-void Parser::parseAttributeValue(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e) {
+void parser::parseAttributeValue(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e) {
 	ASSERT(this->name.size() != 0)
 	for(; i != e; ++i){
 		switch(*i){
@@ -251,11 +244,11 @@ void Parser::parseAttributeValue(utki::Buf<char>::const_iterator& i, utki::Buf<c
 				this->state = State_e::REF_CHAR;
 				return;
 			case '\r':
-				//ignore
+				// ignore
 				break;
 			case '\n':
 				++this->lineNumber;
-				//fall-through
+				// fall-through
 			default:
 				this->buf.push_back(*i);
 				break;
@@ -263,12 +256,12 @@ void Parser::parseAttributeValue(utki::Buf<char>::const_iterator& i, utki::Buf<c
 	}
 }
 
-void Parser::parseAttributeSeekToValue(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e) {
+void parser::parseAttributeSeekToValue(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e) {
 	for(; i != e; ++i){
 		switch(*i){
 			case '\n':
 				++this->lineNumber;
-				//fall-through
+				// fall-through
 			case ' ':
 			case '\t':
 			case '\r':
@@ -282,18 +275,17 @@ void Parser::parseAttributeSeekToValue(utki::Buf<char>::const_iterator& i, utki:
 				this->state = State_e::ATTRIBUTE_VALUE;
 				return;
 			default:
-				throw MalformedDocumentExc(this->lineNumber, "Unexpected character encountered, expected \"'\" or '\"'.");
+				throw malformed_xml(this->lineNumber, "Unexpected character encountered, expected \"'\" or '\"'.");
 		}
 	}
 }
 
-
-void Parser::parseAttributeSeekToEquals(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e) {
+void parser::parseAttributeSeekToEquals(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e) {
 	for(; i != e; ++i){
 		switch(*i){
 			case '\n':
 				++this->lineNumber;
-				//fall-through
+				// fall-through
 			case ' ':
 			case '\t':
 			case '\r':
@@ -307,20 +299,18 @@ void Parser::parseAttributeSeekToEquals(utki::Buf<char>::const_iterator& i, utki
 				{
 					std::stringstream ss;
 					ss << "Unexpected character encountered (0x" << std::hex << unsigned(*i) << "), expected '='";
-					throw MalformedDocumentExc(this->lineNumber, ss.str());
+					throw malformed_xml(this->lineNumber, ss.str());
 				}
 		}
 	}
 }
 
-
-
-void Parser::parseAttributeName(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e) {
+void parser::parseAttributeName(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e) {
 	for(; i != e; ++i){
 		switch(*i){
 			case '\n':
 				++this->lineNumber;
-				//fall-through
+				// fall-through
 			case ' ':
 			case '\t':
 			case '\r':
@@ -338,15 +328,14 @@ void Parser::parseAttributeName(utki::Buf<char>::const_iterator& i, utki::Buf<ch
 	}
 }
 
-
-void Parser::parseAttributes(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e) {
+void parser::parseAttributes(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e) {
 	ASSERT(this->buf.size() == 0)
 	ASSERT(this->name.size() == 0)
 	for(; i != e; ++i){
 		switch(*i){
 			case '\n':
 				++this->lineNumber;
-				//fall-through
+				// fall-through
 			case ' ':
 			case '\t':
 			case '\r':
@@ -355,11 +344,11 @@ void Parser::parseAttributes(utki::Buf<char>::const_iterator& i, utki::Buf<char>
 				this->state = State_e::TAG_EMPTY;
 				return;
 			case '>':
-				this->onAttributesEnd(false);
+				this->on_attributes_end(false);
 				this->state = State_e::IDLE;
 				return;
 			case '=':
-				throw MalformedDocumentExc(this->lineNumber, "unexpected '=' encountered");
+				throw malformed_xml(this->lineNumber, "unexpected '=' encountered");
 			default:
 				this->name.push_back(*i);
 				this->state = State_e::ATTRIBUTE_NAME;
@@ -368,8 +357,7 @@ void Parser::parseAttributes(utki::Buf<char>::const_iterator& i, utki::Buf<char>
 	}
 }
 
-
-void Parser::parseComment(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e) {
+void parser::parseComment(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e) {
 	for(; i != e; ++i){
 		switch(*i){
 			case '-':
@@ -377,19 +365,19 @@ void Parser::parseComment(utki::Buf<char>::const_iterator& i, utki::Buf<char>::c
 				return;
 			case '\n':
 				++this->lineNumber;
-				//fall-through
+				// fall-through
 			default:
 				break;
 		}
 	}
 }
 
-void Parser::parseCommentEnd(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e) {
+void parser::parseCommentEnd(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e) {
 	for(; i != e; ++i){
 		switch(*i){
 			case '\n':
 				++this->lineNumber;
-				//fall-through
+				// fall-through
 			default:
 				this->buf.clear();
 				this->state = State_e::COMMENT;
@@ -417,12 +405,10 @@ void Parser::parseCommentEnd(utki::Buf<char>::const_iterator& i, utki::Buf<char>
 	}
 }
 
-
-
-void Parser::end() {
+void parser::end(){
 	if(this->state != State_e::IDLE){
 		std::array<char, 1> newLine = {{'\n'}};
-		this->feed(utki::wrapBuf(newLine));
+		this->feed(utki::make_span(newLine));
 	}
 }
 
@@ -441,14 +427,14 @@ bool startsWith(const std::vector<char>& vec, const std::string& str){
 }
 }
 
-void Parser::processParsedTagName() {
+void parser::processParsedTagName() {
 	if(this->buf.size() == 0){
-		throw MalformedDocumentExc(this->lineNumber, "tag name cannot be empty");
+		throw malformed_xml(this->lineNumber, "tag name cannot be empty");
 	}
 	
 	switch(this->buf[0]){
 		case '?':
-			//some declaration, we just skip it.
+			// some declaration, we just skip it.
 			this->buf.clear();
 			this->state = State_e::DECLARATION;
 			return;
@@ -465,27 +451,26 @@ void Parser::processParsedTagName() {
 			return;
 		case '/':
 			if(this->buf.size() <= 1){
-				throw MalformedDocumentExc(this->lineNumber, "end tag cannot be empty");
+				throw malformed_xml(this->lineNumber, "end tag cannot be empty");
 			}
-			this->onElementEnd(utki::wrapBuf(&*(++this->buf.begin()), this->buf.size() - 1));
+			this->on_element_end(utki::make_span(&*(++this->buf.begin()), this->buf.size() - 1));
 			this->buf.clear();
 			this->state = State_e::TAG_SEEK_GT;
 			return;
 		default:
-			this->onElementStart(utki::wrapBuf(this->buf));
+			this->on_element_start(utki::make_span(this->buf));
 			this->buf.clear();
 			this->state = State_e::ATTRIBUTES;
 			return;
 	}
 }
 
-
-void Parser::parseTag(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e) {
+void parser::parseTag(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e) {
 	for(; i != e; ++i){
 		switch(*i){
 			case '\n':
 				++this->lineNumber;
-				//fall-through
+				// fall-through
 			case ' ':
 			case '\t':
 			case '\r':
@@ -495,8 +480,8 @@ void Parser::parseTag(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const
 				this->processParsedTagName();
 				switch(this->state){
 					case State_e::ATTRIBUTES:
-						this->onAttributesEnd(false);
-						//fall-through
+						this->on_attributes_end(false);
+						// fall-through
 					default:
 						this->state = State_e::IDLE;
 						break;
@@ -506,14 +491,14 @@ void Parser::parseTag(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const
 				if(this->buf.size() != 0){
 					this->processParsedTagName();
 
-					//After parsing usual tag the we expect attributes, but since we got '/' the tag has no any attributes, so it is empty.
-					//In other cases, like '!--' (comment) tag the state should remain.
+					// After parsing usual tag the we expect attributes, but since we got '/' the tag has no any attributes, so it is empty.
+					// In other cases, like '!--' (comment) tag the state should remain.
 					if(this->state == State_e::ATTRIBUTES){
 						this->state = State_e::TAG_EMPTY;
 					}
 					return;
 				}
-				//fall-through
+				// fall-through
 			default:
 				this->buf.push_back(*i);
 				break;
@@ -521,7 +506,7 @@ void Parser::parseTag(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const
 	}
 }
 
-void Parser::parseDoctype(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e) {
+void parser::parseDoctype(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e) {
 	for(; i != e; ++i){
 		switch(*i){
 			case '>':
@@ -533,14 +518,14 @@ void Parser::parseDoctype(utki::Buf<char>::const_iterator& i, utki::Buf<char>::c
 				return;
 			case '\n':
 				++this->lineNumber;
-				//fall-through
+				// fall-through
 			default:
 				break;
 		}
 	}
 }
 
-void Parser::parseDoctypeBody(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e) {
+void parser::parseDoctypeBody(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e) {
 	for(; i != e; ++i){
 		switch(*i){
 			case ']':
@@ -552,25 +537,24 @@ void Parser::parseDoctypeBody(utki::Buf<char>::const_iterator& i, utki::Buf<char
 				return;
 			case '\n':
 				++this->lineNumber;
-				//fall-through
+				// fall-through
 			default:
 				break;
 		}
 	}
 }
 
-
-void Parser::parseDoctypeTag(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e) {
+void parser::parseDoctypeTag(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e) {
 	for(; i != e; ++i){
 		switch(*i){
 			case '\n':
 				++this->lineNumber;
-				//fall-through
+				// fall-through
 			case ' ':
 			case '\t':
 			case '\r':
 				if(this->buf.size() == 0){
-					throw MalformedDocumentExc(this->lineNumber, "Empty DOCTYPE tag name encountered");
+					throw malformed_xml(this->lineNumber, "Empty DOCTYPE tag name encountered");
 				}
 				
 				if(
@@ -581,12 +565,12 @@ void Parser::parseDoctypeTag(utki::Buf<char>::const_iterator& i, utki::Buf<char>
 				}else if(startsWith(this->buf, doctypeEntityTag_c)){
 					this->state = State_e::DOCTYPE_ENTITY_NAME;
 				}else{
-					throw MalformedDocumentExc(this->lineNumber, "Unknown DOCTYPE tag encountered");
+					throw malformed_xml(this->lineNumber, "Unknown DOCTYPE tag encountered");
 				}
 				this->buf.clear();
 				return;
 			case '>':
-				throw MalformedDocumentExc(this->lineNumber, "Unexpected > character while parsing DOCTYPE tag");
+				throw malformed_xml(this->lineNumber, "Unexpected > character while parsing DOCTYPE tag");
 			default:
 				this->buf.push_back(*i);
 				break;
@@ -594,7 +578,7 @@ void Parser::parseDoctypeTag(utki::Buf<char>::const_iterator& i, utki::Buf<char>
 	}
 }
 
-void Parser::parseDoctypeSkipTag(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e) {
+void parser::parseDoctypeSkipTag(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e) {
 	for(; i != e; ++i){
 		switch(*i){
 			case '>':
@@ -603,19 +587,19 @@ void Parser::parseDoctypeSkipTag(utki::Buf<char>::const_iterator& i, utki::Buf<c
 				return;
 			case '\n':
 				++this->lineNumber;
-				//fall-through
+				// fall-through
 			default:
 				break;
 		}
 	}
 }
 
-void Parser::parseDoctypeEntityName(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e) {
+void parser::parseDoctypeEntityName(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e) {
 	for(; i != e; ++i){
 		switch(*i){
 			case '\n':
 				++this->lineNumber;
-				//fall-through
+				// fall-through
 			case ' ':
 			case '\t':
 			case '\r':
@@ -635,12 +619,12 @@ void Parser::parseDoctypeEntityName(utki::Buf<char>::const_iterator& i, utki::Bu
 	}
 }
 
-void Parser::parseDoctypeEntitySeekToValue(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e) {
+void parser::parseDoctypeEntitySeekToValue(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e) {
 	for(; i != e; ++i){
 		switch(*i){
 			case '\n':
 				++this->lineNumber;
-				//fall-through
+				// fall-through
 			case ' ':
 			case '\t':
 			case '\r':
@@ -649,12 +633,12 @@ void Parser::parseDoctypeEntitySeekToValue(utki::Buf<char>::const_iterator& i, u
 				this->state = State_e::DOCTYPE_ENTITY_VALUE;
 				return;
 			default:
-				throw MalformedDocumentExc(this->lineNumber, "Unexpected character encountered while seeking to DOCTYPE entity value, expected '\"'.");
+				throw malformed_xml(this->lineNumber, "Unexpected character encountered while seeking to DOCTYPE entity value, expected '\"'.");
 		}
 	}
 }
 
-void Parser::parseDoctypeEntityValue(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e) {
+void parser::parseDoctypeEntityValue(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e) {
 	for(; i != e; ++i){
 		switch(*i){
 			case '"':
@@ -668,7 +652,7 @@ void Parser::parseDoctypeEntityValue(utki::Buf<char>::const_iterator& i, utki::B
 				return;
 			case '\n':
 				++this->lineNumber;
-				//fall-through
+				// fall-through
 			default:
 				this->buf.push_back(*i);
 				break;
@@ -676,7 +660,7 @@ void Parser::parseDoctypeEntityValue(utki::Buf<char>::const_iterator& i, utki::B
 	}
 }
 
-void Parser::parseSkipUnknownExclamationMarkConstruct(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e) {
+void parser::parseSkipUnknownExclamationMarkConstruct(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e) {
 	for(; i != e; ++i){
 		switch(*i){
 			case '>':
@@ -685,19 +669,19 @@ void Parser::parseSkipUnknownExclamationMarkConstruct(utki::Buf<char>::const_ite
 				return;
 			case '\n':
 				++this->lineNumber;
-				//fall-through
+				// fall-through
 			default:
 				break;
 		}
 	}
 }
 
-void Parser::parseTagSeekGt(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e) {
+void parser::parseTagSeekGt(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e) {
 	for(; i != e; ++i){
 		switch(*i){
 			case '\n':
 				++this->lineNumber;
-				//fall-through
+				// fall-through
 			case ' ':
 			case '\t':
 			case '\r':
@@ -709,14 +693,13 @@ void Parser::parseTagSeekGt(utki::Buf<char>::const_iterator& i, utki::Buf<char>:
 				{
 					std::stringstream ss;
 					ss << "Unexpected character encountered (" << *i << "), expected '>'.";
-					throw MalformedDocumentExc(this->lineNumber, ss.str());
+					throw malformed_xml(this->lineNumber, ss.str());
 				}
 		}
 	}
 }
 
-
-void Parser::parseDeclaration(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e) {
+void parser::parseDeclaration(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e) {
 	for(; i != e; ++i){
 		switch(*i){
 			case '?':
@@ -724,14 +707,14 @@ void Parser::parseDeclaration(utki::Buf<char>::const_iterator& i, utki::Buf<char
 				return;
 			case '\n':
 				++this->lineNumber;
-				//fall-through
+				// fall-through
 			default:
 				break;
 		}
 	}
 }
 
-void Parser::parseDeclarationEnd(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e) {
+void parser::parseDeclarationEnd(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e) {
 	for(; i != e; ++i){
 		switch(*i){
 			case '>':
@@ -739,7 +722,7 @@ void Parser::parseDeclarationEnd(utki::Buf<char>::const_iterator& i, utki::Buf<c
 				return;
 			case '\n':
 				++this->lineNumber;
-				//fall-through
+				// fall-through
 			default:
 				this->state = State_e::DECLARATION;
 				return;
@@ -747,8 +730,7 @@ void Parser::parseDeclarationEnd(utki::Buf<char>::const_iterator& i, utki::Buf<c
 	}
 }
 
-
-void Parser::parseIdle(utki::Buf<char>::const_iterator& i, utki::Buf<char>::const_iterator& e) {
+void parser::parseIdle(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e) {
 	for(; i != e; ++i){
 		switch(*i){
 			case '<':
@@ -759,11 +741,11 @@ void Parser::parseIdle(utki::Buf<char>::const_iterator& i, utki::Buf<char>::cons
 				this->state = State_e::REF_CHAR;
 				return;
 			case '\r':
-				//ignore
+				// ignore
 				break;
 			case '\n':
 				++this->lineNumber;
-				//fall-through
+				// fall-through
 			default:
 				ASSERT(this->buf.size() == 0)
 				this->buf.push_back(*i);
@@ -773,8 +755,6 @@ void Parser::parseIdle(utki::Buf<char>::const_iterator& i, utki::Buf<char>::cons
 	}
 }
 
-
-
-void Parser::feed(const std::string& str){
-	this->feed(utki::wrapBuf(str.c_str(), str.length()));
+void parser::feed(const std::string& str){
+	this->feed(utki::make_span(str.c_str(), str.length()));
 }
