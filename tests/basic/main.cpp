@@ -10,11 +10,11 @@ class Parser : public mikroxml::parser{
 public:
 	std::stringstream ss;
 	
-	void on_attribute_parsed(const utki::span<char> name, const utki::span<char> value) override{
+	void on_attribute_parsed(utki::span<const char> name, utki::span<const char> value) override{
 		ss << " " << name << "='" << value << "'";
 	}
 	
-	void on_element_end(const utki::span<char> name) override{
+	void on_element_end(utki::span<const char> name) override{
 		if(name.size() == 0){
 			ss << "/>";
 		}else{
@@ -28,11 +28,11 @@ public:
 		}
 	}
 
-	void on_element_start(const utki::span<char> name) override{
+	void on_element_start(utki::span<const char> name) override{
 		ss << '<' << name;
 	}
 	
-	void on_content_parsed(const utki::span<char> str) override{
+	void on_content_parsed(utki::span<const char> str) override{
 		ss << str;
 	}
 };

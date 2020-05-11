@@ -69,7 +69,7 @@ class parser{
 	void processParsedRefChar();
 	
 	std::vector<char> buf;
-	std::vector<char> name; //general variable for storing name of something (attribute name, entity name, etc.)
+	std::vector<char> name; // general variable for storing name of something (attribute name, entity name, etc.)
 	std::vector<char> refCharBuf;
 	
 	char attrValueQuoteChar;
@@ -83,13 +83,13 @@ class parser{
 public:
 	parser();
 	
-	virtual void on_element_start(const utki::span<char> name) = 0;
+	virtual void on_element_start(utki::span<const char> name) = 0;
 	
 	/**
 	 * @brief Element end.
 	 * @param name - name of the element which has ended. Name is empty if empty element has ended.
 	 */
-	virtual void on_element_end(const utki::span<char> name) = 0;
+	virtual void on_element_end(utki::span<const char> name) = 0;
 	
 	/**
 	 * @brief Attributes section end notification.
@@ -104,26 +104,26 @@ public:
 	 * @param name - name of the parsed attribute.
 	 * @param value - value of the parsed attribute.
 	 */
-	virtual void on_attribute_parsed(const utki::span<char> name, const utki::span<char> value) = 0;
+	virtual void on_attribute_parsed(utki::span<const char> name, utki::span<const char> value) = 0;
 	
 	/**
 	 * @brief Content parsed notification.
 	 * This callback may be called after 'onAttributesEnd' notification.
 	 * @param str - parsed content.
 	 */
-	virtual void on_content_parsed(const utki::span<char> str) = 0;
+	virtual void on_content_parsed(utki::span<const char> str) = 0;
 	
 	/**
 	 * @brief feed UTF-8 data to parser.
 	 * @param data - data to be fed to parser.
 	 */
-	void feed(const utki::span<char> data);
+	void feed(utki::span<const char> data);
 	
 	/**
 	 * @brief feed UTF-8 data to parser.
 	 * @param data - data to be fed to parser.
 	 */
-	void feed(const utki::span<std::uint8_t> data){
+	void feed(utki::span<const uint8_t> data){
 		this->feed(utki::make_span(reinterpret_cast<const char*>(&*data.begin()), data.size()));
 	}
 	

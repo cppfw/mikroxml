@@ -28,7 +28,7 @@ malformed_xml::malformed_xml(unsigned line_number, const std::string& message) :
 		}())
 {}
 
-void parser::feed(const utki::span<char> data) {
+void parser::feed(utki::span<const char> data) {
 	for(auto i = data.begin(), e = data.end(); i != e; ++i){
 		switch(this->state){
 			case State_e::IDLE:
