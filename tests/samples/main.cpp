@@ -83,8 +83,8 @@ int main(int argc, char** argv){
 	}
 	
 	{
-		papki::FSFile fi("out.xml");
-		papki::File::Guard fileguard(fi, papki::File::E_Mode::CREATE);
+		papki::fs_file fi("out.xml");
+		papki::file::guard file_guard(fi, papki::file::mode::create);
 		
 		fi.write(utki::make_span(reinterpret_cast<const std::uint8_t*>(parser.ss.str().c_str()), parser.ss.str().length()));
 	}

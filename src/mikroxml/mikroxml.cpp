@@ -4,6 +4,8 @@
 
 #include <unikod/utf8.hpp>
 
+#include <utki/string.hpp>
+
 using namespace mikroxml;
 
 namespace{
@@ -12,6 +14,7 @@ const std::string doctypeTag_c = "!DOCTYPE";
 const std::string doctypeElementTag_c = "!ELEMENT";
 const std::string doctypeAttlistTag_c = "!ATTLIST";
 const std::string doctypeEntityTag_c = "!ENTITY";
+const std::string cdata_tag = "![CDATA[";
 }
 
 parser::parser() {
@@ -99,6 +102,12 @@ void parser::feed(utki::span<const char> data) {
 				break;
 			case State_e::SKIP_UNKNOWN_EXCLAMATION_MARK_CONSTRUCT:
 				this->parseSkipUnknownExclamationMarkConstruct(i, e);
+				break;
+			case State_e::cdata:
+				this->parse_cdata(i, e);
+				break;
+			case State_e::cdata_terminator:
+				this->parse_cdata_terminator(i, e);
 				break;
 		}
 		if(i == e){
@@ -440,9 +449,7 @@ void parser::processParsedTagName() {
 			return;
 		case '!':
 //			TRACE(<< "this->buf = " << std::string(&*this->buf.begin(), this->buf.size()) << std::endl)
-			if(startsWith(this->buf, commentTag_c)){
-				this->state = State_e::COMMENT;
-			}else if(startsWith(this->buf, doctypeTag_c)){
+			if(startsWith(this->buf, doctypeTag_c)){
 				this->state = State_e::DOCTYPE;
 			}else{
 				this->state = State_e::SKIP_UNKNOWN_EXCLAMATION_MARK_CONSTRUCT;
@@ -487,12 +494,28 @@ void parser::parseTag(utki::span<char>::const_iterator& i, utki::span<char>::con
 						break;
 				}
 				return;
+			case '[':
+				this->buf.push_back(*i);
+				if(this->buf.size() == cdata_tag.size() && startsWith(this->buf, cdata_tag)){
+					this->buf.clear();
+					this->state = State_e::cdata;
+					return;
+				}
+				break;
+			case '-':
+				this->buf.push_back(*i);
+				if(this->buf.size() == commentTag_c.size() && startsWith(this->buf, commentTag_c)){
+					this->state = State_e::COMMENT;
+					this->buf.clear();
+					return;
+				}
+				break;
 			case '/':
 				if(this->buf.size() != 0){
 					this->processParsedTagName();
 
-					// After parsing usual tag the we expect attributes, but since we got '/' the tag has no any attributes, so it is empty.
-					// In other cases, like '!--' (comment) tag the state should remain.
+					// After parsing usual tag we expect attributes, but since we got '/' the tag has no any attributes, so it is empty.
+					// In other cases, like '!DOCTYPE' tag the state should remain.
 					if(this->state == State_e::ATTRIBUTES){
 						this->state = State_e::TAG_EMPTY;
 					}
@@ -642,7 +665,7 @@ void parser::parseDoctypeEntityValue(utki::span<char>::const_iterator& i, utki::
 	for(; i != e; ++i){
 		switch(*i){
 			case '"':
-				this->doctypeEntities.insert(std::make_pair(std::string(&*std::begin(this->name), this->name.size()), std::move(this->buf)));
+				this->doctypeEntities.insert(std::make_pair(utki::make_string(this->name), std::move(this->buf)));
 				
 				this->name.clear();
 				
@@ -757,4 +780,46 @@ void parser::parseIdle(utki::span<char>::const_iterator& i, utki::span<char>::co
 
 void parser::feed(const std::string& str){
 	this->feed(utki::make_span(str.c_str(), str.length()));
+}
+
+void parser::parse_cdata(utki::span<const char>::const_iterator& i, utki::span<char>::const_iterator& e){
+	for(; i != e; ++i){
+		switch(*i){
+			case ']':
+				this->buf.push_back(*i);
+				this->state = State_e::cdata_terminator;
+				return;
+			default:
+				this->buf.push_back(*i);
+				break;
+		}
+	}
+}
+
+void parser::parse_cdata_terminator(utki::span<const char>::const_iterator& i, utki::span<const char>::const_iterator& e){
+	for(; i != e; ++i){
+		switch(*i){
+			case ']':
+				ASSERT(!this->buf.empty())
+				ASSERT(this->buf.back() == ']')
+				this->buf.push_back(']');
+				break;
+			case '>':
+				ASSERT(!this->buf.empty())
+				ASSERT(this->buf.back() == ']')
+				if(this->buf.size() < 2 || this->buf[this->buf.size() - 2] != ']'){
+					this->buf.push_back('>');
+					this->state = State_e::cdata;
+				}else{ // CDATA block ended
+					this->on_content_parsed(utki::make_span(this->buf.data(), this->buf.size() - 2));
+					this->buf.clear();
+					this->state = State_e::IDLE;
+				}
+				return;
+			default:
+				this->buf.push_back(*i);
+				this->state = State_e::cdata;
+				return;
+		}
+	}
 }

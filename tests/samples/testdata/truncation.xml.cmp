@@ -4,7 +4,7 @@
 <mesh name="mesh_root">
 	
 	some text
-	
+	someothertext
 	some more text
 	<node attr1="value1" attr2="value2"/>
 	<node attr1="value2">

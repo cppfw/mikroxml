@@ -30,17 +30,18 @@ $(eval $(prorab-build-app))
 this_dirs := $(subst /, ,$(d))
 this_test := $(word $(words $(this_dirs)),$(this_dirs))
 
-this_xmls := $(patsubst %.xml,%,$(shell ls $(d)testdata/*.xml))
+this_xmls := $(patsubst $(d)%,%,$(shell ls $(d)testdata/*.xml))
 
 define this_rules
 test:: $(prorab_this_name)
 $(.RECIPEPREFIX)@myci-running-test.sh $(this_test)
 $(.RECIPEPREFIX)$(a)cp $(d)../../src/build/*.dll $(d) || true
 $(.RECIPEPREFIX)$(a)for f in $(this_xmls); do \
-		echo "checking file $$$$f.xml" && \
-		LD_LIBRARY_PATH=$(d)../../src/build DYLD_LIBRARY_PATH=$$$$LD_LIBRARY_PATH $(d)./parsexml $$$$f.xml && \
-		cmp out.xml $$$$f.xml.cmp; \
-		if [ $$$$? -ne 0 ]; then myci-error.sh "parsed XML did not match etalon sample"; exit 1; fi \
+		echo "checking file $$$$f" && \
+		(cd $(d) && LD_LIBRARY_PATH=../../src/build DYLD_LIBRARY_PATH=$$$$LD_LIBRARY_PATH ./parsexml $$$$f ) && \
+		cmp $(d)out.xml $(d)$$$$f.cmp ; \
+		if [ $$$$? -ne 0 ]; then myci-error.sh "parsed XML did not match etalon sample"; exit 1; fi; \
+		rm -f $(d)out.xml; \
 	done
 $(.RECIPEPREFIX)@myci-passed.sh
 endef

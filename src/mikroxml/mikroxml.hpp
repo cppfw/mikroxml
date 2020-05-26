@@ -35,7 +35,9 @@ class parser{
 		DOCTYPE_ENTITY_SEEK_TO_VALUE,
 		DOCTYPE_ENTITY_VALUE,
 		DOCTYPE_SKIP_TAG,
-		SKIP_UNKNOWN_EXCLAMATION_MARK_CONSTRUCT
+		SKIP_UNKNOWN_EXCLAMATION_MARK_CONSTRUCT,
+		cdata,
+		cdata_terminator
 	} state = State_e::IDLE;
 
 	void parseIdle(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
@@ -61,6 +63,8 @@ class parser{
 	void parseDoctypeEntitySeekToValue(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
 	void parseDoctypeEntityValue(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
 	void parseSkipUnknownExclamationMarkConstruct(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
+	void parse_cdata(utki::span<const char>::const_iterator& i, utki::span<const char>::const_iterator& e);
+	void parse_cdata_terminator(utki::span<const char>::const_iterator& i, utki::span<const char>::const_iterator& e);
 	
 	void handleAttributeParsed();
 	
