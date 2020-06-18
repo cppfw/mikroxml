@@ -94,6 +94,9 @@ tasks.whenTaskAdded { task ->
 
 
 
+
+
+
 //=================================
 //=== pack library files to aar ===
 //This stuff re-packs the release AAR file adding headers and static libs to there, but removing all shared (.so) libs, as we don't need them. The resulting AAR is put to the project root directory and can be uploaded to Maven along with POM file (you need to write one by hand).
