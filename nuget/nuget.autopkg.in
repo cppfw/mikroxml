@@ -31,8 +31,7 @@ nuget{
 	}
 	dependencies {
 		packages : {
-			libutki/1.1.13;
-			libunikod/2.0.17;
+			libutki/1.1.93;
 		};
 	}
 	files {

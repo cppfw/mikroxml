@@ -2,7 +2,7 @@
 
 #include <sstream>
 
-#include <unikod/utf8.hpp>
+#include <utki/utf8.hpp>
 
 #include <utki/string.hpp>
 
@@ -133,7 +133,7 @@ void parser::processParsedRefChar(){
 			ss << "Unknown numeric character reference encountered: " << &*(++this->refCharBuf.begin());
 			throw malformed_xml(this->lineNumber, ss.str());
 		}
-		auto utf8 = unikod::toUtf8(char32_t(unicode));
+		auto utf8 = utki::to_utf8(char32_t(unicode));
 		for(auto i = utf8.begin(), e = utf8.end(); *i != '\0' && i != e; ++i){
 			this->buf.push_back(*i);
 		}
