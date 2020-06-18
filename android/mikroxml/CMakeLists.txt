@@ -14,22 +14,20 @@ set(name mikroxml)
 
 file(GLOB_RECURSE srcs "../../src/*.cpp")
 
-link_directories( build/ndkLibs/${ANDROID_ABI}/ )
+include (${ANDROID_GRADLE_NATIVE_BUNDLE_PLUGIN_MK})
 
-add_library( # Specifies the name of the library.
-             ${name}
+add_library(
+        # Specifies the name of the library.
+        ${name}
 
-             # Sets the library as a static library.
-             STATIC
+        # Sets the library as a static library.
+        STATIC
 
-             # Provides a relative path to your source file(s).
-             ${srcs} )
-
-
-
-include_directories( build/ndkLibs/include/ )
+        # Provides a relative path to your source file(s).
+        ${srcs}
+    )
 
 target_link_libraries(
         ${name}
-        android log utki
+        android log ${ANDROID_GRADLE_NATIVE_MODULES}
     )

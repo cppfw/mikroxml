@@ -1,5 +1,3 @@
-sudo: required
-
 services:
 - docker
 
@@ -32,11 +30,11 @@ matrix:
     - name: macosx
       os: osx
       compiler: clang
-      osx_image: xcode11
+      osx_image: xcode11.3
     - name: ios
       os: osx
       compiler: clang
-      osx_image: xcode11
+      osx_image: xcode11.3
     - name: android
       language: android
       android:
@@ -135,7 +133,7 @@ script:
     myci-create-zip-package.sh -h src -f xcode/build/lib$PACKAGE_NAME.a///lib/ios -f LICENSE $PACKAGE_NAME-`myci-deb-version.sh debian/changelog`.zip;
   fi
 - if [ "$TRAVIS_JOB_NAME" == "android" ]; then
-    (cd android && ./gradlew build) &&
+    (cd android && ./gradlew copy_aar) &&
     myci-apply-version.sh -v `myci-deb-version.sh debian/changelog` android/*.pom.in &&
     myci-apply-version.sh -v `myci-deb-version.sh debian/changelog` android/*.aar.in --filename-only;
   fi

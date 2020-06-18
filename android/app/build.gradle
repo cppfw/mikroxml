@@ -44,7 +44,7 @@ repositories {
     }
 }
 dependencies {
-    implementation project(path: ':mikroxml', configuration: 'default')
+//    implementation project(path: ':mikroxml', configuration: 'default')
 }
 
 
