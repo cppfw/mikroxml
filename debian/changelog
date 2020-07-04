@@ -1,3 +1,9 @@
+libmikroxml (0.1.24) unstable; urgency=medium
+
+  * update to latest libs
+
+ -- Ivan Gagis <igagis@gmail.com>  Sat, 04 Jul 2020 15:01:11 +0300
+
 libmikroxml (0.1.23) unstable; urgency=medium
 
   * use android native bundle plugin
