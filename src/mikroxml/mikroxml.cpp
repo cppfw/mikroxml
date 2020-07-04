@@ -2,7 +2,7 @@
 
 #include <sstream>
 
-#include <utki/utf8.hpp>
+#include <utki/unicode.hpp>
 
 #include <utki/string.hpp>
 
