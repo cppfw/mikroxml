@@ -3,14 +3,11 @@
 #include <vector>
 
 #include <utki/span.hpp>
-
 namespace mikroxml{
-
 class malformed_xml : public std::logic_error{
 public:
 	malformed_xml(unsigned line_number, const std::string& message);
 };
-
 class parser{
 	enum class State_e{
 		IDLE,
@@ -144,4 +141,5 @@ public:
 	
 	virtual ~parser()noexcept{}
 };
+
 }

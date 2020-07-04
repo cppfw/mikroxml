@@ -4,7 +4,7 @@
 
 #include <utki/debug.hpp>
 #include <utki/string.hpp>
-#include <papki/FSFile.hpp>
+#include <papki/fs_file.hpp>
 
 class Parser : public mikroxml::parser{
 public:
