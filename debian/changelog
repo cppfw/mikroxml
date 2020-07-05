@@ -1,3 +1,9 @@
+libmikroxml (0.1.26) unstable; urgency=medium
+
+  * do not build for stretch
+
+ -- Ivan Gagis <igagis@gmail.com>  Sun, 05 Jul 2020 04:58:21 +0300
+
 libmikroxml (0.1.25) unstable; urgency=medium
 
   * update to latest libs
