@@ -123,12 +123,21 @@ void parser::processParsedRefChar(){
 		return;
 	}
 	
-	if(this->refCharBuf[0] == '#'){
-		// numeric character reference
+	if(this->refCharBuf[0] == '#'){ // numeric character reference
+		this->refCharBuf.push_back(0); // null-terminate
+
 		char* endPtr;
 		char* startPtr = &*(++this->refCharBuf.begin());
-		std::uint32_t unicode = std::strtoul(startPtr, &endPtr, 16);
-		if(endPtr != startPtr + this->refCharBuf.size() - 1){
+		int base;
+		if(*startPtr == 'x'){ // hexadecimal format
+			base = 16;
+			++startPtr;
+		}else{ // decimal format
+			base = 10;
+		}
+
+		std::uint32_t unicode = std::strtoul(startPtr, &endPtr, base);
+		if(endPtr != &*this->refCharBuf.rbegin()){
 			std::stringstream ss;
 			ss << "Unknown numeric character reference encountered: " << &*(++this->refCharBuf.begin());
 			throw malformed_xml(this->lineNumber, ss.str());
@@ -137,8 +146,7 @@ void parser::processParsedRefChar(){
 		for(auto i = utf8.begin(), e = utf8.end(); *i != '\0' && i != e; ++i){
 			this->buf.push_back(*i);
 		}
-	}else{
-		// character name reference
+	}else{ // character name reference
 		std::string refCharString(&*this->refCharBuf.begin(), this->refCharBuf.size());
 		
 		auto i = this->doctypeEntities.find(refCharString);

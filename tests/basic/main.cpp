@@ -59,7 +59,7 @@ int main(int argc, char** argv){
 		ASSERT_INFO_ALWAYS(parser.ss.str() == "<element attribute='attribute&<>\"'Value'>content&<>\"'</element>", " str = " << parser.ss.str())
 	}
 	{
-		auto in = "<element attribute='attribute&#bf5;Value'>content&#41a;</element>";
+		auto in = "<element attribute='attribute&#xbf5;Value'>content&#1050;</element>";
 		Parser parser;
 		
 		parser.feed(in);
@@ -69,7 +69,7 @@ int main(int argc, char** argv){
 		ASSERT_INFO_ALWAYS(parser.ss.str() == "<element attribute='attribute௵Value'>contentК</element>", " str = " << parser.ss.str())
 	}
 	{
-		auto in = "<element attribute='attribute&#bf5;Value'/>";
+		auto in = "<element attribute='attribute&#xbf5;Value'/>";
 		Parser parser;
 		
 		parser.feed(in);
