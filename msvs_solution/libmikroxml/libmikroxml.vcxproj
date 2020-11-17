@@ -70,7 +70,7 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{42D83DB5-922D-42C7-8F8C-00932C4CD2B9}</ProjectGuid>
     <RootNamespace>libmikroxml</RootNamespace>
-    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='v141_Debug|Win32'" Label="Configuration">
@@ -454,12 +454,12 @@
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
-    <Import Project="..\packages\libutki.1.1.93\build\native\libutki.targets" Condition="Exists('..\packages\libutki.1.1.93\build\native\libutki.targets')" />
+    <Import Project="..\packages\libutki.1.1.101\build\native\libutki.targets" Condition="Exists('..\packages\libutki.1.1.101\build\native\libutki.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+      <ErrorText>Данный проект ссылается на пакеты NuGet, отсутствующие на этом компьютере. Используйте восстановление пакетов NuGet, чтобы скачать их.  Дополнительную информацию см. по адресу: http://go.microsoft.com/fwlink/?LinkID=322105. Отсутствует следующий файл: {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\libutki.1.1.93\build\native\libutki.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\libutki.1.1.93\build\native\libutki.targets'))" />
+    <Error Condition="!Exists('..\packages\libutki.1.1.101\build\native\libutki.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\libutki.1.1.101\build\native\libutki.targets'))" />
   </Target>
 </Project>
