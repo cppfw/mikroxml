@@ -1,0 +1,13 @@
+:name: mikroxml
+
+= {name}
+
+|====
+| link:https://github.com/cppfw/{name}/releases[image:https://img.shields.io/github/tag/cppfw/{name}.svg[releases]] | link:https://github.com/cppfw/{name}/actions[image:https://github.com/cppfw/{name}/workflows/ci/badge.svg[ci status]]
+|====
+
+Stream-oriented parser of [MicroXML](https://dvcs.w3.org/hg/microxml/raw-file/tip/spec/microxml.html) in C++.
+
+= Installation and usage tutorials
+
+See link:wiki/Main.adoc[WiKi]

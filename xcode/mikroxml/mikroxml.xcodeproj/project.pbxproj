@@ -83,7 +83,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 1110;
-				ORGANIZATIONNAME = igagis;
+				ORGANIZATIONNAME = cppfw;
 				TargetAttributes = {
 					2C1628552350BB3F002F1772 = {
 						CreatedOnToolsVersion = 11.1;

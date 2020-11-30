@@ -18,9 +18,9 @@ nuget{
 		title: C++ XML parser library;
 		authors: {Ivan Gagis};
 		owners: {Ivan Gagis};
-		licenseUrl: "https://raw.githubusercontent.com/igagis/mikroxml/master/LICENSE";
-		projectUrl: "https://github.com/igagis/svgdom";
-		iconUrl: "https://github.com/igagis/mikroxml/blob/master/logo.svg";
+		licenseUrl: "https://raw.githubusercontent.com/cppfw/mikroxml/master/LICENSE";
+		projectUrl: "https://github.com/cppfw/svgdom";
+		iconUrl: "https://github.com/cppfw/mikroxml/blob/master/logo.svg";
 		requireLicenseAcceptance:false;
 		summary: C++ XML parser library;
 
