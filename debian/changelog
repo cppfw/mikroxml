@@ -1,3 +1,9 @@
+libmikroxml (0.1.31) unstable; urgency=medium
+
+  * build for ubuntu focal
+
+ -- Ivan Gagis <igagis@gmail.com>  Mon, 14 Dec 2020 19:41:04 +0200
+
 libmikroxml (0.1.30) unstable; urgency=medium
 
   * github actions
