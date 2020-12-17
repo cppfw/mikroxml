@@ -21,7 +21,7 @@ public:
 		if(name.size() != 0){
 			this->ss << "</" << name << ">";
 			
-			ASSERT_INFO_ALWAYS(this->tagNameStack.back() == std::string(&*name.begin(), name.size()), "element start tag (" << this->tagNameStack.back() << ") does not match end tag (" << name << ")")
+			ASSERT_INFO_ALWAYS(this->tagNameStack.back() == std::string(name.data(), name.size()), "element start tag (" << this->tagNameStack.back() << ") does not match end tag (" << name << ")")
 		}
 		this->tagNameStack.pop_back();
 	}
@@ -76,7 +76,7 @@ int main(int argc, char** argv){
 			if(res == 0){
 				break;
 			}
-			parser.feed(utki::make_span(&*buf.begin(), res));
+			parser.feed(utki::make_span(buf.data(), res));
 		}
 		parser.end();
 		ASSERT_ALWAYS(parser.tagNameStack.size() == 0)

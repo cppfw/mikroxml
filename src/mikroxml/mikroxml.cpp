@@ -147,7 +147,7 @@ void parser::processParsedRefChar(){
 			this->buf.push_back(*i);
 		}
 	}else{ // character name reference
-		std::string refCharString(&*this->refCharBuf.begin(), this->refCharBuf.size());
+		std::string refCharString(this->refCharBuf.data(), this->refCharBuf.size());
 		
 		auto i = this->doctypeEntities.find(refCharString);
 		if(i != this->doctypeEntities.end()){
@@ -164,7 +164,7 @@ void parser::processParsedRefChar(){
 			this->buf.push_back('\'');
 		}else{
 			std::stringstream ss;
-			ss << "Unknown name character reference encountered: " << &*this->refCharBuf.begin();
+			ss << "Unknown name character reference encountered: " << this->refCharBuf.data();
 			throw malformed_xml(this->lineNumber, ss.str());
 		}
 	}

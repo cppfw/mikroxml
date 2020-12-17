@@ -125,7 +125,7 @@ public:
 	 * @param data - data to be fed to parser.
 	 */
 	void feed(utki::span<const uint8_t> data){
-		this->feed(utki::make_span(reinterpret_cast<const char*>(&*data.begin()), data.size()));
+		this->feed(utki::make_span(reinterpret_cast<const char*>(data.data()), data.size()));
 	}
 	
 	/**

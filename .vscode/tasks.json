@@ -9,19 +9,23 @@
             "command": "make autojobs=true",
             "problemMatcher": [
                 "$gcc"
-            ]
+            ],
+            "group": "build"
         },
         {
             "label": "clean",
             "type": "shell",
             "command": "make autojobs=true clean",
-            "problemMatcher": []
+            "problemMatcher": [],
+            "group": "build"
         },
         {
             "label": "test",
             "type": "shell",
             "command": "make test",
-            "problemMatcher": []
+            "problemMatcher": [],
+            "group": "test",
+            "dependsOn": "build"
         }
     ]
 }
