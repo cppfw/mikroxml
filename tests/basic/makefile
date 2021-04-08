@@ -1,27 +1,13 @@
 include prorab.mk
 
+$(eval $(call prorab-config, ../../config))
+
 this_name := tests
 
-this_cxxflags += -Wall
-this_cxxflags += -Wno-format # no warnings about format
-this_cxxflags += -Wno-format-security # no warnings about format
-this_cxxflags += -DDEBUG
-this_cxxflags += -fstrict-aliasing
-this_cxxflags += -std=c++11
-this_cxxflags += -O3
-this_cxxflags += -g
+this_srcs += $(call prorab-src-dir, .)
 
-this_srcs += main.cpp
-
-this_ldlibs += -lmikroxml -lstdc++
-this_ldflags += -L$(d)../../src/build
-
-ifeq ($(os), linux)
-else ifeq ($(os), macosx)
-    this_cxxflags += -stdlib=libc++ # this is needed to be able to use c++11 std lib
-    this_ldlibs += -lc++
-else ifeq ($(os),windows)
-endif
+this_ldlibs += -lmikroxml -lutki
+this_ldflags += -L$(d)../../src/out/$(c)
 
 this_no_install := true
 
@@ -31,11 +17,11 @@ this_dirs := $(subst /, ,$(d))
 this_test := $(word $(words $(this_dirs)),$(this_dirs))
 
 ifeq ($(os),windows)
-    this_test_cmd := (cd $(d) && cmd //C 'set PATH=../../src/build;%PATH% && $$(notdir $$^)')
+    this_test_cmd := (cd $(d) && cmd //C 'set PATH=../../src/out/$(c);%PATH% && out\$(c)\$$(notdir $$^)')
 else ifeq ($(os),macosx)
-    this_test_cmd := (cd $(d) && DYLD_LIBRARY_PATH=../../src/build ./$$(notdir $$^))
+    this_test_cmd := (cd $(d) && DYLD_LIBRARY_PATH=../../src/out/$(c) out/$(c)/$$(notdir $$^))
 else ifeq ($(os),linux)
-    this_test_cmd := (cd $(d) && LD_LIBRARY_PATH=../../src/build ./$$(notdir $$^))
+    this_test_cmd := (cd $(d) && LD_LIBRARY_PATH=../../src/out/$(c) out/$(c)/$$(notdir $$^))
 else
     $(error "Unknown OS")
 endif
@@ -50,6 +36,6 @@ endef
 $(eval $(this_rules))
 
 # add dependency on libmikroxml
-$(prorab_this_name): $(abspath $(d)../../src/build/libmikroxml$(dot_so))
+$(prorab_this_name): $(abspath $(d)../../src/out/$(c)/libmikroxml$(dot_so))
 
 $(eval $(call prorab-include, ../../src/makefile))

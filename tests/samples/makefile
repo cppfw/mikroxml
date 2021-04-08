@@ -1,27 +1,13 @@
 include prorab.mk
 
+$(eval $(call prorab-config, ../../config))
+
 this_name := parsexml
 
-this_cxxflags += -Wall
-this_cxxflags += -Wno-format # no warnings about format
-this_cxxflags += -Wno-format-security # no warnings about format
-this_cxxflags += -DDEBUG
-this_cxxflags += -fstrict-aliasing
-this_cxxflags += -std=c++11
-this_cxxflags += -O3
-this_cxxflags += -g
+this_srcs += $(call prorab-src-dir, .)
 
-this_srcs += main.cpp
-
-this_ldlibs += -lpapki -lmikroxml -lstdc++
-this_ldflags += -L$(d)../../src/build
-
-ifeq ($(os), linux)
-else ifeq ($(os), macosx)
-    this_cxxflags += -stdlib=libc++ # this is needed to be able to use c++11 std lib
-    this_ldlibs += -lc++
-else ifeq ($(os),windows)
-endif
+this_ldlibs += -lpapki -lmikroxml -lutki
+this_ldflags += -L$(d)../../src/out/$(c)
 
 this_no_install := true
 
@@ -35,10 +21,10 @@ this_xmls := $(patsubst $(d)%,%,$(shell ls $(d)testdata/*.xml))
 define this_rules
 test:: $(prorab_this_name)
 $(.RECIPEPREFIX)@myci-running-test.sh $(this_test)
-$(.RECIPEPREFIX)$(a)cp $(d)../../src/build/*.dll $(d) || true
+$(.RECIPEPREFIX)$(a)cp $(d)../../src/out/$(c)/*.dll $(d)out/$(c) || true
 $(.RECIPEPREFIX)$(a)for f in $(this_xmls); do \
 		echo "checking file $$$$f" && \
-		(cd $(d) && LD_LIBRARY_PATH=../../src/build DYLD_LIBRARY_PATH=$$$$LD_LIBRARY_PATH ./parsexml $$$$f ) && \
+		(cd $(d) && LD_LIBRARY_PATH=../../src/out/$(c) DYLD_LIBRARY_PATH=$$$$LD_LIBRARY_PATH out/$(c)/parsexml $$$$f ) && \
 		cmp $(d)out.xml $(d)$$$$f.cmp ; \
 		if [ $$$$? -ne 0 ]; then myci-error.sh "parsed XML did not match etalon sample"; exit 1; fi; \
 		rm -f $(d)out.xml; \
@@ -48,6 +34,6 @@ endef
 $(eval $(this_rules))
 
 # add dependency on libmikroxml
-$(prorab_this_name): $(abspath $(d)../../src/build/libmikroxml$(dot_so))
+$(prorab_this_name): $(abspath $(d)../../src/out/$(c)/libmikroxml$(dot_so))
 
 $(eval $(call prorab-include, ../../src/makefile))
