@@ -26,12 +26,12 @@ nuget{
 
 		description: @"C++ XML parser library";
 		releaseNotes: "Initial release";
-		copyright: Copyright 2017 Ivan Gagis;
+		copyright: Copyright 2021 Ivan Gagis;
 		tags: { native};
 	}
 	dependencies {
 		packages : {
-			libutki/1.1.111;
+			libutki/1.1.123;
 		};
 	}
 	files {
