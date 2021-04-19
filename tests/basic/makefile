@@ -1,4 +1,8 @@
 include prorab.mk
+include prorab-test.mk
+include myci.mk
+
+$(eval $(call myci-try-include, $(CONANBUILDINFO_DIR)conanbuildinfo.mak))
 
 $(eval $(call prorab-config, ../../config))
 
@@ -9,33 +13,19 @@ this_srcs += $(call prorab-src-dir, .)
 this_ldlibs += -lmikroxml -lutki
 this_ldflags += -L$(d)../../src/out/$(c)
 
+this_cxxflags += $(addprefix -I,$(CONAN_INCLUDE_DIRS))
+this_ldflags += $(addprefix -L,$(CONAN_LIB_DIRS))
+
 this_no_install := true
 
 $(eval $(prorab-build-app))
 
-this_dirs := $(subst /, ,$(d))
-this_test := $(word $(words $(this_dirs)),$(this_dirs))
-
-ifeq ($(os),windows)
-    this_test_cmd := (cd $(d) && cmd //C 'set PATH=../../src/out/$(c);%PATH% && out\$(c)\$$(notdir $$^)')
-else ifeq ($(os),macosx)
-    this_test_cmd := (cd $(d) && DYLD_LIBRARY_PATH=../../src/out/$(c) out/$(c)/$$(notdir $$^))
-else ifeq ($(os),linux)
-    this_test_cmd := (cd $(d) && LD_LIBRARY_PATH=../../src/out/$(c) out/$(c)/$$(notdir $$^))
-else
-    $(error "Unknown OS")
-endif
-
-define this_rules
-test:: $(prorab_this_name)
-$(.RECIPEPREFIX)@myci-running-test.sh $(this_test)
-$(.RECIPEPREFIX)$(a)$(this_test_cmd); \
-		if [ $$$$? -ne 0 ]; then myci-error.sh "test failed"; exit 1; fi
-$(.RECIPEPREFIX)@myci-passed.sh
-endef
-$(eval $(this_rules))
-
 # add dependency on libmikroxml
 $(prorab_this_name): $(abspath $(d)../../src/out/$(c)/libmikroxml$(dot_so))
+
+this_test_cmd := $(prorab_this_name)
+this_test_deps := $(prorab_this_name)
+this_test_ld_path := ../../src/out/$(c) $(CONAN_LIB_DIRS)
+$(eval $(prorab-test))
 
 $(eval $(call prorab-include, ../../src/makefile))
