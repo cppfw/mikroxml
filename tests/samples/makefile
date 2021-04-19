@@ -25,7 +25,7 @@ $(prorab_this_name): $(abspath $(d)../../src/out/$(c)/libmikroxml$(dot_so))
 
 this_test_cmd := for f in $(patsubst $(d)%,%,$(shell ls $(d)testdata/*.xml)); do \
 		echo "checking file $$$$f" && \
-		(cd $(d) && LD_LIBRARY_PATH=../../src/out/$(c) DYLD_LIBRARY_PATH=$$$$LD_LIBRARY_PATH out/$(c)/parsexml $$$$f ) && \
+		(cd $(d) && $(prorab_this_name) $$$$f ) && \
 		cmp $(d)out.xml $(d)$$$$f.cmp ; \
 		if [ $$$$? -ne 0 ]; then myci-error.sh "parsed XML did not match etalon sample"; exit 1; fi; \
 		rm -f $(d)out.xml; \
