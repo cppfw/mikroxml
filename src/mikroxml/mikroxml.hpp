@@ -37,31 +37,31 @@ class parser{
 		cdata_terminator
 	} state = State_e::IDLE;
 
-	void parseIdle(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
-	void parseTag(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
-	void parseTagEmpty(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
-	void parseTagSeekGt(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
-	void parseDeclaration(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
-	void parseDeclarationEnd(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
-	void parseComment(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
-	void parseCommentEnd(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
-	void parseAttributes(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
-	void parseAttributeName(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
-	void parseAttributeSeekToEquals(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
-	void parseAttributeSeekToValue(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
-	void parseAttributeValue(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
-	void parseContent(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
-	void parseRefChar(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
-	void parseDoctype(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
-	void parseDoctypeBody(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
-	void parseDoctypeTag(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
-	void parseDoctypeSkipTag(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
-	void parseDoctypeEntityName(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
-	void parseDoctypeEntitySeekToValue(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
-	void parseDoctypeEntityValue(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
-	void parseSkipUnknownExclamationMarkConstruct(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
-	void parse_cdata(utki::span<const char>::const_iterator& i, utki::span<const char>::const_iterator& e);
-	void parse_cdata_terminator(utki::span<const char>::const_iterator& i, utki::span<const char>::const_iterator& e);
+	void parseIdle(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
+	void parseTag(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
+	void parseTagEmpty(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
+	void parseTagSeekGt(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
+	void parseDeclaration(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
+	void parseDeclarationEnd(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
+	void parseComment(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
+	void parseCommentEnd(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
+	void parseAttributes(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
+	void parseAttributeName(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
+	void parseAttributeSeekToEquals(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
+	void parseAttributeSeekToValue(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
+	void parseAttributeValue(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
+	void parseContent(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
+	void parseRefChar(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
+	void parseDoctype(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
+	void parseDoctypeBody(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
+	void parseDoctypeTag(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
+	void parseDoctypeSkipTag(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
+	void parseDoctypeEntityName(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
+	void parseDoctypeEntitySeekToValue(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
+	void parseDoctypeEntityValue(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
+	void parseSkipUnknownExclamationMarkConstruct(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
+	void parse_cdata(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
+	void parse_cdata_terminator(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
 	
 	void handleAttributeParsed();
 	
