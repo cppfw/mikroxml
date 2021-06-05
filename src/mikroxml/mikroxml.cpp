@@ -44,10 +44,10 @@ void parser::feed(utki::span<const char> data){
 				this->parse_tag_empty(i, e);
 				break;
 			case state::tag_seek_gt:
-				this->parseTagSeekGt(i, e);
+				this->parse_tag_seek_gt(i, e);
 				break;
 			case state::declaration:
-				this->parseDeclaration(i, e);
+				this->parse_declaration(i, e);
 				break;
 			case state::declaration_end:
 				this->parseDeclarationEnd(i, e);
@@ -707,7 +707,7 @@ void parser::parseSkipUnknownExclamationMarkConstruct(utki::span<const char>::it
 	}
 }
 
-void parser::parseTagSeekGt(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
+void parser::parse_tag_seek_gt(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
 	for(; i != e; ++i){
 		switch(*i){
 			case '\n':
@@ -730,7 +730,7 @@ void parser::parseTagSeekGt(utki::span<const char>::iterator& i, utki::span<cons
 	}
 }
 
-void parser::parseDeclaration(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
+void parser::parse_declaration(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
 	for(; i != e; ++i){
 		switch(*i){
 			case '?':
