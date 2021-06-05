@@ -73,11 +73,11 @@ class parser{
 	std::vector<char> name; // general variable for storing name of something (attribute name, entity name, etc.)
 	std::vector<char> ref_char_buf;
 	
-	char attrValueQuoteChar;
+	char attr_value_quote_char;
 	
-	State_e stateAfterRefChar;
+	State_e state_after_ref_char;
 	
-	unsigned lineNumber = 1;
+	unsigned line_number = 1;
 	
 	std::map<std::string, std::vector<char>> doctypeEntities;
 	
