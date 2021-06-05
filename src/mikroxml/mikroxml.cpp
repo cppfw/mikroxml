@@ -94,7 +94,7 @@ void parser::feed(utki::span<const char> data){
 			case state::doctype_entity_name:
 				this->parseDoctypeEntityName(i, e);
 				break;
-			case state::DOCTYPE_ENTITY_SEEK_TO_VALUE:
+			case state::doctype_entity_seek_to_value:
 				this->parseDoctypeEntitySeekToValue(i, e);
 				break;
 			case state::DOCTYPE_ENTITY_VALUE:
@@ -641,7 +641,7 @@ void parser::parseDoctypeEntityName(utki::span<const char>::iterator& i, utki::s
 				this->name = std::move(this->buf);
 				ASSERT(this->buf.size() == 0)
 				
-				this->cur_state = state::DOCTYPE_ENTITY_SEEK_TO_VALUE;
+				this->cur_state = state::doctype_entity_seek_to_value;
 				return;
 			default:
 				this->buf.push_back(*i);

@@ -29,7 +29,7 @@ class parser{
 		doctype_body,
 		doctype_tag,
 		doctype_entity_name,
-		DOCTYPE_ENTITY_SEEK_TO_VALUE,
+		doctype_entity_seek_to_value,
 		DOCTYPE_ENTITY_VALUE,
 		DOCTYPE_SKIP_TAG,
 		SKIP_UNKNOWN_EXCLAMATION_MARK_CONSTRUCT,
