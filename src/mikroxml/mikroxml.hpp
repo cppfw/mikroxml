@@ -89,7 +89,7 @@ public:
 	
 	/**
 	 * @brief Element start.
-	 * @param name - name of the element which has started. Name is empty if empty element has started.
+	 * @param name - name of the element which has started.
 	 */
 	virtual void on_element_start(utki::span<const char> name) = 0;
 	

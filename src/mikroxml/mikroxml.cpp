@@ -468,7 +468,7 @@ void parser::process_parsed_tag_name(){
 			if(this->buf.size() <= 1){
 				throw malformed_xml(this->line_number, "end tag cannot be empty");
 			}
-			this->on_element_end(utki::make_span(&*(++this->buf.begin()), this->buf.size() - 1));
+			this->on_element_end(utki::make_span(this->buf).subspan(1));
 			this->buf.clear();
 			this->cur_state = state::tag_seek_gt;
 			return;
