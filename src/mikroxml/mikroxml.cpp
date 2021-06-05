@@ -97,7 +97,7 @@ void parser::feed(utki::span<const char> data){
 			case state::doctype_entity_seek_to_value:
 				this->parseDoctypeEntitySeekToValue(i, e);
 				break;
-			case state::DOCTYPE_ENTITY_VALUE:
+			case state::doctype_entity_value:
 				this->parseDoctypeEntityValue(i, e);
 				break;
 			case state::SKIP_UNKNOWN_EXCLAMATION_MARK_CONSTRUCT:
@@ -661,7 +661,7 @@ void parser::parseDoctypeEntitySeekToValue(utki::span<const char>::iterator& i, 
 			case '\r':
 				break;
 			case '"':
-				this->cur_state = state::DOCTYPE_ENTITY_VALUE;
+				this->cur_state = state::doctype_entity_value;
 				return;
 			default:
 				throw malformed_xml(this->line_number, "Unexpected character encountered while seeking to DOCTYPE entity value, expected '\"'.");
