@@ -20,7 +20,7 @@ class parser{
 		comment_end,
 		attributes,
 		attribute_name,
-		ATTRIBUTE_SEEK_TO_EQUALS,
+		attribute_seek_to_equals,
 		ATTRIBUTE_SEEK_TO_VALUE,
 		ATTRIBUTE_VALUE,
 		CONTENT,

@@ -64,7 +64,7 @@ void parser::feed(utki::span<const char> data){
 			case state::attribute_name:
 				this->parseAttributeName(i, e);
 				break;
-			case state::ATTRIBUTE_SEEK_TO_EQUALS:
+			case state::attribute_seek_to_equals:
 				this->parseAttributeSeekToEquals(i, e);
 				break;
 			case state::ATTRIBUTE_SEEK_TO_VALUE:
@@ -332,7 +332,7 @@ void parser::parseAttributeName(utki::span<const char>::iterator& i, utki::span<
 			case '\t':
 			case '\r':
 				ASSERT(this->name.size() != 0)
-				this->cur_state = state::ATTRIBUTE_SEEK_TO_EQUALS;
+				this->cur_state = state::attribute_seek_to_equals;
 				return;
 			case '=':
 				ASSERT(this->buf.size() == 0)
