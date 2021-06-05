@@ -11,7 +11,7 @@ public:
 class parser{
 	enum class state{
 		idle,
-		TAG,
+		tag,
 		TAG_SEEK_GT,
 		TAG_EMPTY,
 		DECLARATION,
