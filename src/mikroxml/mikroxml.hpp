@@ -10,7 +10,7 @@ public:
 };
 class parser{
 	enum class state{
-		IDLE,
+		idle,
 		TAG,
 		TAG_SEEK_GT,
 		TAG_EMPTY,
@@ -35,7 +35,7 @@ class parser{
 		SKIP_UNKNOWN_EXCLAMATION_MARK_CONSTRUCT,
 		cdata,
 		cdata_terminator
-	} cur_state = state::IDLE;
+	} cur_state = state::idle;
 
 	void parseIdle(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
 	void parseTag(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
