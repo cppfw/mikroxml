@@ -9,7 +9,7 @@ public:
 	malformed_xml(unsigned line_number, const std::string& message);
 };
 class parser{
-	enum class State_e{
+	enum class state{
 		IDLE,
 		TAG,
 		TAG_SEEK_GT,
@@ -35,7 +35,7 @@ class parser{
 		SKIP_UNKNOWN_EXCLAMATION_MARK_CONSTRUCT,
 		cdata,
 		cdata_terminator
-	} cur_state = State_e::IDLE;
+	} cur_state = state::IDLE;
 
 	void parseIdle(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
 	void parseTag(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
@@ -75,7 +75,7 @@ class parser{
 	
 	char attr_value_quote_char;
 	
-	State_e state_after_ref_char;
+	state state_after_ref_char;
 	
 	unsigned line_number = 1;
 	
