@@ -55,7 +55,7 @@ void parser::feed(utki::span<const char> data){
 			case state::comment:
 				this->parseComment(i, e);
 				break;
-			case state::COMMENT_END:
+			case state::comment_end:
 				this->parseCommentEnd(i, e);
 				break;
 			case state::ATTRIBUTES:
@@ -378,7 +378,7 @@ void parser::parseComment(utki::span<const char>::iterator& i, utki::span<const 
 	for(; i != e; ++i){
 		switch(*i){
 			case '-':
-				this->cur_state = state::COMMENT_END;
+				this->cur_state = state::comment_end;
 				return;
 			case '\n':
 				++this->line_number;
