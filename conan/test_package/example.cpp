@@ -34,7 +34,7 @@ public:
 };
 
 int main(int argc, const char** argv){
-	auto in = "<element attribute=\"attributeValue\">content</element>";
+	std::string_view in = "<element attribute=\"attributeValue\">content</element>";
 	Parser parser;
 	
 	parser.feed(in);
