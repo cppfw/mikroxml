@@ -10,7 +10,7 @@ this_name := tests
 
 this_srcs += $(call prorab-src-dir, .)
 
-this_ldlibs += -lmikroxml -lutki
+this_ldlibs += -lmikroxml -lutki -ltst
 this_ldflags += -L$(d)../../src/out/$(c)
 
 this_cxxflags += $(addprefix -I,$(CONAN_INCLUDE_DIRS))
