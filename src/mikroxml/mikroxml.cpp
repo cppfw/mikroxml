@@ -65,13 +65,13 @@ void parser::feed(utki::span<const char> data){
 				this->parse_attribute_name(i, e);
 				break;
 			case state::attribute_seek_to_equals:
-				this->parseAttributeSeekToEquals(i, e);
+				this->parse_attribute_seek_to_equals(i, e);
 				break;
 			case state::attribute_seek_to_value:
-				this->parseAttributeSeekToValue(i, e);
+				this->parse_attribute_seek_to_value(i, e);
 				break;
 			case state::attribute_value:
-				this->parseAttributeValue(i, e);
+				this->parse_attribute_value(i, e);
 				break;
 			case state::content:
 				this->parseContent(i, e);
@@ -237,7 +237,7 @@ void parser::handleAttributeParsed(){
 	this->cur_state = state::attributes;
 }
 
-void parser::parseAttributeValue(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
+void parser::parse_attribute_value(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
 	ASSERT(this->name.size() != 0)
 	for(; i != e; ++i){
 		switch(*i){
@@ -273,7 +273,7 @@ void parser::parseAttributeValue(utki::span<const char>::iterator& i, utki::span
 	}
 }
 
-void parser::parseAttributeSeekToValue(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
+void parser::parse_attribute_seek_to_value(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
 	for(; i != e; ++i){
 		switch(*i){
 			case '\n':
@@ -297,7 +297,7 @@ void parser::parseAttributeSeekToValue(utki::span<const char>::iterator& i, utki
 	}
 }
 
-void parser::parseAttributeSeekToEquals(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
+void parser::parse_attribute_seek_to_equals(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
 	for(; i != e; ++i){
 		switch(*i){
 			case '\n':
