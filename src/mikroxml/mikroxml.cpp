@@ -9,12 +9,12 @@
 using namespace mikroxml;
 
 namespace{
-const std::string commentTag_c = "!--";
-const std::string doctypeTag_c = "!DOCTYPE";
-const std::string doctypeElementTag_c = "!ELEMENT";
-const std::string doctypeAttlistTag_c = "!ATTLIST";
-const std::string doctypeEntityTag_c = "!ENTITY";
-const std::string cdata_tag = "![CDATA[";
+const std::string comment_tag_word = "!--";
+const std::string doctype_tag_word = "!DOCTYPE";
+const std::string doctype_element_tag_word = "!ELEMENT";
+const std::string doctype_attlist_tag_word = "!ATTLIST";
+const std::string doctype_entity_tag_word = "!ENTITY";
+const std::string cdata_tag_word = "![CDATA[";
 }
 
 parser::parser(){
@@ -435,7 +435,7 @@ bool starts_with(const std::vector<char>& vec, const std::string& str){
 		return false;
 	}
 	
-	for(unsigned i = 0; i != str.size(); ++i){
+	for(size_t i = 0; i != str.size(); ++i){
 		if(str[i] != vec[i]){
 			return false;
 		}
@@ -457,7 +457,7 @@ void parser::process_parsed_tag_name(){
 			return;
 		case '!':
 //			TRACE(<< "this->buf = " << std::string(&*this->buf.begin(), this->buf.size()) << std::endl)
-			if(starts_with(this->buf, doctypeTag_c)){
+			if(starts_with(this->buf, doctype_tag_word)){
 				this->cur_state = state::doctype;
 			}else{
 				this->cur_state = state::skip_unknown_exclamation_mark_construct;
@@ -504,7 +504,7 @@ void parser::parse_tag(utki::span<const char>::iterator& i, utki::span<const cha
 				return;
 			case '[':
 				this->buf.push_back(*i);
-				if(this->buf.size() == cdata_tag.size() && starts_with(this->buf, cdata_tag)){
+				if(this->buf.size() == cdata_tag_word.size() && starts_with(this->buf, cdata_tag_word)){
 					this->buf.clear();
 					this->cur_state = state::cdata;
 					return;
@@ -512,7 +512,7 @@ void parser::parse_tag(utki::span<const char>::iterator& i, utki::span<const cha
 				break;
 			case '-':
 				this->buf.push_back(*i);
-				if(this->buf.size() == commentTag_c.size() && starts_with(this->buf, commentTag_c)){
+				if(this->buf.size() == comment_tag_word.size() && starts_with(this->buf, comment_tag_word)){
 					this->cur_state = state::comment;
 					this->buf.clear();
 					return;
@@ -589,11 +589,11 @@ void parser::parse_doctype_tag(utki::span<const char>::iterator& i, utki::span<c
 				}
 				
 				if(
-						starts_with(this->buf, doctypeElementTag_c) ||
-						starts_with(this->buf, doctypeAttlistTag_c)
+						starts_with(this->buf, doctype_element_tag_word) ||
+						starts_with(this->buf, doctype_attlist_tag_word)
 				){
 					this->cur_state = state::doctype_skip_tag;
-				}else if(starts_with(this->buf, doctypeEntityTag_c)){
+				}else if(starts_with(this->buf, doctype_entity_tag_word)){
 					this->cur_state = state::doctype_entity_name;
 				}else{
 					throw malformed_xml(this->line_number, "Unknown DOCTYPE tag encountered");
