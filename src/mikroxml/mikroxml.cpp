@@ -67,10 +67,10 @@ void parser::feed(utki::span<const char> data){
 			case state::attribute_seek_to_equals:
 				this->parseAttributeSeekToEquals(i, e);
 				break;
-			case state::ATTRIBUTE_SEEK_TO_VALUE:
+			case state::attribute_seek_to_value:
 				this->parseAttributeSeekToValue(i, e);
 				break;
-			case state::ATTRIBUTE_VALUE:
+			case state::attribute_value:
 				this->parseAttributeValue(i, e);
 				break;
 			case state::CONTENT:
@@ -285,11 +285,11 @@ void parser::parseAttributeSeekToValue(utki::span<const char>::iterator& i, utki
 				break;
 			case '\'':
 				this->attr_value_quote_char = '\'';
-				this->cur_state = state::ATTRIBUTE_VALUE;
+				this->cur_state = state::attribute_value;
 				return;
 			case '"':
 				this->attr_value_quote_char = '"';
-				this->cur_state = state::ATTRIBUTE_VALUE;
+				this->cur_state = state::attribute_value;
 				return;
 			default:
 				throw malformed_xml(this->line_number, "Unexpected character encountered, expected \"'\" or '\"'.");
@@ -310,7 +310,7 @@ void parser::parseAttributeSeekToEquals(utki::span<const char>::iterator& i, utk
 			case '=':
 				ASSERT(this->name.size() != 0)
 				ASSERT(this->buf.size() == 0)
-				this->cur_state = state::ATTRIBUTE_SEEK_TO_VALUE;
+				this->cur_state = state::attribute_seek_to_value;
 				return;
 			default:
 				{
@@ -336,7 +336,7 @@ void parser::parseAttributeName(utki::span<const char>::iterator& i, utki::span<
 				return;
 			case '=':
 				ASSERT(this->buf.size() == 0)
-				this->cur_state = state::ATTRIBUTE_SEEK_TO_VALUE;
+				this->cur_state = state::attribute_seek_to_value;
 				return;
 			default:
 				this->name.push_back(*i);
