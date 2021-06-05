@@ -79,7 +79,7 @@ class parser{
 	
 	unsigned line_number = 1;
 	
-	std::map<std::string, std::vector<char>> doctypeEntities;
+	std::map<std::string, std::vector<char>> doctype_entities;
 	
 public:
 	parser();

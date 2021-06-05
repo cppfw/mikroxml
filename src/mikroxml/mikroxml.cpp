@@ -149,8 +149,8 @@ void parser::processParsedRefChar(){
 	}else{ // character name reference
 		std::string refCharString(this->ref_char_buf.data(), this->ref_char_buf.size());
 		
-		auto i = this->doctypeEntities.find(refCharString);
-		if(i != this->doctypeEntities.end()){
+		auto i = this->doctype_entities.find(refCharString);
+		if(i != this->doctype_entities.end()){
 			this->buf.insert(std::end(this->buf), std::begin(i->second), std::end(i->second));
 		}else if(std::string("amp") == refCharString){
 			this->buf.push_back('&');
@@ -673,7 +673,7 @@ void parser::parseDoctypeEntityValue(utki::span<const char>::iterator& i, utki::
 	for(; i != e; ++i){
 		switch(*i){
 			case '"':
-				this->doctypeEntities.insert(std::make_pair(utki::make_string(this->name), std::move(this->buf)));
+				this->doctype_entities.insert(std::make_pair(utki::make_string(this->name), std::move(this->buf)));
 				
 				this->name.clear();
 				
