@@ -58,7 +58,7 @@ tst::set set("basic", [](auto& suite){
 
 				auto str = parser.ss.str();
 
-				tst::check_eq(std::string_view(str), p.second, SL);
+				tst::check_eq(str, std::string(p.second), SL);
 			}
 		);
 });
