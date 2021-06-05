@@ -63,7 +63,7 @@ class parser{
 	void parse_cdata(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
 	void parse_cdata_terminator(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
 	
-	void handleAttributeParsed();
+	void handle_attribute_parsed();
 	
 	void processParsedTagName();
 	

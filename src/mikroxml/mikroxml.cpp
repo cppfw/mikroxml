@@ -230,7 +230,7 @@ void parser::parse_content(utki::span<const char>::iterator& i, utki::span<const
 	}
 }
 
-void parser::handleAttributeParsed(){
+void parser::handle_attribute_parsed(){
 	this->on_attribute_parsed(utki::make_span(this->name), utki::make_span(this->buf));
 	this->name.clear();
 	this->buf.clear();
@@ -243,14 +243,14 @@ void parser::parse_attribute_value(utki::span<const char>::iterator& i, utki::sp
 		switch(*i){
 			case '\'':
 				if(this->attr_value_quote_char == '\''){
-					this->handleAttributeParsed();
+					this->handle_attribute_parsed();
 					return;
 				}
 				this->buf.push_back(*i);
 				break;
 			case '"':
 				if(this->attr_value_quote_char == '"'){
-					this->handleAttributeParsed();
+					this->handle_attribute_parsed();
 					return;
 				}
 				this->buf.push_back(*i);
