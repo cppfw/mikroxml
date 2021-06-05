@@ -24,7 +24,7 @@ class parser{
 		attribute_seek_to_value,
 		attribute_value,
 		content,
-		REF_CHAR,
+		ref_char,
 		DOCTYPE,
 		DOCTYPE_BODY,
 		DOCTYPE_TAG,
