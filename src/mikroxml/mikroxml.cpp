@@ -92,7 +92,7 @@ void parser::feed(utki::span<const char> data){
 				this->parse_doctype_skip_tag(i, e);
 				break;
 			case state::doctype_entity_name:
-				this->parseDoctypeEntityName(i, e);
+				this->parse_doctype_entity_name(i, e);
 				break;
 			case state::doctype_entity_seek_to_value:
 				this->parseDoctypeEntitySeekToValue(i, e);
@@ -625,7 +625,7 @@ void parser::parse_doctype_skip_tag(utki::span<const char>::iterator& i, utki::s
 	}
 }
 
-void parser::parseDoctypeEntityName(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
+void parser::parse_doctype_entity_name(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
 	for(; i != e; ++i){
 		switch(*i){
 			case '\n':
