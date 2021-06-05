@@ -27,7 +27,7 @@ class parser{
 		ref_char,
 		doctype,
 		doctype_body,
-		DOCTYPE_TAG,
+		doctype_tag,
 		DOCTYPE_ENTITY_NAME,
 		DOCTYPE_ENTITY_SEEK_TO_VALUE,
 		DOCTYPE_ENTITY_VALUE,
