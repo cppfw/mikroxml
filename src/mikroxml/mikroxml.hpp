@@ -12,8 +12,8 @@ class parser{
 	enum class state{
 		idle,
 		tag,
-		TAG_SEEK_GT,
-		TAG_EMPTY,
+		tag_seek_gt,
+		tag_empty,
 		DECLARATION,
 		DECLARATION_END,
 		COMMENT,

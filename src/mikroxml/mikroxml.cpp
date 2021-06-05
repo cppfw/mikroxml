@@ -40,10 +40,10 @@ void parser::feed(utki::span<const char> data){
 			case state::tag:
 				this->parseTag(i, e);
 				break;
-			case state::TAG_EMPTY:
+			case state::tag_empty:
 				this->parseTagEmpty(i, e);
 				break;
-			case state::TAG_SEEK_GT:
+			case state::tag_seek_gt:
 				this->parseTagSeekGt(i, e);
 				break;
 			case state::DECLARATION:
@@ -358,7 +358,7 @@ void parser::parseAttributes(utki::span<const char>::iterator& i, utki::span<con
 			case '\r':
 				break;
 			case '/':
-				this->cur_state = state::TAG_EMPTY;
+				this->cur_state = state::tag_empty;
 				return;
 			case '>':
 				this->on_attributes_end(false);
@@ -470,7 +470,7 @@ void parser::processParsedTagName(){
 			}
 			this->on_element_end(utki::make_span(&*(++this->buf.begin()), this->buf.size() - 1));
 			this->buf.clear();
-			this->cur_state = state::TAG_SEEK_GT;
+			this->cur_state = state::tag_seek_gt;
 			return;
 		default:
 			this->on_element_start(utki::make_span(this->buf));
@@ -525,7 +525,7 @@ void parser::parseTag(utki::span<const char>::iterator& i, utki::span<const char
 					// After parsing usual tag we expect attributes, but since we got '/' the tag has no any attributes, so it is empty.
 					// In other cases, like '!DOCTYPE' tag the cur_state should remain.
 					if(this->cur_state == state::ATTRIBUTES){
-						this->cur_state = state::TAG_EMPTY;
+						this->cur_state = state::tag_empty;
 					}
 					return;
 				}
