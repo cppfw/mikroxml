@@ -424,8 +424,8 @@ void parser::parse_comment_end(utki::span<const char>::iterator& i, utki::span<c
 
 void parser::end(){
 	if(this->cur_state != state::idle){
-		std::array<char, 1> newLine = {{'\n'}};
-		this->feed(utki::make_span(newLine));
+		std::array<char, 1> new_line = {{'\n'}};
+		this->feed(utki::make_span(new_line));
 	}
 }
 
