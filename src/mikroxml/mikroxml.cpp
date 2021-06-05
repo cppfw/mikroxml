@@ -18,8 +18,8 @@ const std::string cdata_tag = "![CDATA[";
 }
 
 parser::parser(){
-	this->buf.reserve(256);
-	this->name.reserve(256);
+	this->buf.reserve(0x100);
+	this->name.reserve(0x100);
 	this->ref_char_buf.reserve(10);
 }
 
@@ -126,18 +126,18 @@ void parser::process_parsed_ref_char(){
 	if(this->ref_char_buf[0] == '#'){ // numeric character reference
 		this->ref_char_buf.push_back(0); // null-terminate
 
-		char* endPtr;
-		char* startPtr = &*(++this->ref_char_buf.begin());
+		char* end_ptr;
+		char* start_ptr = &*(++this->ref_char_buf.begin());
 		int base;
-		if(*startPtr == 'x'){ // hexadecimal format
+		if(*start_ptr == 'x'){ // hexadecimal format
 			base = 16;
-			++startPtr;
+			++start_ptr;
 		}else{ // decimal format
 			base = 10;
 		}
 
-		std::uint32_t unicode = std::strtoul(startPtr, &endPtr, base);
-		if(endPtr != &*this->ref_char_buf.rbegin()){
+		std::uint32_t unicode = std::strtoul(start_ptr, &end_ptr, base);
+		if(end_ptr != &*this->ref_char_buf.rbegin()){
 			std::stringstream ss;
 			ss << "Unknown numeric character reference encountered: " << &*(++this->ref_char_buf.begin());
 			throw malformed_xml(this->line_number, ss.str());
