@@ -136,7 +136,7 @@ void parser::process_parsed_ref_char(){
 			base = 10;
 		}
 
-		std::uint32_t unicode = std::strtoul(start_ptr, &end_ptr, base);
+		uint32_t unicode = std::strtoul(start_ptr, &end_ptr, base);
 		if(end_ptr != &*this->ref_char_buf.rbegin()){
 			std::stringstream ss;
 			ss << "Unknown numeric character reference encountered: " << &*(++this->ref_char_buf.begin());
