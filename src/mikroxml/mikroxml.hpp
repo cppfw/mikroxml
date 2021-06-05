@@ -52,7 +52,7 @@ class parser{
 	void parse_attribute_value(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
 	void parse_content(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
 	void parse_ref_char(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
-	void parseDoctype(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
+	void parse_doctype(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
 	void parseDoctypeBody(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
 	void parseDoctypeTag(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
 	void parseDoctypeSkipTag(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);

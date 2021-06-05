@@ -80,7 +80,7 @@ void parser::feed(utki::span<const char> data){
 				this->parse_ref_char(i, e);
 				break;
 			case state::doctype:
-				this->parseDoctype(i, e);
+				this->parse_doctype(i, e);
 				break;
 			case state::doctype_body:
 				this->parseDoctypeBody(i, e);
@@ -537,7 +537,7 @@ void parser::parse_tag(utki::span<const char>::iterator& i, utki::span<const cha
 	}
 }
 
-void parser::parseDoctype(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
+void parser::parse_doctype(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
 	for(; i != e; ++i){
 		switch(*i){
 			case '>':
