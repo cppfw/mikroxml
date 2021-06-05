@@ -116,7 +116,7 @@ void parser::feed(utki::span<const char> data){
 	}
 }
 
-void parser::processParsedRefChar(){
+void parser::process_parsed_ref_char(){
 	this->cur_state = this->state_after_ref_char;
 	
 	if(this->ref_char_buf.size() == 0){
@@ -176,7 +176,7 @@ void parser::parse_ref_char(utki::span<const char>::iterator& i, utki::span<cons
 	for(; i != e; ++i){
 		switch(*i){
 			case ';':
-				this->processParsedRefChar();
+				this->process_parsed_ref_char();
 				return;
 			case '\n':
 				++this->line_number;

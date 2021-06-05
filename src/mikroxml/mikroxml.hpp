@@ -67,7 +67,7 @@ class parser{
 	
 	void process_parsed_tag_name();
 	
-	void processParsedRefChar();
+	void process_parsed_ref_char();
 	
 	std::vector<char> buf;
 	std::vector<char> name; // general variable for storing name of something (attribute name, entity name, etc.)
