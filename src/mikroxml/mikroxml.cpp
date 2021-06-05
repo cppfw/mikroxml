@@ -430,7 +430,7 @@ void parser::end(){
 }
 
 namespace{
-bool startsWith(const std::vector<char>& vec, const std::string& str){
+bool starts_with(const std::vector<char>& vec, const std::string& str){
 	if(vec.size() < str.size()){
 		return false;
 	}
@@ -457,7 +457,7 @@ void parser::process_parsed_tag_name(){
 			return;
 		case '!':
 //			TRACE(<< "this->buf = " << std::string(&*this->buf.begin(), this->buf.size()) << std::endl)
-			if(startsWith(this->buf, doctypeTag_c)){
+			if(starts_with(this->buf, doctypeTag_c)){
 				this->cur_state = state::doctype;
 			}else{
 				this->cur_state = state::skip_unknown_exclamation_mark_construct;
@@ -504,7 +504,7 @@ void parser::parse_tag(utki::span<const char>::iterator& i, utki::span<const cha
 				return;
 			case '[':
 				this->buf.push_back(*i);
-				if(this->buf.size() == cdata_tag.size() && startsWith(this->buf, cdata_tag)){
+				if(this->buf.size() == cdata_tag.size() && starts_with(this->buf, cdata_tag)){
 					this->buf.clear();
 					this->cur_state = state::cdata;
 					return;
@@ -512,7 +512,7 @@ void parser::parse_tag(utki::span<const char>::iterator& i, utki::span<const cha
 				break;
 			case '-':
 				this->buf.push_back(*i);
-				if(this->buf.size() == commentTag_c.size() && startsWith(this->buf, commentTag_c)){
+				if(this->buf.size() == commentTag_c.size() && starts_with(this->buf, commentTag_c)){
 					this->cur_state = state::comment;
 					this->buf.clear();
 					return;
@@ -589,11 +589,11 @@ void parser::parse_doctype_tag(utki::span<const char>::iterator& i, utki::span<c
 				}
 				
 				if(
-						startsWith(this->buf, doctypeElementTag_c) ||
-						startsWith(this->buf, doctypeAttlistTag_c)
+						starts_with(this->buf, doctypeElementTag_c) ||
+						starts_with(this->buf, doctypeAttlistTag_c)
 				){
 					this->cur_state = state::doctype_skip_tag;
-				}else if(startsWith(this->buf, doctypeEntityTag_c)){
+				}else if(starts_with(this->buf, doctypeEntityTag_c)){
 					this->cur_state = state::doctype_entity_name;
 				}else{
 					throw malformed_xml(this->line_number, "Unknown DOCTYPE tag encountered");
