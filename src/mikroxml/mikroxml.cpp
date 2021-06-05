@@ -61,7 +61,7 @@ void parser::feed(utki::span<const char> data){
 			case state::attributes:
 				this->parseAttributes(i, e);
 				break;
-			case state::ATTRIBUTE_NAME:
+			case state::attribute_name:
 				this->parseAttributeName(i, e);
 				break;
 			case state::ATTRIBUTE_SEEK_TO_EQUALS:
@@ -368,7 +368,7 @@ void parser::parseAttributes(utki::span<const char>::iterator& i, utki::span<con
 				throw malformed_xml(this->line_number, "unexpected '=' encountered");
 			default:
 				this->name.push_back(*i);
-				this->cur_state = state::ATTRIBUTE_NAME;
+				this->cur_state = state::attribute_name;
 				return;
 		}
 	}
