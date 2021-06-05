@@ -91,7 +91,7 @@ void parser::feed(utki::span<const char> data){
 			case state::DOCTYPE_SKIP_TAG:
 				this->parseDoctypeSkipTag(i, e);
 				break;
-			case state::DOCTYPE_ENTITY_NAME:
+			case state::doctype_entity_name:
 				this->parseDoctypeEntityName(i, e);
 				break;
 			case state::DOCTYPE_ENTITY_SEEK_TO_VALUE:
@@ -594,7 +594,7 @@ void parser::parseDoctypeTag(utki::span<const char>::iterator& i, utki::span<con
 				){
 					this->cur_state = state::DOCTYPE_SKIP_TAG;
 				}else if(startsWith(this->buf, doctypeEntityTag_c)){
-					this->cur_state = state::DOCTYPE_ENTITY_NAME;
+					this->cur_state = state::doctype_entity_name;
 				}else{
 					throw malformed_xml(this->line_number, "Unknown DOCTYPE tag encountered");
 				}
