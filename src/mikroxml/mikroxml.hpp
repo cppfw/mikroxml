@@ -71,7 +71,7 @@ class parser{
 	
 	std::vector<char> buf;
 	std::vector<char> name; // general variable for storing name of something (attribute name, entity name, etc.)
-	std::vector<char> refCharBuf;
+	std::vector<char> ref_char_buf;
 	
 	char attrValueQuoteChar;
 	

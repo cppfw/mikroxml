@@ -20,7 +20,7 @@ const std::string cdata_tag = "![CDATA[";
 parser::parser(){
 	this->buf.reserve(256);
 	this->name.reserve(256);
-	this->refCharBuf.reserve(10);
+	this->ref_char_buf.reserve(10);
 }
 
 malformed_xml::malformed_xml(unsigned line_number, const std::string& message) :
@@ -119,15 +119,15 @@ void parser::feed(utki::span<const char> data){
 void parser::processParsedRefChar(){
 	this->state = this->stateAfterRefChar;
 	
-	if(this->refCharBuf.size() == 0){
+	if(this->ref_char_buf.size() == 0){
 		return;
 	}
 	
-	if(this->refCharBuf[0] == '#'){ // numeric character reference
-		this->refCharBuf.push_back(0); // null-terminate
+	if(this->ref_char_buf[0] == '#'){ // numeric character reference
+		this->ref_char_buf.push_back(0); // null-terminate
 
 		char* endPtr;
-		char* startPtr = &*(++this->refCharBuf.begin());
+		char* startPtr = &*(++this->ref_char_buf.begin());
 		int base;
 		if(*startPtr == 'x'){ // hexadecimal format
 			base = 16;
@@ -137,9 +137,9 @@ void parser::processParsedRefChar(){
 		}
 
 		std::uint32_t unicode = std::strtoul(startPtr, &endPtr, base);
-		if(endPtr != &*this->refCharBuf.rbegin()){
+		if(endPtr != &*this->ref_char_buf.rbegin()){
 			std::stringstream ss;
-			ss << "Unknown numeric character reference encountered: " << &*(++this->refCharBuf.begin());
+			ss << "Unknown numeric character reference encountered: " << &*(++this->ref_char_buf.begin());
 			throw malformed_xml(this->lineNumber, ss.str());
 		}
 		auto utf8 = utki::to_utf8(char32_t(unicode));
@@ -147,7 +147,7 @@ void parser::processParsedRefChar(){
 			this->buf.push_back(*i);
 		}
 	}else{ // character name reference
-		std::string refCharString(this->refCharBuf.data(), this->refCharBuf.size());
+		std::string refCharString(this->ref_char_buf.data(), this->ref_char_buf.size());
 		
 		auto i = this->doctypeEntities.find(refCharString);
 		if(i != this->doctypeEntities.end()){
@@ -164,12 +164,12 @@ void parser::processParsedRefChar(){
 			this->buf.push_back('\'');
 		}else{
 			std::stringstream ss;
-			ss << "Unknown name character reference encountered: " << this->refCharBuf.data();
+			ss << "Unknown name character reference encountered: " << this->ref_char_buf.data();
 			throw malformed_xml(this->lineNumber, ss.str());
 		}
 	}
 	
-	this->refCharBuf.clear();
+	this->ref_char_buf.clear();
 }
 
 void parser::parseRefChar(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
@@ -182,7 +182,7 @@ void parser::parseRefChar(utki::span<const char>::iterator& i, utki::span<const 
 				++this->lineNumber;
 				// fall-through
 			default:
-				this->refCharBuf.push_back(*i);
+				this->ref_char_buf.push_back(*i);
 				break;
 		}
 	}
@@ -213,7 +213,7 @@ void parser::parseContent(utki::span<const char>::iterator& i, utki::span<const 
 				this->state = State_e::TAG;
 				return;
 			case '&':
-				ASSERT(this->refCharBuf.size() == 0)
+				ASSERT(this->ref_char_buf.size() == 0)
 				this->stateAfterRefChar = this->state;
 				this->state = State_e::REF_CHAR;
 				return;
@@ -256,7 +256,7 @@ void parser::parseAttributeValue(utki::span<const char>::iterator& i, utki::span
 				this->buf.push_back(*i);
 				break;
 			case '&':
-				ASSERT(this->refCharBuf.size() == 0)
+				ASSERT(this->ref_char_buf.size() == 0)
 				this->stateAfterRefChar = this->state;
 				this->state = State_e::REF_CHAR;
 				return;
