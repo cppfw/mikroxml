@@ -32,7 +32,7 @@ class parser{
 		doctype_entity_seek_to_value,
 		doctype_entity_value,
 		doctype_skip_tag,
-		SKIP_UNKNOWN_EXCLAMATION_MARK_CONSTRUCT,
+		skip_unknown_exclamation_mark_construct,
 		cdata,
 		cdata_terminator
 	} cur_state = state::idle;

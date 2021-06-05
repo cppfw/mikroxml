@@ -100,7 +100,7 @@ void parser::feed(utki::span<const char> data){
 			case state::doctype_entity_value:
 				this->parseDoctypeEntityValue(i, e);
 				break;
-			case state::SKIP_UNKNOWN_EXCLAMATION_MARK_CONSTRUCT:
+			case state::skip_unknown_exclamation_mark_construct:
 				this->parseSkipUnknownExclamationMarkConstruct(i, e);
 				break;
 			case state::cdata:
@@ -460,7 +460,7 @@ void parser::processParsedTagName(){
 			if(startsWith(this->buf, doctypeTag_c)){
 				this->cur_state = state::doctype;
 			}else{
-				this->cur_state = state::SKIP_UNKNOWN_EXCLAMATION_MARK_CONSTRUCT;
+				this->cur_state = state::skip_unknown_exclamation_mark_construct;
 			}
 			this->buf.clear();
 			return;
