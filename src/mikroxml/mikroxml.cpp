@@ -79,7 +79,7 @@ void parser::feed(utki::span<const char> data){
 			case state::ref_char:
 				this->parseRefChar(i, e);
 				break;
-			case state::DOCTYPE:
+			case state::doctype:
 				this->parseDoctype(i, e);
 				break;
 			case state::DOCTYPE_BODY:
@@ -458,7 +458,7 @@ void parser::processParsedTagName(){
 		case '!':
 //			TRACE(<< "this->buf = " << std::string(&*this->buf.begin(), this->buf.size()) << std::endl)
 			if(startsWith(this->buf, doctypeTag_c)){
-				this->cur_state = state::DOCTYPE;
+				this->cur_state = state::doctype;
 			}else{
 				this->cur_state = state::SKIP_UNKNOWN_EXCLAMATION_MARK_CONSTRUCT;
 			}
@@ -561,7 +561,7 @@ void parser::parseDoctypeBody(utki::span<const char>::iterator& i, utki::span<co
 		switch(*i){
 			case ']':
 				ASSERT(this->buf.size() == 0)
-				this->cur_state = state::DOCTYPE;
+				this->cur_state = state::doctype;
 				return;
 			case '<':
 				this->cur_state = state::DOCTYPE_TAG;
