@@ -39,7 +39,7 @@ public:
 
 int main(int argc, char** argv){
 	{
-		auto in = "<element attribute=\"attributeValue\">content</element>";
+		std::string_view in = "<element attribute=\"attributeValue\">content</element>";
 		Parser parser;
 		
 		parser.feed(in);
@@ -49,7 +49,7 @@ int main(int argc, char** argv){
 		ASSERT_INFO_ALWAYS(parser.ss.str() == "<element attribute='attributeValue'>content</element>", " str = " << parser.ss.str())
 	}
 	{
-		auto in = "<element attribute='attribute&amp;&lt;&gt;&quot;&apos;Value'>content&amp;&lt;&gt;&quot;&apos;</element>";
+		std::string_view in = "<element attribute='attribute&amp;&lt;&gt;&quot;&apos;Value'>content&amp;&lt;&gt;&quot;&apos;</element>";
 		Parser parser;
 		
 		parser.feed(in);
@@ -59,7 +59,7 @@ int main(int argc, char** argv){
 		ASSERT_INFO_ALWAYS(parser.ss.str() == "<element attribute='attribute&<>\"'Value'>content&<>\"'</element>", " str = " << parser.ss.str())
 	}
 	{
-		auto in = "<element attribute='attribute&#xbf5;Value'>content&#1050;</element>";
+		std::string_view in = "<element attribute='attribute&#xbf5;Value'>content&#1050;</element>";
 		Parser parser;
 		
 		parser.feed(in);
@@ -69,7 +69,7 @@ int main(int argc, char** argv){
 		ASSERT_INFO_ALWAYS(parser.ss.str() == "<element attribute='attribute௵Value'>contentК</element>", " str = " << parser.ss.str())
 	}
 	{
-		auto in = "<element attribute='attribute&#xbf5;Value'/>";
+		std::string_view in = "<element attribute='attribute&#xbf5;Value'/>";
 		Parser parser;
 		
 		parser.feed(in);

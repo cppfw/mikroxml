@@ -20,11 +20,11 @@
             "group": "build"
         },
         {
-            "label": "test",
+            "label": "test_",
             "type": "shell",
             "command": "make test",
             "problemMatcher": [],
-            "group": "test",
+            "group": "build",
             "dependsOn": "build"
         }
     ]
