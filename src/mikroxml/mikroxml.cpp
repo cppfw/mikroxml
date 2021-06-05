@@ -147,20 +147,20 @@ void parser::process_parsed_ref_char(){
 			this->buf.push_back(*i);
 		}
 	}else{ // character name reference
-		std::string refCharString(this->ref_char_buf.data(), this->ref_char_buf.size());
+		std::string ref_char_string(this->ref_char_buf.data(), this->ref_char_buf.size());
 		
-		auto i = this->doctype_entities.find(refCharString);
+		auto i = this->doctype_entities.find(ref_char_string);
 		if(i != this->doctype_entities.end()){
 			this->buf.insert(std::end(this->buf), std::begin(i->second), std::end(i->second));
-		}else if(std::string("amp") == refCharString){
+		}else if(ref_char_string == "amp"){
 			this->buf.push_back('&');
-		}else if(std::string("lt") == refCharString){
+		}else if(ref_char_string == "lt"){
 			this->buf.push_back('<');
-		}else if(std::string("gt") == refCharString){
+		}else if(ref_char_string == "gt"){
 			this->buf.push_back('>');
-		}else if(std::string("quot") == refCharString){
+		}else if(ref_char_string == "quot"){
 			this->buf.push_back('"');
-		}else if(std::string("apos") == refCharString){
+		}else if(ref_char_string == "apos"){
 			this->buf.push_back('\'');
 		}else{
 			std::stringstream ss;
