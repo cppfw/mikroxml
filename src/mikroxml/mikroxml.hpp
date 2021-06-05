@@ -18,7 +18,7 @@ class parser{
 		declaration_end,
 		comment,
 		comment_end,
-		ATTRIBUTES,
+		attributes,
 		ATTRIBUTE_NAME,
 		ATTRIBUTE_SEEK_TO_EQUALS,
 		ATTRIBUTE_SEEK_TO_VALUE,
