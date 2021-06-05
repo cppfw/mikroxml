@@ -46,7 +46,7 @@ void parser::feed(utki::span<const char> data){
 			case state::tag_seek_gt:
 				this->parseTagSeekGt(i, e);
 				break;
-			case state::DECLARATION:
+			case state::declaration:
 				this->parseDeclaration(i, e);
 				break;
 			case state::DECLARATION_END:
@@ -453,7 +453,7 @@ void parser::processParsedTagName(){
 		case '?':
 			// some declaration, we just skip it.
 			this->buf.clear();
-			this->cur_state = state::DECLARATION;
+			this->cur_state = state::declaration;
 			return;
 		case '!':
 //			TRACE(<< "this->buf = " << std::string(&*this->buf.begin(), this->buf.size()) << std::endl)
@@ -755,7 +755,7 @@ void parser::parseDeclarationEnd(utki::span<const char>::iterator& i, utki::span
 				++this->line_number;
 				// fall-through
 			default:
-				this->cur_state = state::DECLARATION;
+				this->cur_state = state::declaration;
 				return;
 		}
 	}

@@ -14,7 +14,7 @@ class parser{
 		tag,
 		tag_seek_gt,
 		tag_empty,
-		DECLARATION,
+		declaration,
 		DECLARATION_END,
 		COMMENT,
 		COMMENT_END,
