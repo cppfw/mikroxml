@@ -88,7 +88,7 @@ void parser::feed(utki::span<const char> data){
 			case state::doctype_tag:
 				this->parseDoctypeTag(i, e);
 				break;
-			case state::DOCTYPE_SKIP_TAG:
+			case state::doctype_skip_tag:
 				this->parseDoctypeSkipTag(i, e);
 				break;
 			case state::doctype_entity_name:
@@ -592,7 +592,7 @@ void parser::parseDoctypeTag(utki::span<const char>::iterator& i, utki::span<con
 						startsWith(this->buf, doctypeElementTag_c) ||
 						startsWith(this->buf, doctypeAttlistTag_c)
 				){
-					this->cur_state = state::DOCTYPE_SKIP_TAG;
+					this->cur_state = state::doctype_skip_tag;
 				}else if(startsWith(this->buf, doctypeEntityTag_c)){
 					this->cur_state = state::doctype_entity_name;
 				}else{
@@ -679,7 +679,7 @@ void parser::parseDoctypeEntityValue(utki::span<const char>::iterator& i, utki::
 				
 				ASSERT(this->buf.size() == 0)
 				
-				this->cur_state = state::DOCTYPE_SKIP_TAG;
+				this->cur_state = state::doctype_skip_tag;
 				return;
 			case '\n':
 				++this->line_number;

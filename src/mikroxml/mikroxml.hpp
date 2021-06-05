@@ -31,7 +31,7 @@ class parser{
 		doctype_entity_name,
 		doctype_entity_seek_to_value,
 		doctype_entity_value,
-		DOCTYPE_SKIP_TAG,
+		doctype_skip_tag,
 		SKIP_UNKNOWN_EXCLAMATION_MARK_CONSTRUCT,
 		cdata,
 		cdata_terminator
