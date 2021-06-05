@@ -49,7 +49,7 @@ void parser::feed(utki::span<const char> data){
 			case state::declaration:
 				this->parseDeclaration(i, e);
 				break;
-			case state::DECLARATION_END:
+			case state::declaration_end:
 				this->parseDeclarationEnd(i, e);
 				break;
 			case state::COMMENT:
@@ -734,7 +734,7 @@ void parser::parseDeclaration(utki::span<const char>::iterator& i, utki::span<co
 	for(; i != e; ++i){
 		switch(*i){
 			case '?':
-				this->cur_state = state::DECLARATION_END;
+				this->cur_state = state::declaration_end;
 				return;
 			case '\n':
 				++this->line_number;
