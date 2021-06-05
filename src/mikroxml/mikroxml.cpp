@@ -164,7 +164,7 @@ void parser::process_parsed_ref_char(){
 			this->buf.push_back('\'');
 		}else{
 			std::stringstream ss;
-			ss << "Unknown name character reference encountered: " << this->ref_char_buf.data();
+			ss << "Unknown name character reference encountered: " << std::string_view(this->ref_char_buf.data(), this->ref_char_buf.size());
 			throw malformed_xml(this->line_number, ss.str());
 		}
 	}
