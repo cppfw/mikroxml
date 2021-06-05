@@ -180,7 +180,7 @@ void parser::parse_ref_char(utki::span<const char>::iterator& i, utki::span<cons
 				return;
 			case '\n':
 				++this->line_number;
-				[[fallthrough]]
+				[[fallthrough]];
 			default:
 				this->ref_char_buf.push_back(*i);
 				break;
@@ -222,7 +222,7 @@ void parser::parse_content(utki::span<const char>::iterator& i, utki::span<const
 				break;
 			case '\n':
 				++this->line_number;
-				[[fallthrough]]
+				[[fallthrough]];
 			default:
 				this->buf.push_back(*i);
 				break;
@@ -265,7 +265,7 @@ void parser::parse_attribute_value(utki::span<const char>::iterator& i, utki::sp
 				break;
 			case '\n':
 				++this->line_number;
-				[[fallthrough]]
+				[[fallthrough]];
 			default:
 				this->buf.push_back(*i);
 				break;
@@ -278,7 +278,7 @@ void parser::parse_attribute_seek_to_value(utki::span<const char>::iterator& i, 
 		switch(*i){
 			case '\n':
 				++this->line_number;
-				[[fallthrough]]
+				[[fallthrough]];
 			case ' ':
 			case '\t':
 			case '\r':
@@ -302,7 +302,7 @@ void parser::parse_attribute_seek_to_equals(utki::span<const char>::iterator& i,
 		switch(*i){
 			case '\n':
 				++this->line_number;
-				[[fallthrough]]
+				[[fallthrough]];
 			case ' ':
 			case '\t':
 			case '\r':
@@ -327,7 +327,7 @@ void parser::parse_attribute_name(utki::span<const char>::iterator& i, utki::spa
 		switch(*i){
 			case '\n':
 				++this->line_number;
-				[[fallthrough]]
+				[[fallthrough]];
 			case ' ':
 			case '\t':
 			case '\r':
@@ -352,7 +352,7 @@ void parser::parse_attributes(utki::span<const char>::iterator& i, utki::span<co
 		switch(*i){
 			case '\n':
 				++this->line_number;
-				[[fallthrough]]
+				[[fallthrough]];
 			case ' ':
 			case '\t':
 			case '\r':
@@ -382,7 +382,7 @@ void parser::parse_comment(utki::span<const char>::iterator& i, utki::span<const
 				return;
 			case '\n':
 				++this->line_number;
-				[[fallthrough]]
+				[[fallthrough]];
 			default:
 				break;
 		}
@@ -394,7 +394,7 @@ void parser::parse_comment_end(utki::span<const char>::iterator& i, utki::span<c
 		switch(*i){
 			case '\n':
 				++this->line_number;
-				[[fallthrough]]
+				[[fallthrough]];
 			default:
 				this->buf.clear();
 				this->cur_state = state::comment;
@@ -485,7 +485,7 @@ void parser::parse_tag(utki::span<const char>::iterator& i, utki::span<const cha
 		switch(*i){
 			case '\n':
 				++this->line_number;
-				[[fallthrough]]
+				[[fallthrough]];
 			case ' ':
 			case '\t':
 			case '\r':
@@ -496,7 +496,7 @@ void parser::parse_tag(utki::span<const char>::iterator& i, utki::span<const cha
 				switch(this->cur_state){
 					case state::attributes:
 						this->on_attributes_end(false);
-						[[falltrough]]
+						[[fallthrough]];
 					default:
 						this->cur_state = state::idle;
 						break;
@@ -529,7 +529,7 @@ void parser::parse_tag(utki::span<const char>::iterator& i, utki::span<const cha
 					}
 					return;
 				}
-				[[fallthrough]]
+				[[fallthrough]];
 			default:
 				this->buf.push_back(*i);
 				break;
@@ -549,7 +549,7 @@ void parser::parse_doctype(utki::span<const char>::iterator& i, utki::span<const
 				return;
 			case '\n':
 				++this->line_number;
-				[[fallthrough]]
+				[[fallthrough]];
 			default:
 				break;
 		}
@@ -568,7 +568,7 @@ void parser::parse_doctype_body(utki::span<const char>::iterator& i, utki::span<
 				return;
 			case '\n':
 				++this->line_number;
-				[[fallthrough]]
+				[[fallthrough]];
 			default:
 				break;
 		}
@@ -580,7 +580,7 @@ void parser::parse_doctype_tag(utki::span<const char>::iterator& i, utki::span<c
 		switch(*i){
 			case '\n':
 				++this->line_number;
-				[[fallthrough]]
+				[[fallthrough]];
 			case ' ':
 			case '\t':
 			case '\r':
@@ -618,7 +618,7 @@ void parser::parse_doctype_skip_tag(utki::span<const char>::iterator& i, utki::s
 				return;
 			case '\n':
 				++this->line_number;
-				[[fallthrough]]
+				[[fallthrough]];
 			default:
 				break;
 		}
@@ -630,7 +630,7 @@ void parser::parse_doctype_entity_name(utki::span<const char>::iterator& i, utki
 		switch(*i){
 			case '\n':
 				++this->line_number;
-				[[fallthrough]]
+				[[fallthrough]];
 			case ' ':
 			case '\t':
 			case '\r':
@@ -655,7 +655,7 @@ void parser::parse_doctype_entity_seek_to_value(utki::span<const char>::iterator
 		switch(*i){
 			case '\n':
 				++this->line_number;
-				[[fallthrough]]
+				[[fallthrough]];
 			case ' ':
 			case '\t':
 			case '\r':
@@ -683,7 +683,7 @@ void parser::parse_doctype_entity_value(utki::span<const char>::iterator& i, utk
 				return;
 			case '\n':
 				++this->line_number;
-				[[fallthrough]]
+				[[fallthrough]];
 			default:
 				this->buf.push_back(*i);
 				break;
@@ -700,7 +700,7 @@ void parser::parse_skip_unknown_exclamation_mark_construct(utki::span<const char
 				return;
 			case '\n':
 				++this->line_number;
-				[[fallthrough]]
+				[[fallthrough]];
 			default:
 				break;
 		}
@@ -712,7 +712,7 @@ void parser::parse_tag_seek_gt(utki::span<const char>::iterator& i, utki::span<c
 		switch(*i){
 			case '\n':
 				++this->line_number;
-				[[fallthrough]]
+				[[fallthrough]];
 			case ' ':
 			case '\t':
 			case '\r':
@@ -738,7 +738,7 @@ void parser::parse_declaration(utki::span<const char>::iterator& i, utki::span<c
 				return;
 			case '\n':
 				++this->line_number;
-				[[fallthrough]]
+				[[fallthrough]];
 			default:
 				break;
 		}
@@ -753,7 +753,7 @@ void parser::parse_declaration_end(utki::span<const char>::iterator& i, utki::sp
 				return;
 			case '\n':
 				++this->line_number;
-				[[fallthrough]]
+				[[fallthrough]];
 			default:
 				this->cur_state = state::declaration;
 				return;
@@ -776,7 +776,7 @@ void parser::parse_idle(utki::span<const char>::iterator& i, utki::span<const ch
 				break;
 			case '\n':
 				++this->line_number;
-				[[fallthrough]]
+				[[fallthrough]];
 			default:
 				ASSERT(this->buf.size() == 0)
 				this->buf.push_back(*i);
