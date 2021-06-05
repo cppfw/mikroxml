@@ -101,7 +101,7 @@ void parser::feed(utki::span<const char> data){
 				this->parse_doctype_entity_value(i, e);
 				break;
 			case state::skip_unknown_exclamation_mark_construct:
-				this->parseSkipUnknownExclamationMarkConstruct(i, e);
+				this->parse_skip_unknown_exclamation_mark_construct(i, e);
 				break;
 			case state::cdata:
 				this->parse_cdata(i, e);
@@ -691,7 +691,7 @@ void parser::parse_doctype_entity_value(utki::span<const char>::iterator& i, utk
 	}
 }
 
-void parser::parseSkipUnknownExclamationMarkConstruct(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
+void parser::parse_skip_unknown_exclamation_mark_construct(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
 	for(; i != e; ++i){
 		switch(*i){
 			case '>':
