@@ -35,7 +35,7 @@ void parser::feed(utki::span<const char> data){
 	for(auto i = data.begin(), e = data.end(); i != e; ++i){
 		switch(this->cur_state){
 			case state::idle:
-				this->parseIdle(i, e);
+				this->parse_idle(i, e);
 				break;
 			case state::tag:
 				this->parseTag(i, e);
@@ -761,7 +761,7 @@ void parser::parseDeclarationEnd(utki::span<const char>::iterator& i, utki::span
 	}
 }
 
-void parser::parseIdle(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
+void parser::parse_idle(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
 	for(; i != e; ++i){
 		switch(*i){
 			case '<':
