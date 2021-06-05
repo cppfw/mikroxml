@@ -3,11 +3,14 @@
 #include <vector>
 
 #include <utki/span.hpp>
+
 namespace mikroxml{
+
 class malformed_xml : public std::logic_error{
 public:
 	malformed_xml(unsigned line_number, const std::string& message);
 };
+
 class parser{
 	enum class state{
 		idle,
@@ -84,6 +87,10 @@ class parser{
 public:
 	parser();
 	
+	/**
+	 * @brief Element start.
+	 * @param name - name of the element which has started. Name is empty if empty element has started.
+	 */
 	virtual void on_element_start(utki::span<const char> name) = 0;
 	
 	/**

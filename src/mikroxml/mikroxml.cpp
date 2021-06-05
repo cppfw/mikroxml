@@ -445,7 +445,7 @@ bool startsWith(const std::vector<char>& vec, const std::string& str){
 }
 
 void parser::process_parsed_tag_name(){
-	if(this->buf.size() == 0){
+	if(this->buf.empty()){
 		throw malformed_xml(this->line_number, "tag name cannot be empty");
 	}
 	
