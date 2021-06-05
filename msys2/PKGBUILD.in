@@ -29,9 +29,9 @@ url="http://github.com/cppfw/${packageName}"
 license=('MIT')
 groups=()
 
-depends=("${pkgPrefix}utki" "${pkgPrefix}papki")
+depends=("${pkgPrefix}utki")
 
-makedepends=('myci' 'prorab' 'prorab-extra' 'doxygen')
+makedepends=('myci' 'prorab' 'prorab-extra' 'doxygen' "${pkgPrefix}papki" "${pkgPrefix}tst")
 checkdepends=('myci')
 optdepends=()
 provides=()

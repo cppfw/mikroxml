@@ -6,7 +6,8 @@ class Libmikroxml < Formula
 
   depends_on "prorab" => :build
   depends_on "pkg-config" => :build
-  depends_on "libpapki" => :build #needed for tests
+  depends_on "libtst" => :build # needed for tests
+  depends_on "libpapki" => :build # needed for tests
   depends_on "libutki"
 
   def install
