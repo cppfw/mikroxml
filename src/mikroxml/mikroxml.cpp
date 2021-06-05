@@ -444,7 +444,7 @@ bool startsWith(const std::vector<char>& vec, const std::string& str){
 }
 }
 
-void parser::processParsedTagName(){
+void parser::process_parsed_tag_name(){
 	if(this->buf.size() == 0){
 		throw malformed_xml(this->line_number, "tag name cannot be empty");
 	}
@@ -489,10 +489,10 @@ void parser::parse_tag(utki::span<const char>::iterator& i, utki::span<const cha
 			case ' ':
 			case '\t':
 			case '\r':
-				this->processParsedTagName();
+				this->process_parsed_tag_name();
 				return;
 			case '>':
-				this->processParsedTagName();
+				this->process_parsed_tag_name();
 				switch(this->cur_state){
 					case state::attributes:
 						this->on_attributes_end(false);
@@ -520,7 +520,7 @@ void parser::parse_tag(utki::span<const char>::iterator& i, utki::span<const cha
 				break;
 			case '/':
 				if(this->buf.size() != 0){
-					this->processParsedTagName();
+					this->process_parsed_tag_name();
 
 					// After parsing usual tag we expect attributes, but since we got '/' the tag has no any attributes, so it is empty.
 					// In other cases, like '!DOCTYPE' tag the cur_state should remain.

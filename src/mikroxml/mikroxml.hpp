@@ -65,7 +65,7 @@ class parser{
 	
 	void handle_attribute_parsed();
 	
-	void processParsedTagName();
+	void process_parsed_tag_name();
 	
 	void processParsedRefChar();
 	
