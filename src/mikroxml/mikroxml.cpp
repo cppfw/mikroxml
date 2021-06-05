@@ -52,7 +52,7 @@ void parser::feed(utki::span<const char> data){
 			case state::declaration_end:
 				this->parseDeclarationEnd(i, e);
 				break;
-			case state::COMMENT:
+			case state::comment:
 				this->parseComment(i, e);
 				break;
 			case state::COMMENT_END:
@@ -397,12 +397,12 @@ void parser::parseCommentEnd(utki::span<const char>::iterator& i, utki::span<con
 				// fall-through
 			default:
 				this->buf.clear();
-				this->cur_state = state::COMMENT;
+				this->cur_state = state::comment;
 				return;
 			case '-':
 				if(this->buf.size() == 1){
 					this->buf.clear();
-					this->cur_state = state::COMMENT;
+					this->cur_state = state::comment;
 					return;
 				}
 				ASSERT(this->buf.size() == 0)
@@ -416,7 +416,7 @@ void parser::parseCommentEnd(utki::span<const char>::iterator& i, utki::span<con
 				}
 				ASSERT(this->buf.size() == 0)
 				this->buf.clear();
-				this->cur_state = state::COMMENT;
+				this->cur_state = state::comment;
 				return;
 		}
 	}
@@ -513,7 +513,7 @@ void parser::parseTag(utki::span<const char>::iterator& i, utki::span<const char
 			case '-':
 				this->buf.push_back(*i);
 				if(this->buf.size() == commentTag_c.size() && startsWith(this->buf, commentTag_c)){
-					this->cur_state = state::COMMENT;
+					this->cur_state = state::comment;
 					this->buf.clear();
 					return;
 				}

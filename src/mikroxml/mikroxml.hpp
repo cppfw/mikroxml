@@ -16,7 +16,7 @@ class parser{
 		tag_empty,
 		declaration,
 		declaration_end,
-		COMMENT,
+		comment,
 		COMMENT_END,
 		ATTRIBUTES,
 		ATTRIBUTE_NAME,
