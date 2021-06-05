@@ -35,7 +35,7 @@ class parser{
 		SKIP_UNKNOWN_EXCLAMATION_MARK_CONSTRUCT,
 		cdata,
 		cdata_terminator
-	} state = State_e::IDLE;
+	} cur_state = State_e::IDLE;
 
 	void parseIdle(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
 	void parseTag(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
