@@ -73,7 +73,7 @@ void parser::feed(utki::span<const char> data){
 			case state::attribute_value:
 				this->parseAttributeValue(i, e);
 				break;
-			case state::CONTENT:
+			case state::content:
 				this->parseContent(i, e);
 				break;
 			case state::REF_CHAR:
@@ -768,7 +768,7 @@ void parser::parseIdle(utki::span<const char>::iterator& i, utki::span<const cha
 				this->cur_state = state::tag;
 				return;
 			case '&':
-				this->state_after_ref_char = state::CONTENT;
+				this->state_after_ref_char = state::content;
 				this->cur_state = state::REF_CHAR;
 				return;
 			case '\r':
@@ -780,7 +780,7 @@ void parser::parseIdle(utki::span<const char>::iterator& i, utki::span<const cha
 			default:
 				ASSERT(this->buf.size() == 0)
 				this->buf.push_back(*i);
-				this->cur_state = state::CONTENT;
+				this->cur_state = state::content;
 				return;
 		}
 	}

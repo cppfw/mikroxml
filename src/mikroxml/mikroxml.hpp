@@ -23,7 +23,7 @@ class parser{
 		attribute_seek_to_equals,
 		attribute_seek_to_value,
 		attribute_value,
-		CONTENT,
+		content,
 		REF_CHAR,
 		DOCTYPE,
 		DOCTYPE_BODY,
