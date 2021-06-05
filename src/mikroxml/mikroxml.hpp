@@ -42,7 +42,7 @@ class parser{
 	void parse_tag_empty(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
 	void parse_tag_seek_gt(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
 	void parse_declaration(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
-	void parseDeclarationEnd(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
+	void parse_declaration_end(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
 	void parseComment(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
 	void parseCommentEnd(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
 	void parseAttributes(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
