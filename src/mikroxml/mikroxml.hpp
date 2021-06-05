@@ -46,7 +46,7 @@ class parser{
 	void parse_comment(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
 	void parse_comment_end(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
 	void parse_attributes(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
-	void parseAttributeName(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
+	void parse_attribute_name(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
 	void parseAttributeSeekToEquals(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
 	void parseAttributeSeekToValue(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
 	void parseAttributeValue(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
