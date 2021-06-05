@@ -74,7 +74,7 @@ void parser::feed(utki::span<const char> data){
 				this->parse_attribute_value(i, e);
 				break;
 			case state::content:
-				this->parseContent(i, e);
+				this->parse_content(i, e);
 				break;
 			case state::ref_char:
 				this->parseRefChar(i, e);
@@ -204,7 +204,7 @@ void parser::parse_tag_empty(utki::span<const char>::iterator& i, utki::span<con
 	}
 }
 
-void parser::parseContent(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
+void parser::parse_content(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
 	for(; i != e; ++i){
 		switch(*i){
 			case '<':
