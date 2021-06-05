@@ -56,7 +56,7 @@ void parser::feed(utki::span<const char> data){
 				this->parse_comment(i, e);
 				break;
 			case state::comment_end:
-				this->parseCommentEnd(i, e);
+				this->parse_comment_end(i, e);
 				break;
 			case state::attributes:
 				this->parseAttributes(i, e);
@@ -389,7 +389,7 @@ void parser::parse_comment(utki::span<const char>::iterator& i, utki::span<const
 	}
 }
 
-void parser::parseCommentEnd(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
+void parser::parse_comment_end(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
 	for(; i != e; ++i){
 		switch(*i){
 			case '\n':
