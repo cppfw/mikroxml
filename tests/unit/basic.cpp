@@ -6,6 +6,7 @@
 #include <array>
 #include <sstream>
 
+namespace{
 class Parser : public mikroxml::parser{
 public:
 	std::stringstream ss;
@@ -36,6 +37,7 @@ public:
 		ss << str;
 	}
 };
+}
 
 tst::set set("basic", [](auto& suite){
 	suite.template add<std::pair<std::string_view, std::string_view>>(
