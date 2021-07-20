@@ -5,6 +5,7 @@
 
 #include <array>
 #include <sstream>
+#include <fstream>
 
 namespace{
 class Parser : public mikroxml::parser{
@@ -39,8 +40,8 @@ public:
 };
 }
 
-tst::set set("basic", [](auto& suite){
-	suite.template add<std::pair<std::string_view, std::string_view>>(
+tst::set set("basic", [](tst::suite& suite){
+	suite.add<std::pair<std::string_view, std::string_view>>(
 			"parse_snippet",
 			{
 				{"<element attribute=\"attributeValue\">content</element>",
@@ -63,4 +64,33 @@ tst::set set("basic", [](auto& suite){
 				tst::check_eq(str, std::string(p.second), SL);
 			}
 		);
+	
+	suite.add(
+		"read_from_istream",
+		[](){
+			Parser parser;
+
+			static const size_t chunk_size = 0x1000; // 4kb
+
+			std::ifstream s;
+			s.open("samples_data/tiger.xml");
+
+			while(!s.eof()){
+				std::vector<char> buf;
+				buf.reserve(chunk_size);
+				for(size_t i = 0; i != chunk_size; ++i){
+					char c;
+					c = s.get();
+					if(s.eof()){
+						break;
+					}
+					buf.push_back(c);
+				}
+				parser.feed(utki::make_span(buf));
+			}
+			parser.end();
+
+			tst::check_ne(parser.ss.str().size(), size_t(0), SL);
+		}
+	);
 });
