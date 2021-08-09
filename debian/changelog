@@ -1,3 +1,9 @@
+libmikroxml (0.1.43) unstable; urgency=medium
+
+  * conan build_requires
+
+ -- Ivan Gagis <igagis@gmail.com>  Mon, 09 Aug 2021 19:03:58 +0300
+
 libmikroxml (0.1.42) unstable; urgency=medium
 
   * deploy to own repo
