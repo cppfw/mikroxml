@@ -54,7 +54,7 @@ nuget{
 			lib: ..\msvs_solution\x64\v140_Debug\libmikroxml.lib;
 		}
 */
-/*
+
 		[x86,v141,release] {
 			lib: ..\msvs_solution\v141_Release\libmikroxml.lib;
 		}
@@ -67,7 +67,7 @@ nuget{
 		[x64,v141,debug] {
 			lib: ..\msvs_solution\x64\v141_Debug\libmikroxml.lib;
 		}
-*/
+
 		[x86,v142,release,MultiThreaded] {
 			lib: ..\msvs_solution\v142_Release_MT\libmikroxml.lib;
 		}
