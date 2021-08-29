@@ -1,3 +1,9 @@
+libmikroxml (0.1.46) unstable; urgency=medium
+
+  * build for debian bullseye
+
+ -- Ivan Gagis <igagis@gmail.com>  Sun, 29 Aug 2021 23:47:56 +0300
+
 libmikroxml (0.1.45) unstable; urgency=medium
 
   * msvs: build for v141 tools
