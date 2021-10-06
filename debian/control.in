@@ -20,7 +20,7 @@ Description: Cross-platform XML parser in C++.
 Package: libmikroxml-dev
 Section: libdevel
 Architecture: any
-Depends: libmikroxml$(soname) (= ${binary:Version}), libmikroxml$(soname)-dbgsym (= ${binary:Version}), ${misc:Depends}
+Depends: libmikroxml$(soname) (= ${binary:Version}), ${misc:Depends}
 Suggests: libmikroxml-doc
 Description: Cross-platform XML parser in C++.
  Cross-platform parser of MicroXML standard in C++.
