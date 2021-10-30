@@ -1,3 +1,9 @@
+libmikroxml (0.1.47) unstable; urgency=medium
+
+  * ios: static framework
+
+ -- Ivan Gagis <igagis@gmail.com>  Sat, 30 Oct 2021 14:55:45 +0300
+
 libmikroxml (0.1.46) unstable; urgency=medium
 
   * build for debian bullseye
