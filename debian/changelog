@@ -1,3 +1,9 @@
+libmikroxml (0.1.48) unstable; urgency=medium
+
+  * build for ios 9.0
+
+ -- Ivan Gagis <igagis@gmail.com>  Sun, 31 Oct 2021 15:31:51 +0200
+
 libmikroxml (0.1.47) unstable; urgency=medium
 
   * ios: static framework
