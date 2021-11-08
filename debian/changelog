@@ -1,3 +1,9 @@
+libmikroxml (0.1.49) unstable; urgency=medium
+
+  * build for raspbian bullseye
+
+ -- Ivan Gagis <igagis@gmail.com>  Mon, 08 Nov 2021 20:46:41 +0200
+
 libmikroxml (0.1.48) unstable; urgency=medium
 
   * build for ios 9.0
