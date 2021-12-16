@@ -22,7 +22,7 @@ $(eval $(prorab-build-app))
 # add dependency on libmikroxml
 $(prorab_this_name): $(abspath $(d)../../src/out/$(c)/libmikroxml$(dot_so))
 
-this_test_cmd := $(prorab_this_name) --jobs=auto --junit-out=junit.xml 
+this_test_cmd := $(prorab_this_name) --jobs=auto --junit-out=out/$(c)/junit.xml 
 this_test_deps := $(prorab_this_name)
 this_test_ld_path := ../../src/out/$(c) $(CONAN_LIB_DIRS)
 $(eval $(prorab-test))
