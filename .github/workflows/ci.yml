@@ -26,7 +26,7 @@ jobs:
           - {os: debian, codename: bullseye, image_owner: arm32v7/, package_type: deb, labels: [arm,docker]}
     runs-on: ${{ (matrix.labels == '' && 'ubuntu-latest') || matrix.labels }}
     container: ${{ matrix.image_owner }}${{ matrix.os }}:${{ matrix.codename }}
-    name: linux - ${{ matrix.image_owner }}${{ matrix.os }}:${{ matrix.codename }}
+    name: sanitizer - ${{ matrix.image_owner }}${{ matrix.os }}:${{ matrix.codename }}
     steps:
       - name: add cppfw deb repo
         uses: myci-actions/add-deb-repo@master
@@ -316,7 +316,7 @@ jobs:
       matrix:
         os:
           - macos-10.15
-          - macos-11
+          # - macos-11
     name: conan - ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     steps:
