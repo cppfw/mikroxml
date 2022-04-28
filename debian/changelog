@@ -1,3 +1,9 @@
+libmikroxml (0.1.51) unstable; urgency=medium
+
+  * test release
+
+ -- Ivan Gagis <igagis@gmail.com>  Thu, 28 Apr 2022 20:18:51 +0300
+
 libmikroxml (0.1.50) unstable; urgency=medium
 
   * do not build conan for macos 11 for now
