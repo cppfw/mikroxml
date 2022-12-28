@@ -1,3 +1,9 @@
+libmikroxml (0.1.53) unstable; urgency=medium
+
+  * msvs: build v143 configs
+
+ -- Ivan Gagis <igagis@gmail.com>  Wed, 28 Dec 2022 17:42:12 +0200
+
 libmikroxml (0.1.52) unstable; urgency=medium
 
   * build for ubuntu jammy
