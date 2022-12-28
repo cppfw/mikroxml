@@ -47,16 +47,16 @@ msbuild ../msvs_solution/msvs_solution.sln /t:Rebuild /p:Configuration=v142_Rele
 msbuild ../msvs_solution/msvs_solution.sln /t:Rebuild /p:Configuration=v142_Debug_MT /p:Platform=x64 /v:minimal /nologo; If(!$?){exit 1}
 msbuild ../msvs_solution/msvs_solution.sln /t:Rebuild /p:Configuration=v142_Release_MT /p:Platform=x64 /v:minimal /nologo; If(!$?){exit 1}
 
-msbuild ../msvs_solution/msvs_solution.sln /t:Rebuild /p:Configuration=v143_Debug_MD /p:Platform=x86 /v:minimal /nologo; If(!$?){exit 1}
-msbuild ../msvs_solution/msvs_solution.sln /t:Rebuild /p:Configuration=v143_Release_MD /p:Platform=x86 /v:minimal /nologo; If(!$?){exit 1}
-msbuild ../msvs_solution/msvs_solution.sln /t:Rebuild /p:Configuration=v143_Debug_MD /p:Platform=x64 /v:minimal /nologo; If(!$?){exit 1}
-msbuild ../msvs_solution/msvs_solution.sln /t:Rebuild /p:Configuration=v143_Release_MD /p:Platform=x64 /v:minimal /nologo; If(!$?){exit 1}
-msbuild ../msvs_solution/msvs_solution.sln /t:Rebuild /p:Configuration=v143_Debug_MT /p:Platform=x86 /v:minimal /nologo; If(!$?){exit 1}
-msbuild ../msvs_solution/msvs_solution.sln /t:Rebuild /p:Configuration=v143_Release_MT /p:Platform=x86 /v:minimal /nologo; If(!$?){exit 1}
-msbuild ../msvs_solution/msvs_solution.sln /t:Rebuild /p:Configuration=v143_Debug_MT /p:Platform=x64 /v:minimal /nologo; If(!$?){exit 1}
-msbuild ../msvs_solution/msvs_solution.sln /t:Rebuild /p:Configuration=v143_Release_MT /p:Platform=x64 /v:minimal /nologo; If(!$?){exit 1}
+msbuild /m ../msvs_solution/msvs_solution.sln /t:Rebuild /p:Configuration=v143_Debug_MD /p:Platform=x86 /v:minimal /nologo; If(!$?){exit 1}
+msbuild /m ../msvs_solution/msvs_solution.sln /t:Rebuild /p:Configuration=v143_Release_MD /p:Platform=x86 /v:minimal /nologo; If(!$?){exit 1}
+msbuild /m ../msvs_solution/msvs_solution.sln /t:Rebuild /p:Configuration=v143_Debug_MD /p:Platform=x64 /v:minimal /nologo; If(!$?){exit 1}
+msbuild /m ../msvs_solution/msvs_solution.sln /t:Rebuild /p:Configuration=v143_Release_MD /p:Platform=x64 /v:minimal /nologo; If(!$?){exit 1}
+msbuild /m ../msvs_solution/msvs_solution.sln /t:Rebuild /p:Configuration=v143_Debug_MT /p:Platform=x86 /v:minimal /nologo; If(!$?){exit 1}
+msbuild /m ../msvs_solution/msvs_solution.sln /t:Rebuild /p:Configuration=v143_Release_MT /p:Platform=x86 /v:minimal /nologo; If(!$?){exit 1}
+msbuild /m ../msvs_solution/msvs_solution.sln /t:Rebuild /p:Configuration=v143_Debug_MT /p:Platform=x64 /v:minimal /nologo; If(!$?){exit 1}
+msbuild /m ../msvs_solution/msvs_solution.sln /t:Rebuild /p:Configuration=v143_Release_MT /p:Platform=x64 /v:minimal /nologo; If(!$?){exit 1}
 
-// run tests
+# run tests
 
     ../msvs_solution/v142_Debug_MD/tests.exe       --jobs=2 --junit-out=junit_x86_v142_debug_md.xml; If(!$?){exit 1}
     ../msvs_solution/v142_Debug_MT/tests.exe       --jobs=2 --junit-out=junit_x86_v142_debug_mt.xml; If(!$?){exit 1}
