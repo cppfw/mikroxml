@@ -58,6 +58,9 @@ msbuild /m ../msvs_solution/msvs_solution.sln /t:Rebuild /p:Configuration=v143_R
 
 # run tests
 
+Push-Location
+cd ../tests/unit
+
     ../msvs_solution/v142_Debug_MD/tests.exe       --jobs=2 --junit-out=junit_x86_v142_debug_md.xml; If(!$?){exit 1}
     ../msvs_solution/v142_Debug_MT/tests.exe       --jobs=2 --junit-out=junit_x86_v142_debug_mt.xml; If(!$?){exit 1}
     ../msvs_solution/v142_Release_MD/tests.exe     --jobs=2 --junit-out=junit_x86_v142_release_md.xml; If(!$?){exit 1}
@@ -75,6 +78,8 @@ msbuild /m ../msvs_solution/msvs_solution.sln /t:Rebuild /p:Configuration=v143_R
 ../msvs_solution/x64/v143_Debug_MT/tests.exe       --jobs=2 --junit-out=junit_x64_v143_debug_mt.xml; If(!$?){exit 1}
 ../msvs_solution/x64/v143_Release_MD/tests.exe     --jobs=2 --junit-out=junit_x64_v143_release_md.xml; If(!$?){exit 1}
 ../msvs_solution/x64/v143_Release_MT/tests.exe     --jobs=2 --junit-out=junit_x64_v143_release_mt.xml; If(!$?){exit 1}
+
+Pop-Location
 
 Write-NuGetPackage nuget.autopkg
 If(!$?){exit 1}
