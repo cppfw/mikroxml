@@ -1,3 +1,9 @@
+libmikroxml (0.1.54) unstable; urgency=medium
+
+  * fix lint issues
+
+ -- Ivan Gagis <igagis@gmail.com>  Thu, 16 Feb 2023 16:49:34 +0200
+
 libmikroxml (0.1.53) unstable; urgency=medium
 
   * msvs: build v143 configs
