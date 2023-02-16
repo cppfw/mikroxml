@@ -28,38 +28,39 @@ SOFTWARE.
 
 #include <sstream>
 
-#include <utki/unicode.hpp>
-
 #include <utki/string.hpp>
+#include <utki/unicode.hpp>
 
 using namespace mikroxml;
 
-namespace{
+namespace {
 const std::string comment_tag_word = "!--";
 const std::string doctype_tag_word = "!DOCTYPE";
 const std::string doctype_element_tag_word = "!ELEMENT";
 const std::string doctype_attlist_tag_word = "!ATTLIST";
 const std::string doctype_entity_tag_word = "!ENTITY";
 const std::string cdata_tag_word = "![CDATA[";
-}
+} // namespace
 
-parser::parser(){
+parser::parser()
+{
 	this->buf.reserve(0x100);
 	this->name.reserve(0x100);
 	this->ref_char_buf.reserve(10);
 }
 
 malformed_xml::malformed_xml(unsigned line_number, const std::string& message) :
-		std::logic_error([line_number, &message](){
-			std::stringstream ss;
-			ss << message << " line: " << line_number;
-			return ss.str();
-		}())
+	std::logic_error([line_number, &message]() {
+		std::stringstream ss;
+		ss << message << " line: " << line_number;
+		return ss.str();
+	}())
 {}
 
-void parser::feed(utki::span<const char> data){
-	for(auto i = data.begin(), e = data.end(); i != e; ++i){
-		switch(this->cur_state){
+void parser::feed(utki::span<const char> data)
+{
+	for (auto i = data.begin(), e = data.end(); i != e; ++i) {
+		switch (this->cur_state) {
 			case state::idle:
 				this->parse_idle(i, e);
 				break;
@@ -136,71 +137,74 @@ void parser::feed(utki::span<const char> data){
 				this->parse_cdata_terminator(i, e);
 				break;
 		}
-		if(i == e){
+		if (i == e) {
 			return;
 		}
 	}
 }
 
-void parser::process_parsed_ref_char(){
+void parser::process_parsed_ref_char()
+{
 	this->cur_state = this->state_after_ref_char;
-	
-	if(this->ref_char_buf.size() == 0){
+
+	if (this->ref_char_buf.size() == 0) {
 		return;
 	}
-	
-	if(this->ref_char_buf[0] == '#'){ // numeric character reference
+
+	if (this->ref_char_buf[0] == '#') { // numeric character reference
 		this->ref_char_buf.push_back(0); // null-terminate
 
 		char* end_ptr;
 		char* start_ptr = &*(++this->ref_char_buf.begin());
 		int base;
-		if(*start_ptr == 'x'){ // hexadecimal format
+		if (*start_ptr == 'x') { // hexadecimal format
 			base = 16;
 			++start_ptr;
-		}else{ // decimal format
+		} else { // decimal format
 			base = 10;
 		}
 
 		uint32_t unicode = std::strtoul(start_ptr, &end_ptr, base);
-		if(end_ptr != &*this->ref_char_buf.rbegin()){
+		if (end_ptr != &*this->ref_char_buf.rbegin()) {
 			std::stringstream ss;
 			ss << "unknown numeric character reference encountered: " << &*(++this->ref_char_buf.begin());
 			throw malformed_xml(this->line_number, ss.str());
 		}
 		auto utf8 = utki::to_utf8(char32_t(unicode));
-		for(auto i = utf8.begin(), e = utf8.end(); *i != '\0' && i != e; ++i){
+		for (auto i = utf8.begin(), e = utf8.end(); *i != '\0' && i != e; ++i) {
 			this->buf.push_back(*i);
 		}
-	}else{ // character name reference
+	} else { // character name reference
 		std::string ref_char_string(this->ref_char_buf.data(), this->ref_char_buf.size());
-		
+
 		auto i = this->doctype_entities.find(ref_char_string);
-		if(i != this->doctype_entities.end()){
+		if (i != this->doctype_entities.end()) {
 			this->buf.insert(std::end(this->buf), std::begin(i->second), std::end(i->second));
-		}else if(ref_char_string == "amp"){
+		} else if (ref_char_string == "amp") {
 			this->buf.push_back('&');
-		}else if(ref_char_string == "lt"){
+		} else if (ref_char_string == "lt") {
 			this->buf.push_back('<');
-		}else if(ref_char_string == "gt"){
+		} else if (ref_char_string == "gt") {
 			this->buf.push_back('>');
-		}else if(ref_char_string == "quot"){
+		} else if (ref_char_string == "quot") {
 			this->buf.push_back('"');
-		}else if(ref_char_string == "apos"){
+		} else if (ref_char_string == "apos") {
 			this->buf.push_back('\'');
-		}else{
+		} else {
 			std::stringstream ss;
-			ss << "unknown name character reference encountered: " << std::string(this->ref_char_buf.data(), this->ref_char_buf.size());
+			ss << "unknown name character reference encountered: "
+			   << std::string(this->ref_char_buf.data(), this->ref_char_buf.size());
 			throw malformed_xml(this->line_number, ss.str());
 		}
 	}
-	
+
 	this->ref_char_buf.clear();
 }
 
-void parser::parse_ref_char(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
-	for(; i != e; ++i){
-		switch(*i){
+void parser::parse_ref_char(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e)
+{
+	for (; i != e; ++i) {
+		switch (*i) {
 			case ';':
 				this->process_parsed_ref_char();
 				return;
@@ -214,11 +218,12 @@ void parser::parse_ref_char(utki::span<const char>::iterator& i, utki::span<cons
 	}
 }
 
-void parser::parse_tag_empty(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
+void parser::parse_tag_empty(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e)
+{
 	ASSERT(this->buf.empty())
 	ASSERT(this->name.empty())
-	for(; i != e; ++i){
-		switch(*i){
+	for (; i != e; ++i) {
+		switch (*i) {
 			case '>':
 				this->on_attributes_end(true);
 				this->on_element_end(utki::make_span<char>(nullptr, 0));
@@ -230,9 +235,10 @@ void parser::parse_tag_empty(utki::span<const char>::iterator& i, utki::span<con
 	}
 }
 
-void parser::parse_content(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
-	for(; i != e; ++i){
-		switch(*i){
+void parser::parse_content(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e)
+{
+	for (; i != e; ++i) {
+		switch (*i) {
 			case '<':
 				this->on_content_parsed(utki::make_span(this->buf));
 				this->buf.clear();
@@ -256,26 +262,28 @@ void parser::parse_content(utki::span<const char>::iterator& i, utki::span<const
 	}
 }
 
-void parser::handle_attribute_parsed(){
+void parser::handle_attribute_parsed()
+{
 	this->on_attribute_parsed(utki::make_span(this->name), utki::make_span(this->buf));
 	this->name.clear();
 	this->buf.clear();
 	this->cur_state = state::attributes;
 }
 
-void parser::parse_attribute_value(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
+void parser::parse_attribute_value(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e)
+{
 	ASSERT(!this->name.empty())
-	for(; i != e; ++i){
-		switch(*i){
+	for (; i != e; ++i) {
+		switch (*i) {
 			case '\'':
-				if(this->attr_value_quote_char == '\''){
+				if (this->attr_value_quote_char == '\'') {
 					this->handle_attribute_parsed();
 					return;
 				}
 				this->buf.push_back(*i);
 				break;
 			case '"':
-				if(this->attr_value_quote_char == '"'){
+				if (this->attr_value_quote_char == '"') {
 					this->handle_attribute_parsed();
 					return;
 				}
@@ -299,9 +307,10 @@ void parser::parse_attribute_value(utki::span<const char>::iterator& i, utki::sp
 	}
 }
 
-void parser::parse_attribute_seek_to_value(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
-	for(; i != e; ++i){
-		switch(*i){
+void parser::parse_attribute_seek_to_value(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e)
+{
+	for (; i != e; ++i) {
+		switch (*i) {
 			case '\n':
 				++this->line_number;
 				[[fallthrough]];
@@ -318,14 +327,15 @@ void parser::parse_attribute_seek_to_value(utki::span<const char>::iterator& i, 
 				this->cur_state = state::attribute_value;
 				return;
 			default:
-				throw malformed_xml(this->line_number, "unexpected character encountered, expected \"'\" or '\"'.");
+				throw malformed_xml(this->line_number, R"(unexpected character encountered, expected "'" or '"'.)");
 		}
 	}
 }
 
-void parser::parse_attribute_seek_to_equals(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
-	for(; i != e; ++i){
-		switch(*i){
+void parser::parse_attribute_seek_to_equals(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e)
+{
+	for (; i != e; ++i) {
+		switch (*i) {
 			case '\n':
 				++this->line_number;
 				[[fallthrough]];
@@ -348,9 +358,10 @@ void parser::parse_attribute_seek_to_equals(utki::span<const char>::iterator& i,
 	}
 }
 
-void parser::parse_attribute_name(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
-	for(; i != e; ++i){
-		switch(*i){
+void parser::parse_attribute_name(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e)
+{
+	for (; i != e; ++i) {
+		switch (*i) {
 			case '\n':
 				++this->line_number;
 				[[fallthrough]];
@@ -371,11 +382,12 @@ void parser::parse_attribute_name(utki::span<const char>::iterator& i, utki::spa
 	}
 }
 
-void parser::parse_attributes(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
+void parser::parse_attributes(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e)
+{
 	ASSERT(this->buf.empty())
 	ASSERT(this->name.empty())
-	for(; i != e; ++i){
-		switch(*i){
+	for (; i != e; ++i) {
+		switch (*i) {
 			case '\n':
 				++this->line_number;
 				[[fallthrough]];
@@ -400,9 +412,10 @@ void parser::parse_attributes(utki::span<const char>::iterator& i, utki::span<co
 	}
 }
 
-void parser::parse_comment(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
-	for(; i != e; ++i){
-		switch(*i){
+void parser::parse_comment(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e)
+{
+	for (; i != e; ++i) {
+		switch (*i) {
 			case '-':
 				this->cur_state = state::comment_end;
 				return;
@@ -415,9 +428,10 @@ void parser::parse_comment(utki::span<const char>::iterator& i, utki::span<const
 	}
 }
 
-void parser::parse_comment_end(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
-	for(; i != e; ++i){
-		switch(*i){
+void parser::parse_comment_end(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e)
+{
+	for (; i != e; ++i) {
+		switch (*i) {
 			case '\n':
 				++this->line_number;
 				[[fallthrough]];
@@ -426,7 +440,7 @@ void parser::parse_comment_end(utki::span<const char>::iterator& i, utki::span<c
 				this->cur_state = state::comment;
 				return;
 			case '-':
-				if(this->buf.size() == 1){
+				if (this->buf.size() == 1) {
 					this->buf.clear();
 					this->cur_state = state::comment;
 					return;
@@ -435,7 +449,7 @@ void parser::parse_comment_end(utki::span<const char>::iterator& i, utki::span<c
 				this->buf.push_back('-');
 				break;
 			case '>':
-				if(this->buf.size() == 1){
+				if (this->buf.size() == 1) {
 					this->buf.clear();
 					this->cur_state = state::idle;
 					return;
@@ -448,50 +462,53 @@ void parser::parse_comment_end(utki::span<const char>::iterator& i, utki::span<c
 	}
 }
 
-void parser::end(){
-	if(this->cur_state != state::idle){
+void parser::end()
+{
+	if (this->cur_state != state::idle) {
 		std::array<char, 1> new_line = {{'\n'}};
 		this->feed(utki::make_span(new_line));
 	}
 }
 
-namespace{
-bool starts_with(const std::vector<char>& vec, const std::string& str){
-	if(vec.size() < str.size()){
+namespace {
+bool starts_with(const std::vector<char>& vec, const std::string& str)
+{
+	if (vec.size() < str.size()) {
 		return false;
 	}
-	
-	for(size_t i = 0; i != str.size(); ++i){
-		if(str[i] != vec[i]){
+
+	for (size_t i = 0; i != str.size(); ++i) {
+		if (str[i] != vec[i]) {
 			return false;
 		}
 	}
 	return true;
 }
-}
+} // namespace
 
-void parser::process_parsed_tag_name(){
-	if(this->buf.empty()){
+void parser::process_parsed_tag_name()
+{
+	if (this->buf.empty()) {
 		throw malformed_xml(this->line_number, "tag name cannot be empty");
 	}
-	
-	switch(this->buf[0]){
+
+	switch (this->buf[0]) {
 		case '?':
 			// some declaration, we just skip it.
 			this->buf.clear();
 			this->cur_state = state::declaration;
 			return;
 		case '!':
-//			TRACE(<< "this->buf = " << std::string(&*this->buf.begin(), this->buf.size()) << std::endl)
-			if(starts_with(this->buf, doctype_tag_word)){
+			//			TRACE(<< "this->buf = " << std::string(&*this->buf.begin(), this->buf.size()) << std::endl)
+			if (starts_with(this->buf, doctype_tag_word)) {
 				this->cur_state = state::doctype;
-			}else{
+			} else {
 				this->cur_state = state::skip_unknown_exclamation_mark_construct;
 			}
 			this->buf.clear();
 			return;
 		case '/':
-			if(this->buf.size() <= 1){
+			if (this->buf.size() <= 1) {
 				throw malformed_xml(this->line_number, "end tag cannot be empty");
 			}
 			this->on_element_end(utki::make_span(this->buf).subspan(1));
@@ -506,9 +523,10 @@ void parser::process_parsed_tag_name(){
 	}
 }
 
-void parser::parse_tag(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
-	for(; i != e; ++i){
-		switch(*i){
+void parser::parse_tag(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e)
+{
+	for (; i != e; ++i) {
+		switch (*i) {
 			case '\n':
 				++this->line_number;
 				[[fallthrough]];
@@ -519,7 +537,7 @@ void parser::parse_tag(utki::span<const char>::iterator& i, utki::span<const cha
 				return;
 			case '>':
 				this->process_parsed_tag_name();
-				switch(this->cur_state){
+				switch (this->cur_state) {
 					case state::attributes:
 						this->on_attributes_end(false);
 						[[fallthrough]];
@@ -530,7 +548,7 @@ void parser::parse_tag(utki::span<const char>::iterator& i, utki::span<const cha
 				return;
 			case '[':
 				this->buf.push_back(*i);
-				if(this->buf.size() == cdata_tag_word.size() && starts_with(this->buf, cdata_tag_word)){
+				if (this->buf.size() == cdata_tag_word.size() && starts_with(this->buf, cdata_tag_word)) {
 					this->buf.clear();
 					this->cur_state = state::cdata;
 					return;
@@ -538,19 +556,19 @@ void parser::parse_tag(utki::span<const char>::iterator& i, utki::span<const cha
 				break;
 			case '-':
 				this->buf.push_back(*i);
-				if(this->buf.size() == comment_tag_word.size() && starts_with(this->buf, comment_tag_word)){
+				if (this->buf.size() == comment_tag_word.size() && starts_with(this->buf, comment_tag_word)) {
 					this->cur_state = state::comment;
 					this->buf.clear();
 					return;
 				}
 				break;
 			case '/':
-				if(!this->buf.empty()){
+				if (!this->buf.empty()) {
 					this->process_parsed_tag_name();
 
-					// After parsing usual tag we expect attributes, but since we got '/' the tag has no any attributes, so it is empty.
-					// In other cases, like '!DOCTYPE' tag the cur_state should remain.
-					if(this->cur_state == state::attributes){
+					// After parsing usual tag we expect attributes, but since we got '/' the tag has no any attributes,
+					// so it is empty. In other cases, like '!DOCTYPE' tag the cur_state should remain.
+					if (this->cur_state == state::attributes) {
 						this->cur_state = state::tag_empty;
 					}
 					return;
@@ -563,9 +581,10 @@ void parser::parse_tag(utki::span<const char>::iterator& i, utki::span<const cha
 	}
 }
 
-void parser::parse_doctype(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
-	for(; i != e; ++i){
-		switch(*i){
+void parser::parse_doctype(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e)
+{
+	for (; i != e; ++i) {
+		switch (*i) {
 			case '>':
 				ASSERT(this->buf.empty())
 				this->cur_state = state::idle;
@@ -582,9 +601,10 @@ void parser::parse_doctype(utki::span<const char>::iterator& i, utki::span<const
 	}
 }
 
-void parser::parse_doctype_body(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
-	for(; i != e; ++i){
-		switch(*i){
+void parser::parse_doctype_body(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e)
+{
+	for (; i != e; ++i) {
+		switch (*i) {
 			case ']':
 				ASSERT(this->buf.empty())
 				this->cur_state = state::doctype;
@@ -601,27 +621,27 @@ void parser::parse_doctype_body(utki::span<const char>::iterator& i, utki::span<
 	}
 }
 
-void parser::parse_doctype_tag(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
-	for(; i != e; ++i){
-		switch(*i){
+void parser::parse_doctype_tag(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e)
+{
+	for (; i != e; ++i) {
+		switch (*i) {
 			case '\n':
 				++this->line_number;
 				[[fallthrough]];
 			case ' ':
 			case '\t':
 			case '\r':
-				if(this->buf.size() == 0){
+				if (this->buf.size() == 0) {
 					throw malformed_xml(this->line_number, "empty DOCTYPE tag name encountered");
 				}
-				
-				if(
-						starts_with(this->buf, doctype_element_tag_word) ||
-						starts_with(this->buf, doctype_attlist_tag_word)
-				){
+
+				if (starts_with(this->buf, doctype_element_tag_word)
+					|| starts_with(this->buf, doctype_attlist_tag_word))
+				{
 					this->cur_state = state::doctype_skip_tag;
-				}else if(starts_with(this->buf, doctype_entity_tag_word)){
+				} else if (starts_with(this->buf, doctype_entity_tag_word)) {
 					this->cur_state = state::doctype_entity_name;
-				}else{
+				} else {
 					throw malformed_xml(this->line_number, "unknown DOCTYPE tag encountered");
 				}
 				this->buf.clear();
@@ -635,9 +655,10 @@ void parser::parse_doctype_tag(utki::span<const char>::iterator& i, utki::span<c
 	}
 }
 
-void parser::parse_doctype_skip_tag(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
-	for(; i != e; ++i){
-		switch(*i){
+void parser::parse_doctype_skip_tag(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e)
+{
+	for (; i != e; ++i) {
+		switch (*i) {
 			case '>':
 				ASSERT(this->buf.empty())
 				this->cur_state = state::doctype_body;
@@ -651,22 +672,23 @@ void parser::parse_doctype_skip_tag(utki::span<const char>::iterator& i, utki::s
 	}
 }
 
-void parser::parse_doctype_entity_name(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
-	for(; i != e; ++i){
-		switch(*i){
+void parser::parse_doctype_entity_name(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e)
+{
+	for (; i != e; ++i) {
+		switch (*i) {
 			case '\n':
 				++this->line_number;
 				[[fallthrough]];
 			case ' ':
 			case '\t':
 			case '\r':
-				if(this->buf.size() == 0){
+				if (this->buf.size() == 0) {
 					break;
 				}
-				
+
 				this->name = std::move(this->buf);
 				ASSERT(this->buf.empty())
-				
+
 				this->cur_state = state::doctype_entity_seek_to_value;
 				return;
 			default:
@@ -676,9 +698,13 @@ void parser::parse_doctype_entity_name(utki::span<const char>::iterator& i, utki
 	}
 }
 
-void parser::parse_doctype_entity_seek_to_value(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
-	for(; i != e; ++i){
-		switch(*i){
+void parser::parse_doctype_entity_seek_to_value(
+	utki::span<const char>::iterator& i,
+	utki::span<const char>::iterator& e
+)
+{
+	for (; i != e; ++i) {
+		switch (*i) {
 			case '\n':
 				++this->line_number;
 				[[fallthrough]];
@@ -690,21 +716,25 @@ void parser::parse_doctype_entity_seek_to_value(utki::span<const char>::iterator
 				this->cur_state = state::doctype_entity_value;
 				return;
 			default:
-				throw malformed_xml(this->line_number, "unexpected character encountered while seeking to DOCTYPE entity value, expected '\"'.");
+				throw malformed_xml(
+					this->line_number,
+					"unexpected character encountered while seeking to DOCTYPE entity value, expected '\"'."
+				);
 		}
 	}
 }
 
-void parser::parse_doctype_entity_value(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
-	for(; i != e; ++i){
-		switch(*i){
+void parser::parse_doctype_entity_value(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e)
+{
+	for (; i != e; ++i) {
+		switch (*i) {
 			case '"':
 				this->doctype_entities.insert(std::make_pair(utki::make_string(this->name), std::move(this->buf)));
-				
+
 				this->name.clear();
-				
+
 				ASSERT(this->buf.empty())
-				
+
 				this->cur_state = state::doctype_skip_tag;
 				return;
 			case '\n':
@@ -717,9 +747,13 @@ void parser::parse_doctype_entity_value(utki::span<const char>::iterator& i, utk
 	}
 }
 
-void parser::parse_skip_unknown_exclamation_mark_construct(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
-	for(; i != e; ++i){
-		switch(*i){
+void parser::parse_skip_unknown_exclamation_mark_construct(
+	utki::span<const char>::iterator& i,
+	utki::span<const char>::iterator& e
+)
+{
+	for (; i != e; ++i) {
+		switch (*i) {
 			case '>':
 				ASSERT(this->buf.empty())
 				this->cur_state = state::idle;
@@ -733,9 +767,10 @@ void parser::parse_skip_unknown_exclamation_mark_construct(utki::span<const char
 	}
 }
 
-void parser::parse_tag_seek_gt(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
-	for(; i != e; ++i){
-		switch(*i){
+void parser::parse_tag_seek_gt(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e)
+{
+	for (; i != e; ++i) {
+		switch (*i) {
 			case '\n':
 				++this->line_number;
 				[[fallthrough]];
@@ -756,9 +791,10 @@ void parser::parse_tag_seek_gt(utki::span<const char>::iterator& i, utki::span<c
 	}
 }
 
-void parser::parse_declaration(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
-	for(; i != e; ++i){
-		switch(*i){
+void parser::parse_declaration(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e)
+{
+	for (; i != e; ++i) {
+		switch (*i) {
 			case '?':
 				this->cur_state = state::declaration_end;
 				return;
@@ -771,9 +807,10 @@ void parser::parse_declaration(utki::span<const char>::iterator& i, utki::span<c
 	}
 }
 
-void parser::parse_declaration_end(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
-	for(; i != e; ++i){
-		switch(*i){
+void parser::parse_declaration_end(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e)
+{
+	for (; i != e; ++i) {
+		switch (*i) {
 			case '>':
 				this->cur_state = state::idle;
 				return;
@@ -787,9 +824,10 @@ void parser::parse_declaration_end(utki::span<const char>::iterator& i, utki::sp
 	}
 }
 
-void parser::parse_idle(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
-	for(; i != e; ++i){
-		switch(*i){
+void parser::parse_idle(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e)
+{
+	for (; i != e; ++i) {
+		switch (*i) {
 			case '<':
 				this->cur_state = state::tag;
 				return;
@@ -812,13 +850,15 @@ void parser::parse_idle(utki::span<const char>::iterator& i, utki::span<const ch
 	}
 }
 
-void parser::feed(const std::string& str){
+void parser::feed(const std::string& str)
+{
 	this->feed(utki::make_span(str.c_str(), str.length()));
 }
 
-void parser::parse_cdata(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
-	for(; i != e; ++i){
-		switch(*i){
+void parser::parse_cdata(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e)
+{
+	for (; i != e; ++i) {
+		switch (*i) {
 			case ']':
 				this->buf.push_back(*i);
 				this->cur_state = state::cdata_terminator;
@@ -830,9 +870,10 @@ void parser::parse_cdata(utki::span<const char>::iterator& i, utki::span<const c
 	}
 }
 
-void parser::parse_cdata_terminator(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
-	for(; i != e; ++i){
-		switch(*i){
+void parser::parse_cdata_terminator(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e)
+{
+	for (; i != e; ++i) {
+		switch (*i) {
 			case ']':
 				ASSERT(!this->buf.empty())
 				ASSERT(this->buf.back() == ']')
@@ -841,10 +882,10 @@ void parser::parse_cdata_terminator(utki::span<const char>::iterator& i, utki::s
 			case '>':
 				ASSERT(!this->buf.empty())
 				ASSERT(this->buf.back() == ']')
-				if(this->buf.size() < 2 || this->buf[this->buf.size() - 2] != ']'){
+				if (this->buf.size() < 2 || this->buf[this->buf.size() - 2] != ']') {
 					this->buf.push_back('>');
 					this->cur_state = state::cdata;
-				}else{ // CDATA block ended
+				} else { // CDATA block ended
 					this->on_content_parsed(utki::make_span(this->buf.data(), this->buf.size() - 2));
 					this->buf.clear();
 					this->cur_state = state::idle;

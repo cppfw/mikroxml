@@ -8,7 +8,7 @@
 #include <fstream>
 
 namespace{
-class Parser : public mikroxml::parser{
+class parser : public mikroxml::parser{
 public:
 	std::stringstream ss;
 	
@@ -24,8 +24,8 @@ public:
 		}
 	}
 
-	void on_attributes_end(bool isEmptyElement) override{
-		if(!isEmptyElement){
+	void on_attributes_end(bool is_empty_element) override{
+		if(!is_empty_element){
 			ss << ">";
 		}
 	}
@@ -54,7 +54,7 @@ tst::set set("basic", [](tst::suite& suite){
 						"<element attribute='attribute௵Value'/>"}
 			},
 			[](const auto& p){
-				Parser parser;
+				parser parser;
 		
 				parser.feed(p.first);
 				parser.end();
@@ -68,7 +68,7 @@ tst::set set("basic", [](tst::suite& suite){
 	suite.add(
 		"read_from_istream",
 		[](){
-			Parser parser;
+			parser parser;
 
 			static const size_t chunk_size = 0x1000; // 4kb
 
@@ -79,8 +79,7 @@ tst::set set("basic", [](tst::suite& suite){
 				std::vector<char> buf;
 				buf.reserve(chunk_size);
 				for(size_t i = 0; i != chunk_size; ++i){
-					char c;
-					c = s.get();
+					auto c = char(s.get());
 					if(s.eof()){
 						break;
 					}

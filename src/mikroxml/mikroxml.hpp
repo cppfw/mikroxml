@@ -30,15 +30,17 @@ SOFTWARE.
 
 #include <utki/span.hpp>
 
-namespace mikroxml{
+namespace mikroxml {
 
-class malformed_xml : public std::logic_error{
+class malformed_xml : public std::logic_error
+{
 public:
 	malformed_xml(unsigned line_number, const std::string& message);
 };
 
-class parser{
-	enum class state{
+class parser
+{
+	enum class state {
 		idle,
 		tag,
 		tag_seek_gt,
@@ -88,91 +90,96 @@ class parser{
 	void parse_doctype_entity_name(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
 	void parse_doctype_entity_seek_to_value(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
 	void parse_doctype_entity_value(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
-	void parse_skip_unknown_exclamation_mark_construct(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
+	void parse_skip_unknown_exclamation_mark_construct(
+		utki::span<const char>::iterator& i,
+		utki::span<const char>::iterator& e
+	);
 	void parse_cdata(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
 	void parse_cdata_terminator(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
-	
+
 	void handle_attribute_parsed();
-	
+
 	void process_parsed_tag_name();
-	
+
 	void process_parsed_ref_char();
-	
+
 	std::vector<char> buf;
 	std::vector<char> name; // general variable for storing name of something (attribute name, entity name, etc.)
 	std::vector<char> ref_char_buf;
-	
+
 	char attr_value_quote_char;
-	
+
 	state state_after_ref_char;
-	
+
 	unsigned line_number = 1;
-	
+
 	std::map<std::string, std::vector<char>> doctype_entities;
-	
+
 public:
 	parser();
-	
+
 	/**
 	 * @brief Element start.
 	 * @param name - name of the element which has started.
 	 */
 	virtual void on_element_start(utki::span<const char> name) = 0;
-	
+
 	/**
 	 * @brief Element end.
 	 * @param name - name of the element which has ended. Name is empty if empty element has ended.
 	 */
 	virtual void on_element_end(utki::span<const char> name) = 0;
-	
+
 	/**
 	 * @brief Attributes section end notification.
 	 * This callback is called when all attributes of the last element have been parsed.
 	 * @param is_empty_element - indicates weather the element is empty element or not.
 	 */
 	virtual void on_attributes_end(bool is_empty_element) = 0;
-	
+
 	/**
 	 * @brief Attribute parsed notification.
-	 * This callback may be called after 'on_element_start' notification. It can be called several times, once for each parsed attribute.
+	 * This callback may be called after 'on_element_start' notification. It can be called several times, once for each
+	 * parsed attribute.
 	 * @param name - name of the parsed attribute.
 	 * @param value - value of the parsed attribute.
 	 */
 	virtual void on_attribute_parsed(utki::span<const char> name, utki::span<const char> value) = 0;
-	
+
 	/**
 	 * @brief Content parsed notification.
 	 * This callback may be called after 'onAttributesEnd' notification.
 	 * @param str - parsed content.
 	 */
 	virtual void on_content_parsed(utki::span<const char> str) = 0;
-	
+
 	/**
 	 * @brief feed UTF-8 data to parser.
 	 * @param data - data to be fed to parser.
 	 */
 	void feed(utki::span<const char> data);
-	
+
 	/**
 	 * @brief feed UTF-8 data to parser.
 	 * @param data - data to be fed to parser.
 	 */
-	void feed(utki::span<const uint8_t> data){
+	void feed(utki::span<const uint8_t> data)
+	{
 		this->feed(utki::make_span(reinterpret_cast<const char*>(data.data()), data.size()));
 	}
-	
+
 	/**
 	 * @brief Parse in string.
 	 * @param str - string to parse.
 	 */
 	void feed(const std::string& str);
-	
+
 	/**
 	 * @brief Finalize parsing after all data has been fed.
 	 */
 	void end();
-	
-	virtual ~parser()noexcept{}
+
+	virtual ~parser() noexcept = default;
 };
 
-}
+} // namespace mikroxml

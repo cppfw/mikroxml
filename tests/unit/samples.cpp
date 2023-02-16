@@ -14,7 +14,7 @@ const std::string data_dir = "samples_data/";
 }
 
 namespace{
-class Parser : public mikroxml::parser{
+class parser : public mikroxml::parser{
 public:
 	std::vector<std::string> tagNameStack;
 	
@@ -36,9 +36,9 @@ public:
 		this->tagNameStack.pop_back();
 	}
 
-	void on_attributes_end(bool isEmptyElement) override{
+	void on_attributes_end(bool is_empty_element) override{
 		// std::cout << "onAttributesEnd(): invoked" << std::endl;
-		if(isEmptyElement){
+		if(is_empty_element){
 			this->ss << "/>";
 		}else{
 			this->ss << ">";
@@ -82,7 +82,7 @@ tst::set set("samples", [](tst::suite& suite){
         [](const auto& p){
             auto in_file_name = data_dir + p;
 
-            Parser parser;
+            parser parser;
 	
             {
                 papki::fs_file fi(in_file_name);
