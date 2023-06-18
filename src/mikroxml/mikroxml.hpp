@@ -26,6 +26,7 @@ SOFTWARE.
 
 #pragma once
 
+#include <map>
 #include <vector>
 
 #include <utki/span.hpp>
@@ -107,9 +108,9 @@ class parser
 	std::vector<char> name; // general variable for storing name of something (attribute name, entity name, etc.)
 	std::vector<char> ref_char_buf;
 
-	char attr_value_quote_char;
+	char attr_value_quote_char = 0;
 
-	state state_after_ref_char;
+	state state_after_ref_char = state::idle;
 
 	unsigned line_number = 1;
 
@@ -117,6 +118,12 @@ class parser
 
 public:
 	parser();
+
+	parser(const parser&) = delete;
+	parser& operator=(const parser&) = delete;
+
+	parser(parser&&) = delete;
+	parser& operator=(parser&&) = delete;
 
 	/**
 	 * @brief Element start.
@@ -165,6 +172,7 @@ public:
 	 */
 	void feed(utki::span<const uint8_t> data)
 	{
+		// NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
 		this->feed(utki::make_span(reinterpret_cast<const char*>(data.data()), data.size()));
 	}
 

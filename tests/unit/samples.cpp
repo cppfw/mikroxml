@@ -59,7 +59,7 @@ public:
 }
 
 namespace{
-tst::set set("samples", [](tst::suite& suite){
+const tst::set set("samples", [](tst::suite& suite){
     std::vector<std::string> files;
 
     {
@@ -88,7 +88,8 @@ tst::set set("samples", [](tst::suite& suite){
                 papki::fs_file fi(in_file_name);
                 papki::file::guard file_guard(fi);
 
-                std::array<uint8_t, 0xff> buf;
+				// NOLINTNEXTLINE(cppcoreguidelines-pro-type-member-init)
+                std::array<uint8_t, std::numeric_limits<uint8_t>::max()> buf;
 
                 while(true){
                     auto res = fi.read(buf);
@@ -105,6 +106,7 @@ tst::set set("samples", [](tst::suite& suite){
             auto out_string = parser.ss.str();
 
             auto out_data = utki::make_span(
+					// NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
                     reinterpret_cast<const uint8_t*>(out_string.c_str()), out_string.size()
                 );
 

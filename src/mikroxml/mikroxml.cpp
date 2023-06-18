@@ -40,13 +40,15 @@ const std::string doctype_element_tag_word = "!ELEMENT";
 const std::string doctype_attlist_tag_word = "!ATTLIST";
 const std::string doctype_entity_tag_word = "!ENTITY";
 const std::string cdata_tag_word = "![CDATA[";
+constexpr auto buffer_reserve_size = 0x100; // 4kb
+constexpr auto ref_char_buffer_reserve_size = 10;
 } // namespace
 
 parser::parser()
 {
-	this->buf.reserve(0x100);
-	this->name.reserve(0x100);
-	this->ref_char_buf.reserve(10);
+	this->buf.reserve(buffer_reserve_size);
+	this->name.reserve(buffer_reserve_size);
+	this->ref_char_buf.reserve(ref_char_buffer_reserve_size);
 }
 
 malformed_xml::malformed_xml(unsigned line_number, const std::string& message) :
@@ -154,17 +156,19 @@ void parser::process_parsed_ref_char()
 	if (this->ref_char_buf[0] == '#') { // numeric character reference
 		this->ref_char_buf.push_back(0); // null-terminate
 
-		char* end_ptr;
+		char* end_ptr = nullptr;
 		char* start_ptr = &*(++this->ref_char_buf.begin());
-		int base;
-		if (*start_ptr == 'x') { // hexadecimal format
-			base = 16;
-			++start_ptr;
-		} else { // decimal format
-			base = 10;
-		}
+		auto base = [&start_ptr]() {
+			if (*start_ptr == 'x') { // hexadecimal format
+				// NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+				++start_ptr;
+				return utki::integer_base::hex;
+			} else { // decimal format
+				return utki::integer_base::dec;
+			}
+		}();
 
-		uint32_t unicode = std::strtoul(start_ptr, &end_ptr, base);
+		uint32_t unicode = std::strtoul(start_ptr, &end_ptr, utki::to_int(base));
 		if (end_ptr != &*this->ref_char_buf.rbegin()) {
 			std::stringstream ss;
 			ss << "unknown numeric character reference encountered: " << &*(++this->ref_char_buf.begin());

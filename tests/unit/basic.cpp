@@ -40,7 +40,9 @@ public:
 };
 }
 
-tst::set set("basic", [](tst::suite& suite){
+namespace{
+// NOLINTNEXTLINE(cppcoreguidelines-interfaces-global-init)
+const tst::set set("basic", [](tst::suite& suite){
 	suite.add<std::pair<std::string_view, std::string_view>>(
 			"parse_snippet",
 			{
@@ -93,3 +95,4 @@ tst::set set("basic", [](tst::suite& suite){
 		}
 	);
 });
+}
