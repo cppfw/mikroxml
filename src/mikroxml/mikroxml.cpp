@@ -156,7 +156,9 @@ void parser::process_parsed_ref_char()
 	if (this->ref_char_buf[0] == '#') { // numeric character reference
 		this->ref_char_buf.push_back(0); // null-terminate
 
+		// NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg)
 		char* end_ptr = nullptr;
+		// NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg)
 		char* start_ptr = &*(++this->ref_char_buf.begin());
 		auto base = [&start_ptr]() {
 			if (*start_ptr == 'x') { // hexadecimal format
@@ -175,7 +177,9 @@ void parser::process_parsed_ref_char()
 			throw malformed_xml(this->line_number, ss.str());
 		}
 		auto utf8 = utki::to_utf8(char32_t(unicode));
-		for (auto i = utf8.begin(), e = utf8.end(); *i != '\0' && i != e; ++i) {
+
+		// NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg)
+		for (auto i = utf8.begin(); *i != '\0' && i != utf8.end(); ++i) {
 			this->buf.push_back(*i);
 		}
 	} else { // character name reference
