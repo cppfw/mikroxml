@@ -31,6 +31,12 @@ Suggests: libmikroxml-doc
 Description: Cross-platform XML parser in C++.
  Cross-platform parser of MicroXML standard in C++.
 
+Package: libmikroxml$(soname)-dbgsrc
+Section: debug
+Architecture: any
+Depends: libmikroxml$(soname)-dbgsym (= ${binary:Version}), ${misc:Depends}
+Description: debugging sources for libmikroxml$(soname) package.
+
 Package: libmikroxml-doc
 Section: doc
 Architecture: all
