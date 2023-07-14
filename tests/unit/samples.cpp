@@ -105,10 +105,7 @@ const tst::set set("samples", [](tst::suite& suite){
 
             auto out_string = parser.ss.str();
 
-            auto out_data = utki::make_span(
-					// NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-                    reinterpret_cast<const uint8_t*>(out_string.c_str()), out_string.size()
-                );
+            auto out_data = to_uint8_t(utki::make_span(out_string));
 
             auto cmp_data = papki::fs_file(in_file_name + ".cmp").load();
 
