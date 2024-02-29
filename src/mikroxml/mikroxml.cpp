@@ -643,8 +643,8 @@ void parser::parse_doctype_tag(utki::span<const char>::iterator& i, utki::span<c
 					throw malformed_xml(this->line_number, "empty DOCTYPE tag name encountered");
 				}
 
-				if (starts_with(this->buf, doctype_element_tag_word)
-					|| starts_with(this->buf, doctype_attlist_tag_word))
+				if (starts_with(this->buf, doctype_element_tag_word) ||
+					starts_with(this->buf, doctype_attlist_tag_word))
 				{
 					this->cur_state = state::doctype_skip_tag;
 				} else if (starts_with(this->buf, doctype_entity_tag_word)) {
