@@ -1,3 +1,9 @@
+libmikroxml (0.1.61) unstable; urgency=medium
+
+  * fix dbgsrc package
+
+ -- Ivan Gagis <igagis@gmail.com>  Thu, 29 Feb 2024 14:38:26 +0200
+
 libmikroxml (0.1.60) unstable; urgency=medium
 
   * bookworm
