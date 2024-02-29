@@ -1,3 +1,9 @@
+libmikroxml (0.1.60) unstable; urgency=medium
+
+  * bookworm
+
+ -- Ivan Gagis <igagis@gmail.com>  Thu, 29 Feb 2024 11:23:28 +0200
+
 libmikroxml (0.1.59) unstable; urgency=medium
 
   * aptian
