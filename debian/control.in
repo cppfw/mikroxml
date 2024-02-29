@@ -33,7 +33,7 @@ Description: Cross-platform XML parser in C++.
 
 Package: libmikroxml$(soname)-dbgsrc
 Section: debug
-Architecture: any
+Architecture: all
 Depends: libmikroxml$(soname)-dbgsym (= ${binary:Version}), ${misc:Depends}
 Description: debugging sources for libmikroxml$(soname) package.
 
