@@ -1,3 +1,9 @@
+libmikroxml (0.1.59) unstable; urgency=medium
+
+  * aptian
+
+ -- Ivan Gagis <igagis@gmail.com>  Thu, 29 Feb 2024 11:10:38 +0200
+
 libmikroxml (0.1.58) unstable; urgency=medium
 
   * archlinux: deploy
