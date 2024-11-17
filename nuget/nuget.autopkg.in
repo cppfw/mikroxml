@@ -18,9 +18,9 @@ nuget{
 		title: C++ XML parser library;
 		authors: {Ivan Gagis};
 		owners: {Ivan Gagis};
-		licenseUrl: "https://raw.githubusercontent.com/cppfw/mikroxml/master/LICENSE";
+		licenseUrl: "https://raw.githubusercontent.com/cppfw/mikroxml/main/LICENSE";
 		projectUrl: "https://github.com/cppfw/svgdom";
-		iconUrl: "https://github.com/cppfw/mikroxml/blob/master/logo.svg";
+		iconUrl: "https://github.com/cppfw/mikroxml/blob/main/logo.svg";
 		requireLicenseAcceptance:false;
 		summary: C++ XML parser library;
 
@@ -69,7 +69,7 @@ nuget{
 		}
 */
 		// ===== v142 =======
-
+/*
 		[x86,v142,release,MultiThreaded] {
 			lib: ..\msvs_solution\v142_Release_MT\libmikroxml.lib;
 		}
@@ -94,7 +94,7 @@ nuget{
 		[x64,v142,debug,MultiThreadedDebugDLL] {
 			lib: ..\msvs_solution\x64\v142_Debug_MD\libmikroxml.lib;
 		}
-
+*/
 		//==== v143 tools ====
 
 		[x86,v143,release,MultiThreaded] {
