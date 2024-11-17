@@ -507,7 +507,6 @@ void parser::process_parsed_tag_name()
 			this->cur_state = state::declaration;
 			return;
 		case '!':
-			//			TRACE(<< "this->buf = " << std::string(&*this->buf.begin(), this->buf.size()) << std::endl)
 			if (starts_with(this->buf, doctype_tag_word)) {
 				this->cur_state = state::doctype;
 			} else {
@@ -574,8 +573,9 @@ void parser::parse_tag(utki::span<const char>::iterator& i, utki::span<const cha
 				if (!this->buf.empty()) {
 					this->process_parsed_tag_name();
 
-					// After parsing usual tag we expect attributes, but since we got '/' the tag has no any attributes,
-					// so it is empty. In other cases, like '!DOCTYPE' tag the cur_state should remain.
+					// After parsing usual tag we expect attributes, but since we got '/'
+					// the tag has no any attributes, so it is empty. In other cases, like
+					// '!DOCTYPE' tag the cur_state should remain.
 					if (this->cur_state == state::attributes) {
 						this->cur_state = state::tag_empty;
 					}
@@ -726,7 +726,8 @@ void parser::parse_doctype_entity_seek_to_value(
 			default:
 				throw malformed_xml(
 					this->line_number,
-					"unexpected character encountered while seeking to DOCTYPE entity value, expected '\"'."
+					"unexpected character encountered while seeking to "
+					"DOCTYPE entity value, expected '\"'."
 				);
 		}
 	}

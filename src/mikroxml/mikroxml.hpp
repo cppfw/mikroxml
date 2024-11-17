@@ -105,7 +105,11 @@ class parser
 	void process_parsed_ref_char();
 
 	std::vector<char> buf;
-	std::vector<char> name; // general variable for storing name of something (attribute name, entity name, etc.)
+
+	// general variable for storing name of something
+	// (attribute name, entity name, etc.)
+	std::vector<char> name;
+
 	std::vector<char> ref_char_buf;
 
 	char attr_value_quote_char = 0;
@@ -133,21 +137,23 @@ public:
 
 	/**
 	 * @brief Element end.
-	 * @param name - name of the element which has ended. Name is empty if empty element has ended.
+	 * @param name - name of the element which has ended. Name is empty if empty
+	 * element has ended.
 	 */
 	virtual void on_element_end(utki::span<const char> name) = 0;
 
 	/**
 	 * @brief Attributes section end notification.
-	 * This callback is called when all attributes of the last element have been parsed.
+	 * This callback is called when all attributes of the last element have been
+	 * parsed.
 	 * @param is_empty_element - indicates weather the element is empty element or not.
 	 */
 	virtual void on_attributes_end(bool is_empty_element) = 0;
 
 	/**
 	 * @brief Attribute parsed notification.
-	 * This callback may be called after 'on_element_start' notification. It can be called several times, once for each
-	 * parsed attribute.
+	 * This callback may be called after 'on_element_start' notification. It can
+	 * be called several times, once for each parsed attribute.
 	 * @param name - name of the parsed attribute.
 	 * @param value - value of the parsed attribute.
 	 */

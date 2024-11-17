@@ -109,7 +109,7 @@ const tst::set set("samples", [](tst::suite& suite){
 
             auto cmp_data = papki::fs_file(in_file_name + ".cmp").load();
 
-            if(out_data != cmp_data){
+            if(utki::deep_not_equals(out_data, utki::make_span(cmp_data))){
                 papki::fs_file failed_file(p + ".out");
 
                 {
