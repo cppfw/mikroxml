@@ -7,8 +7,6 @@ set(name mikroxml)
 project(${name})
 
 find_package(utki CONFIG REQUIRED)
-find_package(papki CONFIG REQUIRED)
-find_package(ZLIB REQUIRED)
 
 file(GLOB_RECURSE srcs "../src/${name}/*.cpp")
 
@@ -33,9 +31,6 @@ target_link_libraries(
     ${name}
     PUBLIC
         utki::utki
-        papki::papki
-    PRIVATE
-        ZLIB::ZLIB
 )
 
 # install library header files preserving directory hierarchy
