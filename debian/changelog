@@ -1,3 +1,9 @@
+libmikroxml (0.1.66) unstable; urgency=medium
+
+  * vcpkg
+
+ -- Ivan Gagis <igagis@gmail.com>  Sun, 24 Nov 2024 16:38:43 +0200
+
 libmikroxml (0.1.65) unstable; urgency=medium
 
   * conan: rebuild
