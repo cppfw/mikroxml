@@ -1,3 +1,9 @@
+libmikroxml (0.1.68) unstable; urgency=medium
+
+  * conan: wasm
+
+ -- Ivan Gagis <igagis@gmail.com>  Mon, 27 Jan 2025 22:30:41 +0200
+
 libmikroxml (0.1.67) unstable; urgency=medium
 
   * conan: macos
