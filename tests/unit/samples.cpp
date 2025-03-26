@@ -113,7 +113,7 @@ const tst::set set("samples", [](tst::suite& suite){
                 papki::fs_file failed_file(p + ".out");
 
                 {
-                    papki::file::guard file_guard(failed_file, papki::file::mode::create);
+                    papki::file::guard file_guard(failed_file, papki::mode::create);
                     failed_file.write(out_data);
                 }
 
