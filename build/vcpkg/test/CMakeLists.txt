@@ -4,7 +4,6 @@ set(CMAKE_TOOLCHAIN_FILE $ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake)
 
 project(test)
 
-find_package(utki CONFIG REQUIRED)
 find_package(mikroxml CONFIG REQUIRED)
 
 add_executable(test main.cpp)
