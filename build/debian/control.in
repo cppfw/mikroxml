@@ -1,0 +1,62 @@
+Source: libmikroxml
+Section: libs
+Priority: extra
+Maintainer: Ivan Gagis <igagis@gmail.com>
+Build-Depends:
+	debhelper (>= 9),
+	prorab,
+	prorab-extra,
+	myci,
+	clang-tidy,
+	clang-format,
+	libc6-dev,
+	libutki-dev (>= 1.1.123),
+	libpapki-dev (>= 1.0.93),
+	libtst-dev (>= 0.3.2)
+Build-Depends-Indep: doxygen
+Standards-Version: 3.9.2
+
+Package: libmikroxml$(soname)
+Section: libs
+Architecture: any
+Depends:
+	${shlibs:Depends},
+	${misc:Depends}
+Description: Cross-platform XML parser in C++.
+	Cross-platform parser of MicroXML standard in C++.
+
+Package: libmikroxml-dbg$(soname)
+Section: libs
+Architecture: any
+Depends:
+	${shlibs:Depends},
+	${misc:Depends}
+Description: Cross-platform XML parser in C++.
+	Debug version of libmikroxml.
+
+Package: libmikroxml-dev
+Section: libdevel
+Architecture: any
+Depends:
+	libmikroxml$(soname) (= ${binary:Version}),
+	libmikroxml-dbg$(soname) (= ${binary:Version}),
+	${misc:Depends}
+Suggests: libmikroxml-doc
+Description: Cross-platform XML parser in C++.
+	Cross-platform parser of MicroXML standard in C++.
+
+Package: libmikroxml$(soname)-dbgsrc
+Section: debug
+Architecture: all
+Depends:
+	libmikroxml$(soname)-dbgsym (= ${binary:Version}),
+	libmikroxml-dbg$(soname)-dbgsym (= ${binary:Version}),
+	${misc:Depends}
+Description: debugging sources for libmikroxml$(soname) package.
+
+Package: libmikroxml-doc
+Section: doc
+Architecture: all
+Depends: ${misc:Depends}
+Description: documentation for libmikroxml library.
+	For more details see description to libmikroxml-dev package.
