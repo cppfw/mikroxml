@@ -9,7 +9,7 @@ this_srcs += $(call prorab-src-dir, .)
 
 this_ldlibs += -l utki$(this_dbg)
 this_ldlibs += -l papki$(this_dbg)
-this_ldlibs += -l tst
+this_ldlibs += -l tst$(this_dbg)
 
 this_ldlibs += ../../src/out/$(c)/libmikroxml$(this_dbg)$(dot_so)
 
