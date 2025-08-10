@@ -13,9 +13,9 @@
             "group": "build"
         },
         {
-            "label": "build_dbg",
+            "label": "build-dev",
             "type": "shell",
-            "command": "make config=dbg",
+            "command": "make config=dev",
             "problemMatcher": [
                 "$gcc"
             ],
@@ -37,17 +37,17 @@
             "dependsOn": "build"
         },
         {
-            "label": "test_dbg",
+            "label": "test-dev",
             "type": "shell",
-            "command": "make test config=dbg",
+            "command": "make test config=dev",
             "problemMatcher": [],
             "group": "build",
-            "dependsOn": "build_dbg"
+            "dependsOn": "build-dev"
         },
         {
             "label": "format",
             "type": "shell",
-            "command": "make apply-format",
+            "command": "make format",
             "problemMatcher": [],
             "group": "build"
         }

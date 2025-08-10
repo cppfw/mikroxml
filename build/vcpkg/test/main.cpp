@@ -1,5 +1,7 @@
 #include <mikroxml/mikroxml.hpp>
 
+#include <iostream>
+
 int main(int argc, const char** argv){
     try{
         throw mikroxml::malformed_xml(10, "file.xml");
