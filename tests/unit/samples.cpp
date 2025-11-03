@@ -5,7 +5,7 @@
 
 #include <utki/string.hpp>
 
-#include <papki/fs_file.hpp>
+#include <fsif/native_file.hpp>
 
 #include "../../src/mikroxml/mikroxml.hpp"
 
@@ -64,7 +64,7 @@ const tst::set set("samples", [](tst::suite& suite){
 
     {
 		const std::regex suffix_regex("^.*\\.xml$");
-		auto all_files = papki::fs_file(data_dir).list_dir();
+		auto all_files = fsif::native_file(data_dir).list_dir();
 
 		std::copy_if(
 				all_files.begin(),
@@ -85,8 +85,8 @@ const tst::set set("samples", [](tst::suite& suite){
             parser parser;
 	
             {
-                papki::fs_file fi(in_file_name);
-                papki::file::guard file_guard(fi);
+                fsif::native_file fi(in_file_name);
+                fsif::file::guard file_guard(fi);
 
 				// NOLINTNEXTLINE(cppcoreguidelines-pro-type-member-init)
                 std::array<uint8_t, std::numeric_limits<uint8_t>::max()> buf;
@@ -107,13 +107,13 @@ const tst::set set("samples", [](tst::suite& suite){
 
             auto out_data = to_uint8_t(utki::make_span(out_string));
 
-            auto cmp_data = papki::fs_file(in_file_name + ".cmp").load();
+            auto cmp_data = fsif::native_file(in_file_name + ".cmp").load();
 
             if(utki::deep_not_equals(out_data, utki::make_span(cmp_data))){
-                papki::fs_file failed_file(p + ".out");
+                fsif::native_file failed_file(p + ".out");
 
                 {
-                    papki::file::guard file_guard(failed_file, papki::mode::create);
+                    fsif::file::guard file_guard(failed_file, fsif::mode::create);
                     failed_file.write(out_data);
                 }
 

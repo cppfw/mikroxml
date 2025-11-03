@@ -37,7 +37,7 @@ makedepends=(
 	'prorab-extra'
 	'doxygen'
 	"${pkgPrefix}clang-tools-extra"
-	"${pkgPrefix}papki"
+	"${pkgPrefix}fsif"
 	"${pkgPrefix}tst"
 )
 checkdepends=('myci')

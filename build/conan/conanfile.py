@@ -18,7 +18,7 @@ class MikroxmlConan(ConanFile):
 	generators = "AutotoolsDeps" # this will set CXXFLAGS etc. env vars
 
 	def requirements(self):
-		self.requires("papki/[>=0.0.0]@cppfw/main", transitive_headers=True)
+		self.requires("fsif/[>=0.0.0]@cppfw/main", transitive_headers=True)
 
 	def build_requirements(self):
 		self.tool_requires("prorab/[>=2.0.27]@cppfw/main")
