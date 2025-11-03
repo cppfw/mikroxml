@@ -11,7 +11,7 @@ Build-Depends:
 	clang-format,
 	libc6-dev,
 	libutki-dev (>= 1.1.123),
-	libpapki-dev (>= 1.0.93),
+	libfsif-dev (>= 1.0.93),
 	libtst-dev (>= 0.3.2)
 Build-Depends-Indep: doxygen
 Standards-Version: 3.9.2
