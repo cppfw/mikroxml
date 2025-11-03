@@ -1,3 +1,9 @@
+libmikroxml (0.1.74) unstable; urgency=medium
+
+  * vcpkg: non-host myci dep
+
+ -- Ivan Gagis <igagis@gmail.com>  Mon, 03 Nov 2025 12:44:54 +0200
+
 libmikroxml (0.1.73) unstable; urgency=medium
 
   * debian trixie build
