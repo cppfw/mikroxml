@@ -816,20 +816,25 @@ void parser::parse_declaration(utki::span<const char>::iterator& i, utki::span<c
 	}
 }
 
-void parser::parse_declaration_end(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e)
+void parser::parse_declaration_end(
+	utki::span<const char>::iterator& i, //
+	utki::span<const char>::iterator& e
+)
 {
-	for (; i != e; ++i) {
-		switch (*i) {
-			case '>':
-				this->cur_state = state::idle;
-				return;
-			case '\n':
-				++this->line_number;
-				[[fallthrough]];
-			default:
-				this->cur_state = state::declaration;
-				return;
-		}
+	if (i == e) {
+		return;
+	}
+
+	switch (*i) {
+		case '>':
+			this->cur_state = state::idle;
+			return;
+		case '\n':
+			++this->line_number;
+			[[fallthrough]];
+		default:
+			this->cur_state = state::declaration;
+			return;
 	}
 }
 
