@@ -228,18 +228,21 @@ void parser::parse_ref_char(utki::span<const char>::iterator& i, utki::span<cons
 
 void parser::parse_tag_empty(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e)
 {
-	ASSERT(this->buf.empty())
-	ASSERT(this->name.empty())
-	for (; i != e; ++i) {
-		switch (*i) {
-			case '>':
-				this->on_attributes_end(true);
-				this->on_element_end(utki::make_span<char>(nullptr, 0));
-				this->cur_state = state::idle;
-				return;
-			default:
-				throw malformed_xml(this->line_number, "unexpected '/' character in attribute list encountered.");
-		}
+	utki::assert(this->buf.empty(), SL);
+	utki::assert(this->name.empty(), SL);
+
+	if (i == e) {
+		return;
+	}
+
+	switch (*i) {
+		case '>':
+			this->on_attributes_end(true);
+			this->on_element_end(utki::make_span<char>(nullptr, 0));
+			this->cur_state = state::idle;
+			return;
+		default:
+			throw malformed_xml(this->line_number, "unexpected '/' character in attribute list encountered.");
 	}
 }
 
