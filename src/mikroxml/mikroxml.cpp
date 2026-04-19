@@ -170,7 +170,7 @@ void parser::process_parsed_ref_char()
 			}
 		}();
 
-		uint32_t unicode = uint32_t(std::strtoul(start_ptr, &end_ptr, utki::to_int(base)));
+		auto unicode = uint32_t(std::strtoul(start_ptr, &end_ptr, utki::to_int(base)));
 		if (end_ptr != &*this->ref_char_buf.rbegin()) {
 			std::stringstream ss;
 			ss << "unknown numeric character reference encountered: " << &*(++this->ref_char_buf.begin());
