@@ -30,8 +30,8 @@ public:
 		if(name.size() != 0){
 			this->ss << "</" << name << ">";
 			
-			tst::check_eq(this->tagNameStack.back(), std::string(name.data(), name.size()), SL)
-                    << "element start tag (" << this->tagNameStack.back() << ") does not match end tag (" << name << ")";
+			tst::check_eq(this->tagNameStack.back(), std::string(name.data(), name.size()), [&](auto& o){o
+                    << "element start tag (" << this->tagNameStack.back() << ") does not match end tag (" << name << ")";}, SL);
 		}
 		this->tagNameStack.pop_back();
 	}
@@ -117,7 +117,7 @@ const tst::set set("samples", [](tst::suite& suite){
                     failed_file.write(out_data);
                 }
 
-                tst::check(false, SL) << "parsed file is not as expected: " << in_file_name;
+                tst::check(false, [&](auto& o){o << "parsed file is not as expected: " << in_file_name;}, SL);
             }
         }
     );
