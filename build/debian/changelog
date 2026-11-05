@@ -1,3 +1,9 @@
+libmikroxml (0.1.76) unstable; urgency=medium
+
+  * update
+
+ -- Ivan Gagis <igagis@gmail.com>  Thu, 05 Nov 2026 15:12:15 +0200
+
 libmikroxml (0.1.75) unstable; urgency=medium
 
   * fix compiler warnings
