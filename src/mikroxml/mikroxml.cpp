@@ -256,7 +256,7 @@ void parser::parse_content(utki::span<const char>::iterator& i, utki::span<const
 				this->cur_state = state::tag;
 				return;
 			case '&':
-				ASSERT(this->ref_char_buf.empty())
+				utki::assert(this->ref_char_buf.empty(), SL);
 				this->state_after_ref_char = this->cur_state;
 				this->cur_state = state::ref_char;
 				return;
@@ -283,7 +283,7 @@ void parser::handle_attribute_parsed()
 
 void parser::parse_attribute_value(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e)
 {
-	ASSERT(!this->name.empty())
+	utki::assert(!this->name.empty(), SL);
 	for (; i != e; ++i) {
 		switch (*i) {
 			case '\'':
@@ -301,7 +301,7 @@ void parser::parse_attribute_value(utki::span<const char>::iterator& i, utki::sp
 				this->buf.push_back(*i);
 				break;
 			case '&':
-				ASSERT(this->ref_char_buf.empty())
+				utki::assert(this->ref_char_buf.empty(), SL);
 				this->state_after_ref_char = this->cur_state;
 				this->cur_state = state::ref_char;
 				return;
@@ -355,8 +355,8 @@ void parser::parse_attribute_seek_to_equals(utki::span<const char>::iterator& i,
 			case '\r':
 				break;
 			case '=':
-				ASSERT(!this->name.empty())
-				ASSERT(this->buf.empty())
+				utki::assert(!this->name.empty(), SL);
+				utki::assert(this->buf.empty(), SL);
 				this->cur_state = state::attribute_seek_to_value;
 				return;
 			default:
@@ -379,11 +379,11 @@ void parser::parse_attribute_name(utki::span<const char>::iterator& i, utki::spa
 			case ' ':
 			case '\t':
 			case '\r':
-				ASSERT(!this->name.empty())
+				utki::assert(!this->name.empty(), SL);
 				this->cur_state = state::attribute_seek_to_equals;
 				return;
 			case '=':
-				ASSERT(this->buf.empty())
+				utki::assert(this->buf.empty(), SL);
 				this->cur_state = state::attribute_seek_to_value;
 				return;
 			default:
@@ -395,8 +395,8 @@ void parser::parse_attribute_name(utki::span<const char>::iterator& i, utki::spa
 
 void parser::parse_attributes(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e)
 {
-	ASSERT(this->buf.empty())
-	ASSERT(this->name.empty())
+	utki::assert(this->buf.empty(), SL);
+	utki::assert(this->name.empty(), SL);
 	for (; i != e; ++i) {
 		switch (*i) {
 			case '\n':
@@ -456,7 +456,7 @@ void parser::parse_comment_end(utki::span<const char>::iterator& i, utki::span<c
 					this->cur_state = state::comment;
 					return;
 				}
-				ASSERT(this->buf.empty())
+				utki::assert(this->buf.empty(), SL);
 				this->buf.push_back('-');
 				break;
 			case '>':
@@ -465,7 +465,7 @@ void parser::parse_comment_end(utki::span<const char>::iterator& i, utki::span<c
 					this->cur_state = state::idle;
 					return;
 				}
-				ASSERT(this->buf.empty())
+				utki::assert(this->buf.empty(), SL);
 				this->buf.clear();
 				this->cur_state = state::comment;
 				return;
@@ -597,7 +597,7 @@ void parser::parse_doctype(utki::span<const char>::iterator& i, utki::span<const
 	for (; i != e; ++i) {
 		switch (*i) {
 			case '>':
-				ASSERT(this->buf.empty())
+				utki::assert(this->buf.empty(), SL);
 				this->cur_state = state::idle;
 				return;
 			case '[':
@@ -617,7 +617,7 @@ void parser::parse_doctype_body(utki::span<const char>::iterator& i, utki::span<
 	for (; i != e; ++i) {
 		switch (*i) {
 			case ']':
-				ASSERT(this->buf.empty())
+				utki::assert(this->buf.empty(), SL);
 				this->cur_state = state::doctype;
 				return;
 			case '<':
@@ -671,7 +671,7 @@ void parser::parse_doctype_skip_tag(utki::span<const char>::iterator& i, utki::s
 	for (; i != e; ++i) {
 		switch (*i) {
 			case '>':
-				ASSERT(this->buf.empty())
+				utki::assert(this->buf.empty(), SL);
 				this->cur_state = state::doctype_body;
 				return;
 			case '\n':
@@ -698,7 +698,7 @@ void parser::parse_doctype_entity_name(utki::span<const char>::iterator& i, utki
 				}
 
 				this->name = std::move(this->buf);
-				ASSERT(this->buf.empty())
+				utki::assert(this->buf.empty(), SL);
 
 				this->cur_state = state::doctype_entity_seek_to_value;
 				return;
@@ -745,7 +745,7 @@ void parser::parse_doctype_entity_value(utki::span<const char>::iterator& i, utk
 
 				this->name.clear();
 
-				ASSERT(this->buf.empty())
+				utki::assert(this->buf.empty(), SL);
 
 				this->cur_state = state::doctype_skip_tag;
 				return;
@@ -767,7 +767,7 @@ void parser::parse_skip_unknown_exclamation_mark_construct(
 	for (; i != e; ++i) {
 		switch (*i) {
 			case '>':
-				ASSERT(this->buf.empty())
+				utki::assert(this->buf.empty(), SL);
 				this->cur_state = state::idle;
 				return;
 			case '\n':
@@ -859,7 +859,7 @@ void parser::parse_idle(utki::span<const char>::iterator& i, utki::span<const ch
 				++this->line_number;
 				[[fallthrough]];
 			default:
-				ASSERT(this->buf.empty())
+				utki::assert(this->buf.empty(), SL);
 				this->buf.push_back(*i);
 				this->cur_state = state::content;
 				return;
@@ -892,13 +892,13 @@ void parser::parse_cdata_terminator(utki::span<const char>::iterator& i, utki::s
 	for (; i != e; ++i) {
 		switch (*i) {
 			case ']':
-				ASSERT(!this->buf.empty())
-				ASSERT(this->buf.back() == ']')
+				utki::assert(!this->buf.empty(), SL);
+				utki::assert(this->buf.back() == ']', SL);
 				this->buf.push_back(']');
 				break;
 			case '>':
-				ASSERT(!this->buf.empty())
-				ASSERT(this->buf.back() == ']')
+				utki::assert(!this->buf.empty(), SL);
+				utki::assert(this->buf.back() == ']', SL);
 				if (this->buf.size() < 2 || this->buf[this->buf.size() - 2] != ']') {
 					this->buf.push_back('>');
 					this->cur_state = state::cdata;
